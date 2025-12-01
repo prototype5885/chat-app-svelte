@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+.theme-diskord {
+  color: white;
+  background-color: rgb(66, 68, 75);
+}
+
+.theme-1 {
+  color: white;
+  background-image: linear-gradient(
+    to top right,
+    #ad46ff,
+    #3b82f6 30%,
+    #ec4899
+  );
+}

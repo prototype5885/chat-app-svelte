@@ -1,13 +1,13 @@
-import { defineConfig } from 'vite'
-import { svelte } from '@sveltejs/vite-plugin-svelte'
-import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from "vite";
+import { svelte } from "@sveltejs/vite-plugin-svelte";
+import tailwindcss from "@tailwindcss/vite";
 
 const backendAddress = "http://127.0.0.1:8000";
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [tailwindcss(), svelte()],
-   server: {
+  server: {
     host: "127.0.0.1",
     port: 80,
     proxy: {
@@ -17,11 +17,10 @@ export default defineConfig({
       "/cdn": {
         target: backendAddress,
       },
-      "/ws": {
+      "/socket.io": {
         target: backendAddress,
         ws: true,
       },
     },
   },
-  
-})
+});

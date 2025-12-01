@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import type { MessageModel } from "../scripts/models";
   import { currentServer, currentChannel } from "../scripts/globals.svelte";
   import Message from "./Message.svelte";
+  import { socket } from "../scripts/socketio";
 
   let messageList: MessageModel[] = $state([]);
 
@@ -24,6 +25,14 @@
     }
 
     messageList = await response.json();
+
+    socket.on("new_message", (data: MessageModel) => {
+      messageList.push(data);
+    });
+  });
+
+  onDestroy(() => {
+    socket.off("new_message");
   });
 </script>
 

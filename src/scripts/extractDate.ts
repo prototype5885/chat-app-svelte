@@ -1,6 +1,6 @@
-export type SnowflakeDateFormat = "short" | "medium" | "long";
+export type DateFormat = "short" | "medium" | "long";
 
-export function extractTime(id: string, format: SnowflakeDateFormat) {
+export function extractTime(id: string, format: DateFormat) {
   const timeChars = id.substring(0, 10); // first 10 characters contain the time
   const alphabet = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 

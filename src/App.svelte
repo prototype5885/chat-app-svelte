@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Hash from "./icons/Hash.svelte";
   import ChannelList from "./lib/ChannelList.svelte";
   import MessageInput from "./lib/MessageInput.svelte";
   import MessageList from "./lib/MessageList.svelte";
@@ -11,34 +12,43 @@
 
 <main>
   <div class={`flex flex-row h-screen select-none ${theme}`}>
-    <!-- server list -->
-    <div
-      class="bg-black/45 min-w-18 max-w-18 overflow-y-auto"
-      style="scrollbar-width: none;"
-    >
-      <ServerList />
-    </div>
+    <div class="flex flex-col h-screen bg-black/30">
+      <div class="flex flex-row overflow-y-auto grow">
+        <!-- server list -->
+        <div
+          class="min-w-18 max-w-18 overflow-y-auto"
+          style="scrollbar-width: none;"
+        >
+          <ServerList />
+        </div>
 
-    <!-- channel/friend list -->
-    <div class="flex flex-col min-w-60 max-w-60 h-screen grow">
-      <!-- channel or friend list -->
-      <div class="flex grow overflow-y-auto bg-black/20">
-        {#if currentServer.value}
-          {#key currentServer.value.id}
-            <ChannelList />
-          {/key}
-        {/if}
+        <!-- channel/friend list -->
+        <div class="flex flex-col min-w-60 max-w-60 border-l border-color">
+          <Top classValue="flex justify-center items-center">
+            <span>{currentServer.value?.name}</span>
+          </Top>
+          <!-- channel or friend list -->
+          {#if currentServer.value}
+            {#key currentServer.value.id}
+              <ChannelList />
+            {/key}
+          {/if}
+        </div>
       </div>
+
       <!-- user panel -->
-      <div class="min-h-14 max-h-14 bg-black/35">
-        <!-- <UserPanel /> -->
+      <div class="min-h-[66px] max-h-[66px] px-2 pb-2 bg-transparent">
+        <div class="h-full rounded-lg bg-white/4 border border-color">
+          <span>user panel here</span>
+        </div>
       </div>
     </div>
 
     <!-- chat area -->
-    <div class="flex flex-col w-full h-full">
-      <Top classValue="bg-black/10 flex items-center">
-        {currentChannel.value?.name}
+    <div class="flex flex-col w-full h-full bg-black/20">
+      <Top classValue="flex items-center px-4">
+        <Hash />
+        <span class="ml-2">{currentChannel.value?.name}<span> </span></span>
       </Top>
       {#key currentChannel.value}
         {#if currentChannel.value}
@@ -48,9 +58,11 @@
       {/key}
     </div>
     <!-- member list -->
-    <div class="min-w-64 max-w-64 flex flex-col">
-      <Top classValue="bg-black/10">idk</Top>
-      <div class="bg-black/20 flex-1"></div>
+    <div
+      class="min-w-64 max-w-64 flex flex-col border-l border-color bg-black/20"
+    >
+      <Top classValue="flex items-center px-4">idk</Top>
+      <div class="flex-1"></div>
     </div>
   </div>
 </main>

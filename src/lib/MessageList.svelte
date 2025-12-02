@@ -44,7 +44,7 @@
   };
 </script>
 
-<ul class="grow overflow-y-auto py-3" bind:this={element}>
+<ul class="grow overflow-y-auto py-3 scrollbar-hover" bind:this={element}>
   {#each messageList as msg}
     <Message {msg}></Message>
   {/each}

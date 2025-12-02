@@ -20,7 +20,7 @@
   });
 </script>
 
-<ul class="flex flex-col items-center py-2">
+<ul class="flex flex-col items-center py-2" style="scrollbar-width: none;">
   <ServerBase type="dm" />
   {#if serverList.length > 0}
     {@render ServerSeparator()}

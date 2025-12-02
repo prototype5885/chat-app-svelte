@@ -7,7 +7,7 @@
 </script>
 
 <li>
-  <div class="flex flex-row px-3 py-1 hover-bg select-text">
+  <div class="flex flex-row px-3 py-1 hover-bg select-text hover:bg-white/5">
     <!-- avatar -->
     <Avatar size="40" pic={msg.picture} name={msg.display_name} />
     <div class="flex flex-col pl-3">

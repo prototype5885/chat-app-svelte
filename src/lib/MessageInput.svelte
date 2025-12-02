@@ -55,14 +55,12 @@
   }
 </script>
 
-<div class="flex flex-col">
-  <div
-    class="flex rounded-lg mx-4 bg-white/5 border border-white/10 overflow-hidden"
-  >
+<div class="flex flex-col px-2 pb-2">
+  <div class="flex rounded-lg bg-white/3 border border-color overflow-hidden">
     <textarea
       bind:this={textareaRef}
       bind:value={chatInput}
-      class="resize-none overflow-y-hidden box-border grow my-3 outline-0 mx-2"
+      class="resize-none overflow-y-hidden box-border grow my-4 outline-0 mx-2"
       rows="1"
       {placeholder}
       on:keydown={handleKeyDown}

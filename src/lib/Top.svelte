@@ -5,6 +5,6 @@
   export let children: Snippet;
 </script>
 
-<div class={["min-h-12 max-h-12 border-b border-black", classValue]}>
+<div class={["min-h-12 max-h-12 border-b border-color", classValue]}>
   {@render children?.()}
 </div>

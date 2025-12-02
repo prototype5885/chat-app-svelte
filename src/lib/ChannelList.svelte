@@ -29,13 +29,8 @@
   });
 </script>
 
-<div class="flex flex-col min-w-60 max-w-60 grow overflow-y-auto">
-  <Top classValue="flex justify-center items-center">
-    <span>{currentServer.value?.name}</span>
-  </Top>
-  <div class="grow flex flex-col overflow-y-auto p-2">
-    {#each channelList as channel}
-      <Channel {channel} />
-    {/each}
-  </div>
-</div>
+<ul class="flex flex-col p-2 overflow-y-auto scrollbar-hover">
+  {#each channelList as channel}
+    <Channel {channel} />
+  {/each}
+</ul>

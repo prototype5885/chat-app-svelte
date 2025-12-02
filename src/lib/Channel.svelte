@@ -9,7 +9,7 @@
 <li>
   <button
     class={[
-      "w-full flex items-center h-9 px-2 rounded-lg hover:text-white cursor-pointer",
+      "w-full flex items-center h-9 px-2 rounded-lg hover:text-white",
       `${props.channel.id === currentChannel.value?.id ? " bg-white/8 text-white" : "hover:bg-white/5 text-white/50"}`,
     ]}
     onclick={() => {

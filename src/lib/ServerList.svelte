@@ -2,7 +2,9 @@
   import { onMount } from "svelte";
   import type { ServerModel } from "../scripts/models";
   import ServerBase from "./ServerBase.svelte";
-  import { currentServer } from "../scripts/globals.svelte";
+  import { currentChannel, currentServer } from "../scripts/globals.svelte";
+  import Mail from "../icons/Mail.svelte";
+  import Plus from "../icons/Plus.svelte";
 
   let serverList = $state<ServerModel[]>([]);
 
@@ -18,18 +20,57 @@
       currentServer.value = serverList[0];
     }
   });
+
+  function selectServer(server: ServerModel) {
+    currentServer.value = server;
+    currentChannel.value = undefined;
+  }
+
+  async function createServer(name: string) {
+    const params = new URLSearchParams({
+      name: name,
+    });
+
+    const response = await fetch(`/api/v1/server?${params}`, {
+      method: "POST",
+    });
+    if (!response.ok) {
+      throw new Error(`${response.status} creating server`);
+    }
+
+    const newServer: ServerModel = await response.json();
+    serverList.push(newServer);
+  }
 </script>
 
 <ul class="flex flex-col items-center py-2" style="scrollbar-width: none;">
-  <ServerBase type="dm" />
+  <!-- DM -->
+  <ServerBase onclick={() => {}}>
+    <Mail />
+  </ServerBase>
+
   {#if serverList.length > 0}
     {@render ServerSeparator()}
   {/if}
+
+  <!-- Server List -->
   {#each serverList as server}
-    <ServerBase type="server" {server} />
+    <ServerBase
+      onclick={() => selectServer(server)}
+      selected={server.id === currentServer.value?.id}
+      data-ctx-type="server"
+      data-ctx-id={server.id}
+    >
+      <span>{server.name[0].toUpperCase()}</span>
+    </ServerBase>
   {/each}
+
   {@render ServerSeparator()}
-  <ServerBase type="add-server" />
+
+  <!-- Add Server -->
+  <ServerBase onclick={() => createServer("Server")}>
+    <Plus />
+  </ServerBase>
 </ul>
 
 {#snippet ServerSeparator()}

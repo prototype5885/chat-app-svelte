@@ -190,12 +190,14 @@
         {#if item.type === "item"}
           <li>
             <button
-              class={`w-full px-2 py-2 text-sm rounded text-left
-              ${
-                item.color == "red"
-                  ? "text-red-500 hover:bg-red-500 hover:text-white"
-                  : "text-white hover:bg-blue-500"
-              }`}
+              class={[
+                "w-full px-2 py-2 text-sm rounded text-left",
+                `${
+                  item.color == "red"
+                    ? "text-red-500 hover:bg-red-500 hover:text-white"
+                    : "text-white hover:bg-blue-500"
+                }`,
+              ]}
               onclick={() => {
                 item.action();
                 visible = false;

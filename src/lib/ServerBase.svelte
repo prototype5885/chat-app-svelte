@@ -13,12 +13,14 @@
 </script>
 
 <button
-  class={`flex justify-center items-center w-12 h-12 my-1 bg-cover bg-center transition-all cursor-pointer
-        ${
-          selected
-            ? "rounded-[35%] bg-blue-500"
-            : "rounded-[50%] hover:rounded-[35%] hover:bg-blue-500 bg-white/7"
-        }`}
+  class={[
+    "flex justify-center items-center w-12 h-12 my-1 bg-cover bg-center transition-all cursor-pointer",
+    `${
+      selected
+        ? "rounded-[35%] bg-blue-500"
+        : "rounded-[50%] hover:rounded-[35%] hover:bg-blue-500 bg-white/7"
+    }`,
+  ]}
   {...attributes}
 >
   {@render children?.()}

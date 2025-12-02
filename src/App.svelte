@@ -13,7 +13,7 @@
 
 <main>
   <ContextMenu />
-  <div class={`flex flex-row h-screen select-none ${theme}`}>
+  <div class={["flex flex-row h-screen select-none", theme]}>
     <div class="flex flex-col h-screen bg-black/30">
       <div class="flex flex-row overflow-y-auto grow">
         <!-- server list -->

@@ -1,10 +1,9 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
 
-  export let classValue: string | undefined = undefined;
-  export let children: Snippet;
+  let props: { classValue?: string; children: Snippet } = $props();
 </script>
 
-<div class={["min-h-12 max-h-12 border-b border-color", classValue]}>
-  {@render children?.()}
+<div class={["min-h-12 max-h-12 border-b border-color", props.classValue]}>
+  {@render props.children?.()}
 </div>

@@ -1,22 +1,20 @@
 <script lang="ts">
-  export let size: string;
-  export let pic: string | undefined = undefined;
-  export let name: string;
+  let props: { size: string; pic?: string; name: string } = $props();
 </script>
 
 <div
   class="rounded-full overflow-hidden bg-black/15 select-none"
-  style={`width: ${size}px; height: ${size}px;`}
+  style={`width: ${props.size}px; height: ${props.size}px;`}
 >
-  {#if pic}
+  {#if props.pic}
     <img
-      src={`/cdn/avatars/${pic}`}
-      alt={name[0]}
+      src={`/cdn/avatars/${props.pic}`}
+      alt={props.name[0]}
       class="w-full h-full object-cover"
     />
-  {:else if name}
+  {:else if props.name}
     <div class="w-full h-full flex items-center justify-center">
-      <span>{name[0]}</span>
+      <span>{props.name[0]}</span>
     </div>
   {/if}
 </div>

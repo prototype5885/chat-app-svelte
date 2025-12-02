@@ -17,10 +17,10 @@ export interface MessageModel {
   channel_id: string;
   sender_id: string;
   display_name: string;
-  picture: string;
+  picture?: string;
   message: string;
-  attachments: string[];
-  edited: boolean;
+  attachments?: string[];
+  edited?: boolean;
 }
 
 export interface AddMessageModel {

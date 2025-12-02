@@ -1,11 +1,12 @@
 <script lang="ts">
-  import { onDestroy, onMount } from "svelte";
+  import { onDestroy, onMount, tick } from "svelte";
   import type { MessageModel } from "../scripts/models";
   import { currentServer, currentChannel } from "../scripts/globals.svelte";
   import Message from "./Message.svelte";
   import { socket } from "../scripts/socketio";
 
   let messageList: MessageModel[] = $state([]);
+  let element: HTMLUListElement;
 
   onMount(async () => {
     if (!currentServer.value || !currentChannel.value) {
@@ -25,21 +26,26 @@
     }
 
     messageList = await response.json();
+    scrollToBottom("instant");
 
     socket.on("new_message", (data: MessageModel) => {
       messageList.push(data);
+      scrollToBottom("smooth");
     });
   });
 
   onDestroy(() => {
     socket.off("new_message");
   });
+
+  const scrollToBottom = async (behavior: ScrollBehavior) => {
+    await tick();
+    element.scroll({ top: element.scrollHeight, behavior: behavior });
+  };
 </script>
 
-<div class="grow overflow-y-auto py-3">
-  <ul>
-    {#each messageList as msg}
-      <Message {msg}></Message>
-    {/each}
-  </ul>
-</div>
+<ul class="grow overflow-y-auto py-3" bind:this={element}>
+  {#each messageList as msg}
+    <Message {msg}></Message>
+  {/each}
+</ul>

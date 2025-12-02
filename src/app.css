@@ -14,3 +14,32 @@
     #ec4899
   );
 }
+
+/* these only work on chromium browsers */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: color-mix(
+    in oklab,
+    var(--color-white) /* #fff = #ffffff */ 25%,
+    transparent
+  );
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(
+    in oklab,
+    var(--color-white) /* #fff = #ffffff */ 50%,
+    transparent
+  );
+}

@@ -54,7 +54,9 @@
 
   const scrollToBottom = async (behavior: ScrollBehavior) => {
     await tick();
-    element.scroll({ top: element.scrollHeight, behavior: behavior });
+    if (element) {
+      element.scroll({ top: element.scrollHeight, behavior: behavior });
+    }
   };
 </script>
 

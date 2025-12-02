@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import Hash from "./icons/Hash.svelte";
   import ChannelList from "./lib/ChannelList.svelte";
   import ContextMenu from "./lib/ContextMenu.svelte";
@@ -7,8 +8,20 @@
   import ServerList from "./lib/ServerList.svelte";
   import Top from "./lib/Top.svelte";
   import { currentChannel, currentServer } from "./scripts/globals.svelte";
+  import type { UserModel } from "./scripts/models";
+  import UserPanel from "./lib/UserPanel.svelte";
 
   let theme: string = $state("theme-diskord");
+
+  let user = $state<UserModel>();
+
+  onMount(async () => {
+    const response = await fetch("/api/v1/user", { method: "GET" });
+    if (!response.ok) {
+      throw new Error(`${response.status} getting user info`);
+    }
+    user = await response.json();
+  });
 </script>
 
 <main>
@@ -41,7 +54,9 @@
       <!-- user panel -->
       <div class="min-h-[66px] max-h-[66px] px-2 pb-2 bg-transparent">
         <div class="h-full rounded-lg bg-white/4 border border-color">
-          <span>user panel here</span>
+          {#if user}
+            <UserPanel {user} />
+          {/if}
         </div>
       </div>
     </div>

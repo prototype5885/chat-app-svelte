@@ -21,6 +21,12 @@ export default defineConfig({
         target: backendAddress,
         ws: true,
       },
+      "/login": {
+        target: backendAddress,
+      },
+      "/register": {
+        target: backendAddress,
+      },
     },
   },
 });

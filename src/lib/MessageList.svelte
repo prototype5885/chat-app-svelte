@@ -3,10 +3,11 @@
   import type { MessageModel } from "../scripts/models";
   import { currentServer, currentChannel } from "../scripts/globals.svelte";
   import Message from "./Message.svelte";
-  import { socket } from "../scripts/socketio";
+  import { create_message, delete_message, socket } from "../scripts/socketio";
 
   let messageList: MessageModel[] = $state([]);
   let element: HTMLUListElement;
+  let events: string[] = [];
 
   onMount(async () => {
     if (!currentServer.value || !currentChannel.value) {
@@ -28,14 +29,27 @@
     messageList = await response.json();
     scrollToBottom("instant");
 
-    socket.on("new_message", (data: MessageModel) => {
-      messageList.push(data);
+    socket.on(create_message, (newMessage: MessageModel) => {
+      events.push(create_message);
+      messageList.push(newMessage);
       scrollToBottom("smooth");
+    });
+
+    socket.on(delete_message, (messageID: string) => {
+      events.push(delete_message);
+      for (let i = 0; i < messageList.length; i++) {
+        if (messageList[i].id === messageID) {
+          messageList.splice(i, 1);
+          return;
+        }
+      }
     });
   });
 
   onDestroy(() => {
-    socket.off("new_message");
+    events.forEach((event) => {
+      socket.off(event);
+    });
   });
 
   const scrollToBottom = async (behavior: ScrollBehavior) => {

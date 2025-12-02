@@ -24,6 +24,8 @@
             ? "rounded-[35%] bg-blue-500"
             : "rounded-[50%] hover:rounded-[35%] hover:bg-blue-500 bg-white/7"
         }`}
+      data-ctx-type={`${type === "server" ? "server" : ""}`}
+      data-ctx-id={`${type === "server" ? server?.id : ""}`}
       onclick={() => {
         if (type !== "add-server") selectServer();
         else createServer();

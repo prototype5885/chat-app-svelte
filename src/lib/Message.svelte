@@ -7,13 +7,24 @@
 </script>
 
 <li>
-  <div class="flex flex-row px-3 py-1 hover-bg select-text hover:bg-white/5">
+  <div
+    class="flex flex-row px-3 py-1 hover-bg select-text hover:bg-white/5"
+    data-ctx-type="message"
+    data-ctx-id={msg.id}
+  >
     <!-- avatar -->
-    <Avatar size="40" pic={msg.picture} name={msg.display_name} />
+    <div data-ctx-type="user" data-ctx-id={msg.sender_id}>
+      <Avatar size="40" pic={msg.picture} name={msg.display_name} />
+    </div>
+
     <div class="flex flex-col pl-3">
       <div class="flex flex-row">
         <!-- name -->
-        <span class="font-bold cursor-pointer content-center hover:underline">
+        <span
+          class="font-bold cursor-pointer content-center hover:underline"
+          data-ctx-type="user"
+          data-ctx-id={msg.sender_id}
+        >
           {msg.display_name}
         </span>
         <!-- date -->

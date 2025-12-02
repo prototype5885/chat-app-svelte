@@ -1,6 +1,7 @@
 <script lang="ts">
   import Hash from "./icons/Hash.svelte";
   import ChannelList from "./lib/ChannelList.svelte";
+  import ContextMenu from "./lib/ContextMenu.svelte";
   import MessageInput from "./lib/MessageInput.svelte";
   import MessageList from "./lib/MessageList.svelte";
   import ServerList from "./lib/ServerList.svelte";
@@ -11,6 +12,7 @@
 </script>
 
 <main>
+  <ContextMenu />
   <div class={`flex flex-row h-screen select-none ${theme}`}>
     <div class="flex flex-col h-screen bg-black/30">
       <div class="flex flex-row overflow-y-auto grow">

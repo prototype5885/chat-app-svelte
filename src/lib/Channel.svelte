@@ -13,6 +13,8 @@
     onclick={() => {
       currentChannel.value = channel;
     }}
+    data-ctx-type="channel"
+    data-ctx-id={channel.id}
   >
     <Hash />
     <span class="ml-2">{channel.name}<span> </span></span>

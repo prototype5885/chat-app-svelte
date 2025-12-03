@@ -7,26 +7,31 @@
   import MessageList from "./lib/MessageList.svelte";
   import ServerList from "./lib/ServerList.svelte";
   import Top from "./lib/Top.svelte";
-  import { currentChannel, currentServer } from "./scripts/globals.svelte";
-  import type { UserModel } from "./scripts/models";
+  import {
+    currentChannel,
+    currentServer,
+    settingsVisible,
+    theme,
+    userData,
+  } from "./scripts/globals.svelte";
   import UserPanel from "./lib/UserPanel.svelte";
-
-  let theme: string = $state("theme-diskord");
-
-  let user = $state<UserModel>();
+  import Settings from "./lib/Settings.svelte";
 
   onMount(async () => {
     const response = await fetch("/api/v1/user", { method: "GET" });
     if (!response.ok) {
       throw new Error(`${response.status} getting user info`);
     }
-    user = await response.json();
+    userData.value = await response.json();
   });
 </script>
 
 <main>
+  {#if settingsVisible.value}
+    <Settings />
+  {/if}
   <ContextMenu />
-  <div class={["flex flex-row h-screen select-none", theme]}>
+  <div class={["flex flex-row h-screen select-none", theme.value]}>
     <div class="flex flex-col h-screen bg-black/30">
       <div class="flex flex-row overflow-y-auto grow">
         <!-- server list -->
@@ -54,9 +59,7 @@
       <!-- user panel -->
       <div class="min-h-[66px] max-h-[66px] px-2 pb-2 bg-transparent">
         <div class="h-full rounded-lg bg-white/4 border border-color">
-          {#if user}
-            <UserPanel {user} />
-          {/if}
+          <UserPanel />
         </div>
       </div>
     </div>

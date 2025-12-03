@@ -4,6 +4,7 @@
   import Channel from "./Channel.svelte";
   import { currentChannel, currentServer } from "../scripts/globals.svelte";
   import { create_channel, delete_channel, socket } from "../scripts/socketio";
+  import ChannelAdd from "./ChannelAdd.svelte";
 
   let channelList = $state<ChannelModel[]>([]);
   let events: string[] = [];
@@ -58,8 +59,11 @@
   });
 </script>
 
-<ul class="flex flex-col p-2 overflow-y-auto scrollbar-hover">
-  {#each channelList as channel}
-    <Channel {channel} />
-  {/each}
-</ul>
+<div class="flex flex-col p-2 overflow-y-auto scrollbar-hover text-white/50">
+  <ChannelAdd />
+  <ul>
+    {#each channelList as channel}
+      <Channel {channel} />
+    {/each}
+  </ul>
+</div>

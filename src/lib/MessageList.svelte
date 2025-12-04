@@ -4,6 +4,12 @@
   import { currentServer, currentChannel } from "../scripts/globals.svelte";
   import Message from "./Message.svelte";
   import { create_message, delete_message, socket } from "../scripts/socketio";
+  import {
+    getMediumDate,
+    isOlderThanFiveMins,
+    isSameDay,
+  } from "../scripts/date";
+  import MessageSmall from "./MessageSmall.svelte";
 
   let messageList: MessageModel[] = $state([]);
   let element: HTMLUListElement;
@@ -26,7 +32,9 @@
       throw new Error(`${response.status} getting message list`);
     }
 
-    messageList = await response.json();
+    const receivedList: MessageModel[] = await response.json();
+    messageList = receivedList.reverse();
+
     scrollToBottom("instant");
 
     socket.on(create_message, (newMessage: MessageModel) => {
@@ -61,7 +69,30 @@
 </script>
 
 <ul class="grow overflow-y-auto py-3 scrollbar-hover" bind:this={element}>
-  {#each messageList as msg}
-    <Message {msg}></Message>
+  {#each messageList as msg, index}
+    {@const sameDay =
+      index !== 0 ? isSameDay(messageList[index - 1].id, msg.id) : false}
+
+    <!-- insert separator if previous message is from a previous day -->
+    {#if index !== 0 && !sameDay}
+      <div class="flex flex-row justify-center items-center py-4">
+        <div class="grow h-px ml-4 bg-white/10"></div>
+        <h1 class="text-center mx-1 text-white/50 text-xs">
+          {getMediumDate(msg.id)}
+        </h1>
+        <div class="grow h-px mr-4 bg-white/10"></div>
+      </div>
+    {/if}
+
+    <!-- show message in small format if previous message is less than five minutes old -->
+    {#if index !== 0 && !isOlderThanFiveMins(messageList[index - 1].id, msg.id)}
+      <MessageSmall {msg} />
+    {:else}
+      {#if index !== 0 && sameDay}
+        <div class="h-4"></div>
+      {/if}
+      <Message {msg}></Message>
+    {/if}
   {/each}
+  <div class="h-4"></div>
 </ul>

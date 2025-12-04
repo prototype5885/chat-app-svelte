@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { extractTime } from "../scripts/extractDate";
+  import { getLongDate } from "../scripts/date";
   import type { MessageModel } from "../scripts/models";
   import Avatar from "./Avatar.svelte";
 
@@ -8,17 +8,17 @@
 
 <li>
   <div
-    class="flex flex-row px-3 py-1 hover-bg select-text hover:bg-white/5"
+    class="flex px-3 hover-bg select-text hover:bg-white/5"
     data-ctx-type="message"
     data-ctx-id={props.msg.id}
   >
     <!-- avatar -->
-    <div data-ctx-type="user" data-ctx-id={props.msg.sender_id}>
+    <div class="pt-1" data-ctx-type="user" data-ctx-id={props.msg.sender_id}>
       <Avatar size="40" pic={props.msg.picture} name={props.msg.display_name} />
     </div>
 
-    <div class="flex flex-col pl-3">
-      <div class="flex flex-row">
+    <div class="pl-3">
+      <div class="flex">
         <!-- name -->
         <span
           class="font-bold cursor-pointer content-center hover:underline"
@@ -29,7 +29,7 @@
         </span>
         <!-- date -->
         <span class="ml-2 text-xs text-white/50 content-center cursor-default">
-          {extractTime(props.msg.id, "long")}
+          {getLongDate(props.msg.id)}
         </span>
       </div>
       <!-- message -->

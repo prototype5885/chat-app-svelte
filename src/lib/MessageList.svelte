@@ -74,7 +74,7 @@
       index !== 0 ? isSameDay(messageList[index - 1].id, msg.id) : false}
 
     <!-- insert separator if previous message is from a previous day -->
-    {#if index !== 0 && !sameDay}
+    {#if !sameDay}
       <div class="flex flex-row justify-center items-center py-4">
         <div class="grow h-px ml-4 bg-white/10"></div>
         <h1 class="text-center mx-1 text-white/50 text-xs">
@@ -85,10 +85,10 @@
     {/if}
 
     <!-- show message in small format if previous message is less than five minutes old -->
-    {#if index !== 0 && !isOlderThanFiveMins(messageList[index - 1].id, msg.id)}
+    {#if sameDay && !isOlderThanFiveMins(messageList[index - 1].id, msg.id)}
       <MessageSmall {msg} />
     {:else}
-      {#if index !== 0 && sameDay}
+      {#if sameDay}
         <div class="h-4"></div>
       {/if}
       <Message {msg}></Message>

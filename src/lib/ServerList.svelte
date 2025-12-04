@@ -34,12 +34,15 @@
     const response = await fetch(`/api/v1/server?${params}`, {
       method: "POST",
     });
+
     if (!response.ok) {
       throw new Error(`${response.status} creating server`);
     }
 
     const newServer: ServerModel = await response.json();
     serverList.push(newServer);
+
+    selectServer(newServer);
   }
 </script>
 

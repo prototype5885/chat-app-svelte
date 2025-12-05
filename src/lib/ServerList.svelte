@@ -19,6 +19,16 @@
     if (serverList.length > 0) {
       currentServer.value = serverList[0];
     }
+
+    // remove server IDs of left/deleted servers from localStorage
+    Object.keys(localStorage).forEach((lastServerID) => {
+      const foundServer = serverList.find(
+        (server) => server.id === lastServerID
+      );
+      if (!foundServer) {
+        localStorage.removeItem(lastServerID);
+      }
+    });
   });
 
   function selectServer(server: ServerModel) {

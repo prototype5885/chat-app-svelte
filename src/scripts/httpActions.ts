@@ -13,6 +13,9 @@ export async function deleteServer(serverID: string) {
   if (!response.ok) {
     throw new Error(`${response.status} deleting server ID ${serverID}`);
   }
+
+  // no need to store last channel ID of this server anymore
+  localStorage.removeItem(serverID);
 }
 
 export async function deleteChannel(channelID: string) {

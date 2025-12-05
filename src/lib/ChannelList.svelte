@@ -32,7 +32,12 @@
     channelList = await response.json();
 
     if (channelList.length > 0) {
-      currentChannel.value = channelList[0];
+      // select the channel found in localStorage, or just select the first one
+      const lastChannelID = localStorage.getItem(currentServer.value.id);
+      const lastChannel = channelList.find(
+        (channel) => channel.id === lastChannelID
+      );
+      currentChannel.value = lastChannel || channelList[0];
     }
 
     socket.on(create_channel, (newChannel: ChannelModel) => {

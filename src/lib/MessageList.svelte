@@ -20,9 +20,8 @@
   let events: string[] = [];
 
   onMount(async () => {
-    if (!currentServer.value || !currentChannel.value) {
-      return;
-    }
+    if (!currentServer.value || !currentChannel.value) return;
+    if (!socket.id) return;
 
     const params = new URLSearchParams({
       server_id: currentServer.value.id,
@@ -31,6 +30,7 @@
 
     const response = await fetch(`/api/v1/message?${params}`, {
       method: "GET",
+      headers: { Sid: socket.id },
     });
     if (!response.ok) {
       throw new Error(`${response.status} getting message list`);

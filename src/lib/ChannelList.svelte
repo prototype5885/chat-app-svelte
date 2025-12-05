@@ -15,6 +15,7 @@
 
   onMount(async () => {
     if (!currentServer.value) return;
+    if (!socket.id) return;
 
     const params = new URLSearchParams({
       server_id: currentServer.value.id,
@@ -22,6 +23,7 @@
 
     const response = await fetch(`/api/v1/channel?${params}`, {
       method: "GET",
+      headers: { Sid: socket.id },
     });
     if (!response.ok) {
       throw new Error(`${response.status} getting channel list`);

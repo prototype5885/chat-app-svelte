@@ -3,7 +3,11 @@
   import type { MessageModel } from "../scripts/models";
   import { currentServer, currentChannel } from "../scripts/globals.svelte";
   import Message from "./Message.svelte";
-  import { create_message, delete_message, socket } from "../scripts/socketio";
+  import {
+    create_message,
+    delete_message,
+    socket,
+  } from "../scripts/socketio.svelte";
   import {
     getMediumDate,
     isOlderThanFiveMins,

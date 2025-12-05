@@ -3,7 +3,11 @@
   import type { ChannelModel } from "../scripts/models";
   import Channel from "./Channel.svelte";
   import { currentChannel, currentServer } from "../scripts/globals.svelte";
-  import { create_channel, delete_channel, socket } from "../scripts/socketio";
+  import {
+    create_channel,
+    delete_channel,
+    socket,
+  } from "../scripts/socketio.svelte";
   import ChannelAdd from "./ChannelAdd.svelte";
 
   let channelList = $state<ChannelModel[]>([]);

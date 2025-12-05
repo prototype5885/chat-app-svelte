@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import Hash from "./icons/Hash.svelte";
   import ChannelList from "./lib/ChannelList.svelte";
   import ContextMenu from "./lib/ContextMenu.svelte";
@@ -12,77 +11,89 @@
     currentServer,
     settingsVisible,
     theme,
-    userData,
   } from "./scripts/globals.svelte";
   import UserPanel from "./lib/UserPanel.svelte";
   import Settings from "./lib/Settings.svelte";
-
-  onMount(async () => {
-    const response = await fetch("/api/v1/user", { method: "GET" });
-    if (!response.ok) {
-      throw new Error(`${response.status} getting user info`);
-    }
-    userData.value = await response.json();
-  });
+  import {
+    sioConnection,
+    sioReconnectAttempts,
+  } from "./scripts/socketio.svelte";
 </script>
 
 <main>
-  {#if settingsVisible.value}
-    <Settings />
-  {/if}
-  <ContextMenu />
-  <div class={["flex flex-row h-screen select-none", theme.value]}>
-    <div class="flex flex-col h-screen bg-black/30">
-      <div class="flex flex-row overflow-y-auto grow">
-        <!-- server list -->
-        <div
-          class="min-w-18 max-w-18 overflow-y-auto"
-          style="scrollbar-width: none;"
-        >
-          <ServerList />
-        </div>
-
-        <!-- channel/friend list -->
-        <div class="flex flex-col min-w-60 max-w-60 border-l border-color">
-          <Top classValue="flex justify-center items-center">
-            <span>{currentServer.value?.name}</span>
-          </Top>
-          <!-- channel or friend list -->
-          {#if currentServer.value}
-            {#key currentServer.value.id}
-              <ChannelList />
-            {/key}
-          {/if}
-        </div>
-      </div>
-
-      <!-- user panel -->
-      <div class="min-h-[66px] max-h-[66px] px-2 pb-2 bg-transparent">
-        <div class="h-full rounded-lg bg-white/4 border border-color">
-          <UserPanel />
-        </div>
-      </div>
-    </div>
-
-    <!-- chat area -->
-    <div class="flex flex-col w-full h-full bg-black/20">
-      <Top classValue="flex items-center px-4">
-        <Hash />
-        <span class="ml-2">{currentChannel.value?.name}<span> </span></span>
-      </Top>
-      {#key currentChannel.value}
-        {#if currentChannel.value}
-          <MessageList />
-          <MessageInput />
-        {/if}
-      {/key}
-    </div>
-    <!-- member list -->
+  {#if sioConnection.value !== "connected"}
     <div
-      class="min-w-64 max-w-64 flex flex-col border-l border-color bg-black/20"
+      class={[
+        "flex flex-col h-screen justify-center items-center select-none",
+        theme.value,
+      ]}
     >
-      <Top classValue="flex items-center px-4">idk</Top>
-      <div class="flex-1"></div>
+      <b>State:</b>
+      <b class="text-2xl">{sioConnection.value}</b>
+      {#if sioReconnectAttempts.value !== 0}
+        <br />
+        <b>Socket.IO connection attempts:</b>
+        <b class="text-2xl">{sioReconnectAttempts.value}</b>
+      {/if}
     </div>
-  </div>
+  {:else}
+    {#if settingsVisible.value}
+      <Settings />
+    {/if}
+    <ContextMenu />
+    <div class={["flex flex-row h-screen select-none", theme.value]}>
+      <div class="flex flex-col h-screen bg-black/30">
+        <div class="flex flex-row overflow-y-auto grow">
+          <!-- server list -->
+          <div
+            class="min-w-18 max-w-18 overflow-y-auto"
+            style="scrollbar-width: none;"
+          >
+            <ServerList />
+          </div>
+
+          <!-- channel/friend list -->
+          <div class="flex flex-col min-w-60 max-w-60 border-l border-color">
+            <Top classValue="flex justify-center items-center">
+              <span>{currentServer.value?.name}</span>
+            </Top>
+            <!-- channel or friend list -->
+            {#if currentServer.value}
+              {#key currentServer.value.id}
+                <ChannelList />
+              {/key}
+            {/if}
+          </div>
+        </div>
+
+        <!-- user panel -->
+        <div class="min-h-[66px] max-h-[66px] px-2 pb-2 bg-transparent">
+          <div class="h-full rounded-lg bg-white/4 border border-color">
+            <UserPanel />
+          </div>
+        </div>
+      </div>
+
+      <!-- chat area -->
+      <div class="flex flex-col w-full h-full bg-black/20">
+        <Top classValue="flex items-center px-4">
+          <Hash />
+          <span class="ml-2">{currentChannel.value?.name}<span> </span></span>
+        </Top>
+        {#key currentChannel.value}
+          {#if currentChannel.value}
+            <MessageList />
+            <MessageInput />
+          {/if}
+        {/key}
+      </div>
+      <!-- member list -->
+      <div
+        class="min-w-64 max-w-64 flex flex-col border-l border-color bg-black/20"
+      >
+        <Top classValue="flex items-center px-4">idk</Top>
+        <div class="flex-1"></div>
+      </div>
+    </div>
+  {/if}
 </main>

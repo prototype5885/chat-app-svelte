@@ -1,8 +1,17 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import Settings from "../icons/Settings.svelte";
   import { settingsVisible, userData } from "../scripts/globals.svelte";
   import Avatar from "./Avatar.svelte";
   import UserPanelButton from "./UserPanelButton.svelte";
+
+  onMount(async () => {
+    const response = await fetch("/api/v1/user", { method: "GET" });
+    if (!response.ok) {
+      throw new Error(`${response.status} getting user info`);
+    }
+    userData.value = await response.json();
+  });
 </script>
 
 {#if userData.value}

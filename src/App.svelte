@@ -18,6 +18,7 @@
     sioConnection,
     sioReconnectAttempts,
   } from "./scripts/socketio.svelte";
+  import Toasts from "./lib/Toasts.svelte";
 </script>
 
 <main>
@@ -37,6 +38,7 @@
       {/if}
     </div>
   {:else}
+    <Toasts />
     {#if settingsVisible.value}
       <Settings />
     {/if}

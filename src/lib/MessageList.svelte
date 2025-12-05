@@ -14,14 +14,25 @@
     isSameDay,
   } from "../scripts/date";
   import MessageSmall from "./MessageSmall.svelte";
+  import { errorToast } from "../scripts/toast.svelte";
 
   let messageList: MessageModel[] = $state([]);
   let element: HTMLUListElement;
   let events: string[] = [];
 
   onMount(async () => {
-    if (!currentServer.value || !currentChannel.value) return;
-    if (!socket.id) return;
+    if (!currentServer.value) {
+      errorToast("Can't fetch chat messages, there is no server selected");
+      return;
+    }
+    if (!currentChannel.value) {
+      errorToast("Can't fetch chat messages, there is no channel selected");
+      return;
+    }
+    if (!socket.id) {
+      errorToast("Can't fetch chat messages, not connected to Socket.IO");
+      return;
+    }
 
     const params = new URLSearchParams({
       server_id: currentServer.value.id,
@@ -32,8 +43,10 @@
       method: "GET",
       headers: { Sid: socket.id },
     });
+
     if (!response.ok) {
-      throw new Error(`${response.status} getting message list`);
+      errorToast(response.statusText, response.status);
+      return;
     }
 
     const receivedList: MessageModel[] = await response.json();

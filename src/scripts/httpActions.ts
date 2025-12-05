@@ -1,4 +1,5 @@
 import { currentServer } from "./globals.svelte";
+import { errorToast } from "./toast.svelte";
 
 export async function deleteServer(serverID: string) {
   console.log(`Deleting server ID ${serverID}`);
@@ -10,8 +11,10 @@ export async function deleteServer(serverID: string) {
   const response = await fetch(`/api/v1/server?${params}`, {
     method: "DELETE",
   });
+
   if (!response.ok) {
-    throw new Error(`${response.status} deleting server ID ${serverID}`);
+    errorToast(response.statusText, response.status);
+    return;
   }
 
   // no need to store last channel ID of this server anymore
@@ -22,7 +25,8 @@ export async function deleteChannel(channelID: string) {
   console.log(`Deleting channel ID ${channelID}`);
 
   if (!currentServer.value) {
-    throw new Error("No current server set");
+    errorToast("Can't delete channel, there is no server selected");
+    return;
   }
 
   const params = new URLSearchParams({
@@ -33,8 +37,10 @@ export async function deleteChannel(channelID: string) {
   const response = await fetch(`/api/v1/channel?${params}`, {
     method: "DELETE",
   });
+
   if (!response.ok) {
-    throw new Error(`${response.status} deleting channel ID ${channelID}`);
+    errorToast(response.statusText, response.status);
+    return;
   }
 }
 
@@ -48,7 +54,9 @@ export async function deleteMessage(messageID: string) {
   const response = await fetch(`/api/v1/message?${params}`, {
     method: "DELETE",
   });
+
   if (!response.ok) {
-    throw new Error(`${response.status} deleting message ID ${messageID}`);
+    errorToast(response.statusText, response.status);
+    return;
   }
 }

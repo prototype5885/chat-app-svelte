@@ -1,5 +1,6 @@
 <script lang="ts">
   import { userData } from "../scripts/globals.svelte";
+  import { errorToast, successToast } from "../scripts/toast.svelte";
 
   interface UpdateUserSettingsForm {
     displayName: string;
@@ -10,8 +11,6 @@
     displayName: userData.value!.display_name,
     picture: null,
   });
-
-  let responseText = $state<string>("");
 
   function wasNameChanged(): boolean {
     if (updatedUserData.displayName !== userData.value!.display_name) {
@@ -52,9 +51,8 @@
       body: formData,
     });
 
-    responseText = `Result: ${response.statusText}`;
-
     if (!response.ok) {
+      errorToast(response.statusText, response.status);
       return;
     }
 
@@ -65,6 +63,8 @@
     if (newData.picture) {
       userData.value.picture = newData.picture;
     }
+
+    successToast("Updated user data!");
   }
 </script>
 
@@ -88,6 +88,4 @@
       Submit
     </button>
   </form>
-  <br />
-  <h1>{responseText}</h1>
 </div>

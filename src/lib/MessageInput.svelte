@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount, tick } from "svelte";
   import { currentChannel, currentServer } from "../scripts/globals.svelte";
+  import { errorToast } from "../scripts/toast.svelte";
 
   let chatInput = "";
   let typing = false;
@@ -26,7 +27,14 @@
 
   async function sendMessage() {
     if (chatInput === "") return;
-    if (!currentServer.value || !currentChannel.value) return;
+    if (!currentServer.value) {
+      errorToast("Can't send chat message, there is no server selected");
+      return;
+    }
+    if (!currentChannel.value) {
+      errorToast("Can't send chat message, there is no channel selected");
+      return;
+    }
 
     const params = new URLSearchParams({
       channel_id: currentChannel.value.id,
@@ -38,8 +46,10 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: chatInput }),
     });
+
     if (!response.ok) {
-      throw new Error(`${response.status} sending chat message`);
+      errorToast(response.statusText, response.status);
+      return;
     }
     chatInput = "";
   }

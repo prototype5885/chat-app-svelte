@@ -5,6 +5,7 @@
     deleteMessage,
     deleteServer,
   } from "../scripts/httpActions";
+  import { infoToast } from "../scripts/toast.svelte";
 
   interface CtxMenuItemBase {
     type: "item" | "separator";
@@ -54,7 +55,7 @@
             label: "Add user",
             color: "default",
             action: () => {
-              console.log(`TODO Adding user ID ${id}`);
+              infoToast(`TODO Adding user ID ${id}`);
             },
           },
           { type: "separator" },
@@ -63,7 +64,7 @@
             label: "Remove user",
             color: "red",
             action: () => {
-              console.log(`TODO Removing user ID ${id}`);
+              infoToast(`TODO Removing user ID ${id}`);
             },
           },
           {
@@ -71,7 +72,7 @@
             label: "Block User",
             color: "red",
             action: () => {
-              console.log(`TODO Blocking user ID ${id}`);
+              infoToast(`TODO Blocking user ID ${id}`);
             },
           },
           { type: "separator" },
@@ -81,7 +82,7 @@
             color: "default",
             action: () => {
               navigator.clipboard.writeText(id!);
-              console.log(`Copied user ID ${id} to clipboard`);
+              infoToast(`Copied user ID ${id} to clipboard`);
             },
           },
         ];
@@ -94,7 +95,7 @@
             label: "Edit server",
             color: "default",
             action: async () => {
-              console.log(`TODO Editing server ID ${id}`);
+              infoToast(`TODO Editing server ID ${id}`);
             },
           },
           {
@@ -118,7 +119,7 @@
             label: "Edit channel",
             color: "default",
             action: async () => {
-              console.log(`TODO Renaming channel ID ${id}`);
+              infoToast(`TODO Renaming channel ID ${id}`);
             },
           },
           {
@@ -142,7 +143,7 @@
             label: "Edit message",
             color: "default",
             action: () => {
-              console.log(`TODO Editing message ID ${id}`);
+              infoToast(`TODO Editing message ID ${id}`);
             },
           },
           {

@@ -9,13 +9,20 @@
     socket,
   } from "../scripts/socketio.svelte";
   import ChannelAdd from "./ChannelAdd.svelte";
+  import { errorToast } from "../scripts/toast.svelte";
 
   let channelList = $state<ChannelModel[]>([]);
   let events: string[] = [];
 
   onMount(async () => {
-    if (!currentServer.value) return;
-    if (!socket.id) return;
+    if (!currentServer.value) {
+      errorToast("Can't fetch channels, there is no server selected");
+      return;
+    }
+    if (!socket.id) {
+      errorToast("Can't fetch channels, not connected to Socket.IO");
+      return;
+    }
 
     const params = new URLSearchParams({
       server_id: currentServer.value.id,
@@ -25,8 +32,10 @@
       method: "GET",
       headers: { Sid: socket.id },
     });
+
     if (!response.ok) {
-      throw new Error(`${response.status} getting channel list`);
+      errorToast(response.statusText, response.status);
+      return;
     }
 
     channelList = await response.json();

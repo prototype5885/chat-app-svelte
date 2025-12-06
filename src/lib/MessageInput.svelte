@@ -4,7 +4,7 @@
   import { errorToast } from "../scripts/toast.svelte";
   import { create_message } from "../scripts/httpActions";
 
-  let chatInput = "";
+  let chatInput = $state<string>("");
   let typing = false;
   let minRows = 1;
   let maxRows = 12;
@@ -46,7 +46,10 @@
     chatInput = "";
   }
 
-  $: chatInput, tick().then(autoResize); // run when value changes
+  $effect(() => {
+    chatInput;
+    autoResize();
+  });
 
   function autoResize() {
     textareaRef.style.height = "auto";
@@ -65,7 +68,7 @@
       class="resize-none overflow-y-hidden box-border grow my-4 outline-0 mx-2"
       rows="1"
       {placeholder}
-      on:keydown={handleKeyDown}
+      onkeydown={handleKeyDown}
     ></textarea>
   </div>
 </div>

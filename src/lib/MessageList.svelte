@@ -15,6 +15,7 @@
   } from "../scripts/date";
   import MessageSmall from "./MessageSmall.svelte";
   import { errorToast } from "../scripts/toast.svelte";
+  import { get_messages } from "../scripts/httpActions";
 
   let messageList: MessageModel[] = $state([]);
   let element: HTMLUListElement;
@@ -33,23 +34,11 @@
       errorToast("Can't fetch chat messages, not connected to Socket.IO");
       return;
     }
-
-    const params = new URLSearchParams({
-      server_id: currentServer.value.id,
-      channel_id: currentChannel.value.id,
-    });
-
-    const response = await fetch(`/api/v1/message?${params}`, {
-      method: "GET",
-      headers: { Sid: socket.id },
-    });
-
-    if (!response.ok) {
-      errorToast(response.statusText, response.status);
-      return;
-    }
-
-    const receivedList: MessageModel[] = await response.json();
+    const receivedList = await get_messages(
+      currentServer.value.id,
+      currentChannel.value.id,
+      socket.id
+    );
     messageList = receivedList.reverse();
 
     scrollToBottom("instant");

@@ -4,17 +4,10 @@
   import { settingsVisible, userData } from "../scripts/globals.svelte";
   import Avatar from "./Avatar.svelte";
   import UserPanelButton from "./UserPanelButton.svelte";
-  import { errorToast } from "../scripts/toast.svelte";
+  import { get_user_info } from "../scripts/httpActions";
 
   onMount(async () => {
-    const response = await fetch("/api/v1/user", { method: "GET" });
-
-    if (!response.ok) {
-      errorToast(response.statusText, response.status);
-      return;
-    }
-
-    userData.value = await response.json();
+    userData.value = await get_user_info();
   });
 </script>
 

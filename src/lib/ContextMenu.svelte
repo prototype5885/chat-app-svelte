@@ -1,11 +1,12 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
   import {
-    deleteChannel,
-    deleteMessage,
-    deleteServer,
+    delete_channel,
+    delete_message,
+    delete_server,
   } from "../scripts/httpActions";
-  import { infoToast } from "../scripts/toast.svelte";
+  import { errorToast, infoToast } from "../scripts/toast.svelte";
+  import { currentServer } from "../scripts/globals.svelte";
 
   interface CtxMenuItemBase {
     type: "item" | "separator";
@@ -106,7 +107,7 @@
             label: "Delete server",
             color: "red",
             action: async () => {
-              await deleteServer(id!);
+              await delete_server(id!);
             },
           },
         ];
@@ -130,7 +131,11 @@
             label: "Delete channel",
             color: "red",
             action: async () => {
-              await deleteChannel(id!);
+              if (!currentServer.value) {
+                errorToast("Can't delete channel, there is no server selected");
+                return;
+              }
+              await delete_channel(currentServer.value.id, id!);
             },
           },
         ];
@@ -151,7 +156,7 @@
             label: "Delete message",
             color: "red",
             action: async () => {
-              await deleteMessage(id!);
+              await delete_message(id!);
             },
           },
         ];

@@ -21,10 +21,14 @@ export function successToast(message: string) {
 
 export function errorToast(
   message: string,
-  code: number | undefined = undefined
+  code: number | undefined = undefined,
+  throwError: boolean | undefined = undefined
 ) {
   showToast(message, "error", code);
   console.error(message);
+  if (throwError) {
+    throw new Error(message);
+  }
 }
 
 export function warningToast(message: string) {

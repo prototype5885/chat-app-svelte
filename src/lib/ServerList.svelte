@@ -5,18 +5,12 @@
   import { currentChannel, currentServer } from "../scripts/globals.svelte";
   import Mail from "../icons/Mail.svelte";
   import Plus from "../icons/Plus.svelte";
-  import { errorToast } from "../scripts/toast.svelte";
+  import { create_server, get_servers } from "../scripts/httpActions";
 
   let serverList = $state<ServerModel[]>([]);
 
   onMount(async () => {
-    const response = await fetch("/api/v1/server", { method: "GET" });
-    if (!response.ok) {
-      errorToast(response.statusText, response.status);
-      return;
-    }
-
-    serverList = await response.json();
+    serverList = await get_servers();
 
     if (serverList.length > 0) {
       currentServer.value = serverList[0];
@@ -39,20 +33,7 @@
   }
 
   async function createServer(name: string) {
-    const params = new URLSearchParams({
-      name: name,
-    });
-
-    const response = await fetch(`/api/v1/server?${params}`, {
-      method: "POST",
-    });
-
-    if (!response.ok) {
-      errorToast(response.statusText, response.status);
-      return;
-    }
-
-    const newServer: ServerModel = await response.json();
+    const newServer: ServerModel = await create_server(name);
     serverList.push(newServer);
 
     selectServer(newServer);

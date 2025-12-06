@@ -10,6 +10,7 @@
   } from "../scripts/socketio.svelte";
   import ChannelAdd from "./ChannelAdd.svelte";
   import { errorToast } from "../scripts/toast.svelte";
+  import { get_channels } from "../scripts/httpActions";
 
   let channelList = $state<ChannelModel[]>([]);
   let events: string[] = [];
@@ -24,21 +25,7 @@
       return;
     }
 
-    const params = new URLSearchParams({
-      server_id: currentServer.value.id,
-    });
-
-    const response = await fetch(`/api/v1/channel?${params}`, {
-      method: "GET",
-      headers: { Sid: socket.id },
-    });
-
-    if (!response.ok) {
-      errorToast(response.statusText, response.status);
-      return;
-    }
-
-    channelList = await response.json();
+    channelList = await get_channels(currentServer.value.id, socket.id);
 
     if (channelList.length > 0) {
       // select the channel found in localStorage, or just select the first one

@@ -2,6 +2,7 @@
   import { onMount, tick } from "svelte";
   import { currentChannel, currentServer } from "../scripts/globals.svelte";
   import { errorToast } from "../scripts/toast.svelte";
+  import { create_message } from "../scripts/httpActions";
 
   let chatInput = "";
   let typing = false;
@@ -36,21 +37,12 @@
       return;
     }
 
-    const params = new URLSearchParams({
-      channel_id: currentChannel.value.id,
-      server_id: currentServer.value.id,
-    });
+    await create_message(
+      currentServer.value.id,
+      currentChannel.value.id,
+      chatInput
+    );
 
-    const response = await fetch(`/api/v1/message?${params}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: chatInput }),
-    });
-
-    if (!response.ok) {
-      errorToast(response.statusText, response.status);
-      return;
-    }
     chatInput = "";
   }
 

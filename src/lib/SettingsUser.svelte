@@ -1,6 +1,7 @@
 <script lang="ts">
   import { userData } from "../scripts/globals.svelte";
-  import { errorToast, successToast } from "../scripts/toast.svelte";
+  import { update_user_info } from "../scripts/httpActions";
+  import { successToast } from "../scripts/toast.svelte";
 
   interface UpdateUserSettingsForm {
     displayName: string;
@@ -46,17 +47,7 @@
       return;
     }
 
-    const response = await fetch("/api/v1/user", {
-      method: "PATCH",
-      body: formData,
-    });
-
-    if (!response.ok) {
-      errorToast(response.statusText, response.status);
-      return;
-    }
-
-    const newData = await response.json();
+    const newData = await update_user_info(formData);
     if (newData.display_name) {
       userData.value.display_name = newData.display_name;
     }

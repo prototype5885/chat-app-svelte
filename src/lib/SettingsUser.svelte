@@ -47,7 +47,7 @@
     }
 
     const response = await fetch("/api/v1/user", {
-      method: "POST",
+      method: "PATCH",
       body: formData,
     });
 

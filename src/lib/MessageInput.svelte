@@ -3,9 +3,9 @@
   import { currentChannel, currentServer } from "../scripts/globals.svelte";
   import { errorToast } from "../scripts/toast.svelte";
   import { create_message } from "../scripts/httpActions";
+  import MessageTyping from "./MessageTyping.svelte";
 
   let chatInput = $state<string>("");
-  let typing = false;
   let minRows = 1;
   let maxRows = 12;
   let placeholder = "Message ...";
@@ -61,6 +61,7 @@
 </script>
 
 <div class="flex flex-col px-2 pb-2">
+  <MessageTyping {chatInput} />
   <div class="flex rounded-lg bg-white/3 border border-color overflow-hidden">
     <textarea
       bind:this={textareaRef}

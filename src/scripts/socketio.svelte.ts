@@ -9,6 +9,9 @@ export const delete_channel = "delete_channel";
 export const create_message = "create_message";
 export const delete_message = "delete_message";
 
+export const start_typing = "start_typing";
+export const stop_typing = "stop_typing";
+
 export type socketIOstate = "connected" | "disconnected" | "connecting";
 
 export const socket = io();

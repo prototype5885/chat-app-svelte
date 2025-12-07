@@ -147,3 +147,21 @@ export async function delete_message(messageID: string) {
 
   if (!response.ok) errorToast(response.statusText, response.status, true);
 }
+
+export async function typing(
+  serverID: string,
+  channelID: string,
+  value: "start" | "stop"
+) {
+  const params = new URLSearchParams({
+    server_id: serverID,
+    channel_id: channelID,
+    value: value,
+  });
+
+  const response = await fetch(`/api/v1/typing?${params}`, {
+    method: "POST",
+  });
+
+  if (!response.ok) errorToast(response.statusText, response.status, true);
+}

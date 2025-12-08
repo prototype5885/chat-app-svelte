@@ -1,4 +1,5 @@
 import { io } from "socket.io-client";
+import { errorToast } from "./toast.svelte";
 
 export const create_server = "create_server";
 export const delete_server = "delete_server";
@@ -55,4 +56,8 @@ socket.io.on("reconnect_attempt", () => {
 
 socket.io.on("reconnect", () => {
   console.log("Socket.IO reconnected!");
+});
+
+socket.on("exception", (errorMessage: string) => {
+  errorToast(errorMessage, "Socket.IO");
 });

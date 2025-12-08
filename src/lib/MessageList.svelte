@@ -61,6 +61,13 @@
         `'${delete_message}' event received, but message ID '${messageID}' was not found`
       );
     });
+
+    socket.emit(
+      "enter_room",
+      currentServer.value.id,
+      currentChannel.value.id,
+      "channel"
+    );
   });
 
   onDestroy(() => {

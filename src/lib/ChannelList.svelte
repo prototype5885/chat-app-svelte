@@ -60,6 +60,8 @@
         `'${delete_channel}' event received, but channel ID '${channelID}' was not found`
       );
     });
+
+    socket.emit("enter_room", currentServer.value.id, undefined, "server");
   });
 
   onDestroy(() => {

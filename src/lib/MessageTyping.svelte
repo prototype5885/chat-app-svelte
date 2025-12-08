@@ -68,7 +68,7 @@
     if (props.chatInput !== "" && !isTyping) {
       isTyping = true;
       typingValueChanged("start");
-    } else if (props.chatInput === "") {
+    } else if (props.chatInput === "" && isTyping) {
       isTyping = false;
       typingValueChanged("stop");
     }

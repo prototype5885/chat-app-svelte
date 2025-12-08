@@ -55,10 +55,10 @@
           }
           return;
         }
-        errorToast(
-          `'${delete_channel}' event received, but channel ID '${channelID}' was not found`
-        );
       }
+      errorToast(
+        `'${delete_channel}' event received, but channel ID '${channelID}' was not found`
+      );
     });
   });
 

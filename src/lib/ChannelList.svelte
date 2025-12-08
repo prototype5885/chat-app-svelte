@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
-  import type { ChannelModel } from "../scripts/models";
+  import { ChannelSchema, type ChannelModel } from "../scripts/models";
   import Channel from "./Channel.svelte";
   import { currentChannel, currentServer } from "../scripts/globals.svelte";
   import {
@@ -13,7 +13,6 @@
   import { get_channels } from "../scripts/httpActions";
 
   let channelList = $state<ChannelModel[]>([]);
-  let events: string[] = [];
 
   onMount(async () => {
     if (!currentServer.value) {
@@ -36,13 +35,14 @@
       currentChannel.value = lastChannel || channelList[0];
     }
 
-    socket.on(create_channel, (newChannel: ChannelModel) => {
-      events.push(create_channel);
-      channelList.push(newChannel);
+    socket.on(create_channel, (data) => {
+      const result = ChannelSchema.safeParse(data);
+      if (!result.success) errorToast(result.error.message, result.error.name);
+
+      channelList.push(result.data!);
     });
 
     socket.on(delete_channel, (channelID: string) => {
-      events.push(delete_channel);
       for (let i = 0; i < channelList.length; i++) {
         if (channelList[i].id === channelID) {
           channelList.splice(i, 1);
@@ -55,14 +55,16 @@
           }
           return;
         }
+        errorToast(
+          `'${delete_channel}' event received, but channel ID '${channelID}' was not found`
+        );
       }
     });
   });
 
   onDestroy(() => {
-    events.forEach((event) => {
-      socket.off(event);
-    });
+    socket.off(create_channel);
+    socket.off(delete_channel);
   });
 </script>
 

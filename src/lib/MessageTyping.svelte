@@ -15,18 +15,19 @@
   let usersTyping = new Set<string>([]);
   let usersTypingText = $state<string>("");
   let isAreTypingText = $state<string>("");
-  let events: string[] = [];
 
   onMount(async () => {
     socket.on(start_typing, (userID: string) => {
-      events.push(start_typing);
       usersTyping.add(userID);
       values_changed();
     });
 
     socket.on(stop_typing, (userID: string) => {
-      events.push(stop_typing);
-      usersTyping.delete(userID);
+      if (!usersTyping.delete(userID)) {
+        errorToast(
+          `'${stop_typing}' event received, but user ID '${userID}' was not found`
+        );
+      }
       values_changed();
     });
   });
@@ -74,9 +75,8 @@
   });
 
   onDestroy(() => {
-    events.forEach((event) => {
-      socket.off(event);
-    });
+    socket.off(start_typing);
+    socket.off(stop_typing);
   });
 </script>
 

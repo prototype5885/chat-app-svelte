@@ -4,7 +4,7 @@ export interface Toast {
   id: string;
   message: string | undefined;
   type: ToastType;
-  code: number | undefined;
+  name: string | undefined;
 }
 
 export const toasts = $state<Toast[]>([]);
@@ -21,11 +21,10 @@ export function successToast(message: string) {
 
 export function errorToast(
   message: string,
-  code: number | undefined = undefined,
-  throwError: boolean | undefined = undefined
+  name: string = "Error",
+  throwError: boolean = true
 ) {
-  showToast(message, "error", code);
-  console.error(message);
+  showToast(message, "error", name);
   if (throwError) {
     throw new Error(message);
   }
@@ -39,10 +38,10 @@ export function warningToast(message: string) {
 function showToast(
   message: string | undefined = undefined,
   type: ToastType,
-  code: number | undefined = undefined
+  name: string | undefined = undefined
 ) {
   const id = Math.random().toString(36).substring(2);
-  toasts.push({ id, message, type, code });
+  toasts.push({ id, message, type, name });
 
   setTimeout(() => {
     const index = toasts.findIndex((t) => t.id === id);

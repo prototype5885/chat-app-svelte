@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy, onMount, tick } from "svelte";
-  import type { MessageModel } from "../scripts/models";
+  import { MessageSchema, type MessageModel } from "../scripts/models";
   import { currentServer, currentChannel } from "../scripts/globals.svelte";
   import Message from "./Message.svelte";
   import {
@@ -19,7 +19,6 @@
 
   let messageList: MessageModel[] = $state([]);
   let element: HTMLUListElement;
-  let events: string[] = [];
 
   onMount(async () => {
     if (!currentServer.value) {
@@ -43,27 +42,30 @@
 
     scrollToBottom("instant");
 
-    socket.on(create_message, (newMessage: MessageModel) => {
-      events.push(create_message);
-      messageList.push(newMessage);
+    socket.on(create_message, (data) => {
+      const result = MessageSchema.safeParse(data);
+      if (!result.success) errorToast(result.error.message, result.error.name);
+
+      messageList.push(result.data!);
       scrollToBottom("smooth");
     });
 
     socket.on(delete_message, (messageID: string) => {
-      events.push(delete_message);
       for (let i = 0; i < messageList.length; i++) {
         if (messageList[i].id === messageID) {
           messageList.splice(i, 1);
           return;
         }
       }
+      errorToast(
+        `'${delete_message}' event received, but message ID '${messageID}' was not found`
+      );
     });
   });
 
   onDestroy(() => {
-    events.forEach((event) => {
-      socket.off(event);
-    });
+    socket.off(create_message);
+    socket.off(delete_message);
   });
 
   const scrollToBottom = async (behavior: ScrollBehavior) => {

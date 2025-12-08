@@ -1,25 +1,35 @@
+import * as m from "./models";
 import { errorToast } from "./toast.svelte";
+import * as z from "zod/mini";
 
 export async function get_user_info() {
   const response = await fetch("/api/v1/user", { method: "GET" });
 
-  if (!response.ok) errorToast(response.statusText, response.status, true);
+  if (!response.ok) errorToast(response.statusText, response.statusText);
 
-  return await response.json();
+  const result = m.UserSchema.safeParse(await response.json());
+  if (!result.success) errorToast(result.error.message, result.error.name);
+
+  return result.data!;
 }
 
-export async function update_user_info(formData: FormData) {
+export async function update_user_info(
+  formData: FormData
+): Promise<m.UpdateUserInfoModel> {
   const response = await fetch("/api/v1/user", {
     method: "PATCH",
     body: formData,
   });
 
-  if (!response.ok) errorToast(response.statusText, response.status, true);
+  if (!response.ok) errorToast(response.statusText, response.statusText);
 
-  return await response.json();
+  const result = m.UpdateUserInfoSchema.safeParse(await response.json());
+  if (!result.success) errorToast(result.error.message, result.error.name);
+
+  return result.data!;
 }
 
-export async function create_server(name: string) {
+export async function create_server(name: string): Promise<m.ServerModel> {
   const params = new URLSearchParams({
     name: name,
   });
@@ -28,17 +38,23 @@ export async function create_server(name: string) {
     method: "POST",
   });
 
-  if (!response.ok) errorToast(response.statusText, response.status, true);
+  if (!response.ok) errorToast(response.statusText, response.statusText);
 
-  return await response.json();
+  const result = m.ServerSchema.safeParse(await response.json());
+  if (!result.success) errorToast(result.error.message, result.error.name);
+
+  return result.data!;
 }
 
-export async function get_servers() {
+export async function get_servers(): Promise<m.ServerModel[]> {
   const response = await fetch("/api/v1/server", { method: "GET" });
 
-  if (!response.ok) errorToast(response.statusText, response.status, true);
+  if (!response.ok) errorToast(response.statusText, response.statusText);
 
-  return await response.json();
+  const result = z.array(m.ServerSchema).safeParse(await response.json());
+  if (!result.success) errorToast(result.error.message, result.error.name);
+
+  return result.data!;
 }
 
 export async function delete_server(serverID: string) {
@@ -50,10 +66,12 @@ export async function delete_server(serverID: string) {
     method: "DELETE",
   });
 
-  if (!response.ok) errorToast(response.statusText, response.status, true);
+  if (!response.ok) errorToast(response.statusText, response.statusText);
 
   // no need to store last channel ID of this server anymore
   localStorage.removeItem(serverID);
+
+  // socket.io response
 }
 
 export async function create_channel(serverID: string, name: string) {
@@ -66,10 +84,15 @@ export async function create_channel(serverID: string, name: string) {
     method: "POST",
   });
 
-  if (!response.ok) errorToast(response.statusText, response.status, true);
+  if (!response.ok) errorToast(response.statusText, response.statusText);
+
+  // socket.io response
 }
 
-export async function get_channels(serverID: string, sid: string) {
+export async function get_channels(
+  serverID: string,
+  sid: string
+): Promise<m.ChannelModel[]> {
   const params = new URLSearchParams({
     server_id: serverID,
   });
@@ -79,9 +102,12 @@ export async function get_channels(serverID: string, sid: string) {
     headers: { Sid: sid },
   });
 
-  if (!response.ok) errorToast(response.statusText, response.status, true);
+  if (!response.ok) errorToast(response.statusText, response.statusText);
 
-  return await response.json();
+  const result = z.array(m.ChannelSchema).safeParse(await response.json());
+  if (!result.success) errorToast(result.error.message, result.error.name);
+
+  return result.data!;
 }
 
 export async function delete_channel(serverID: string, channelID: string) {
@@ -94,7 +120,9 @@ export async function delete_channel(serverID: string, channelID: string) {
     method: "DELETE",
   });
 
-  if (!response.ok) errorToast(response.statusText, response.status, true);
+  if (!response.ok) errorToast(response.statusText, response.statusText);
+
+  // socket.io response
 }
 
 export async function create_message(
@@ -113,14 +141,16 @@ export async function create_message(
     body: JSON.stringify({ message: message }),
   });
 
-  if (!response.ok) errorToast(response.statusText, response.status, true);
+  if (!response.ok) errorToast(response.statusText, response.statusText);
+
+  // socket.io response
 }
 
 export async function get_messages(
   serverID: string,
   channelID: string,
   sid: string
-) {
+): Promise<m.MessageModel[]> {
   const params = new URLSearchParams({
     server_id: serverID,
     channel_id: channelID,
@@ -131,9 +161,10 @@ export async function get_messages(
     headers: { Sid: sid },
   });
 
-  if (!response.ok) errorToast(response.statusText, response.status, true);
+  const result = z.array(m.MessageSchema).safeParse(await response.json());
+  if (!result.success) errorToast(result.error.message, result.error.name);
 
-  return await response.json();
+  return result.data!;
 }
 
 export async function delete_message(messageID: string) {
@@ -145,7 +176,9 @@ export async function delete_message(messageID: string) {
     method: "DELETE",
   });
 
-  if (!response.ok) errorToast(response.statusText, response.status, true);
+  if (!response.ok) errorToast(response.statusText, response.statusText);
+
+  // socket.io response
 }
 
 export async function typing(
@@ -163,5 +196,7 @@ export async function typing(
     method: "POST",
   });
 
-  if (!response.ok) errorToast(response.statusText, response.status, true);
+  if (!response.ok) errorToast(response.statusText, response.statusText);
+
+  // socket.io response
 }

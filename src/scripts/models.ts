@@ -1,36 +1,60 @@
-export interface ServerModel {
-  id: string;
-  owner_id: string;
-  name: string;
-  picture?: string;
-  banner?: string;
-}
+import * as z from "zod/mini";
 
-export interface ChannelModel {
-  id: string;
-  server_id: string;
-  name: string;
-}
+const USERNAME = z.string().check(z.minLength(6), z.maxLength(32));
+const DISPLAY_NAME = z.string().check(z.minLength(1), z.maxLength(64));
+const SERVER_NAME = z.string().check(z.minLength(1), z.maxLength(64));
+const CHANNEL_NAME = z.string().check(z.minLength(1), z.maxLength(32));
+const MESSAGE = z.string().check(z.minLength(1), z.maxLength(4096));
 
-export interface MessageModel {
-  id: string;
-  channel_id: string;
-  sender_id: string;
-  display_name: string;
-  picture?: string;
-  message: string;
-  attachments?: string[];
-  edited?: boolean;
-}
+// main models
+export const ServerSchema = z.object({
+  id: z.ulid(),
+  owner_id: z.ulid(),
+  name: SERVER_NAME,
+  picture: z.nullable(z.string()),
+  banner: z.nullable(z.string()),
+  roles: z.nullable(z.array(z.string())),
+});
+export type ServerModel = z.infer<typeof ServerSchema>;
 
-export interface AddMessageModel {
-  message: string;
-  channel_id: string;
-  reply_id?: string;
-}
+export const ChannelSchema = z.object({
+  id: z.ulid(),
+  server_id: z.ulid(),
+  name: CHANNEL_NAME,
+});
+export type ChannelModel = z.infer<typeof ChannelSchema>;
 
-export interface UserModel {
-  id: string;
-  display_name: string;
-  picture: string;
-}
+export const MessageSchema = z.object({
+  id: z.ulid(),
+  channel_id: z.ulid(),
+  sender_id: z.ulid(),
+  display_name: DISPLAY_NAME,
+  picture: z.nullable(z.string()),
+  message: MESSAGE,
+  attachments: z.nullable(z.array(z.string())),
+  edited: z.nullable(z.boolean()),
+});
+export type MessageModel = z.infer<typeof MessageSchema>;
+
+// DTOs
+export const MessageCreateRequestSchema = z.object({
+  message: MESSAGE,
+  channel_id: z.ulid(),
+  reply_id: z.nullable(z.ulid()),
+});
+export type MessageCreateRequestModel = z.infer<
+  typeof MessageCreateRequestSchema
+>;
+
+export const UserSchema = z.object({
+  id: z.ulid(),
+  display_name: DISPLAY_NAME,
+  picture: z.nullable(z.string()),
+});
+export type UserModel = z.infer<typeof UserSchema>;
+
+export const UpdateUserInfoSchema = z.object({
+  display_name: z.nullable(z.optional(DISPLAY_NAME)),
+  picture: z.nullable(z.optional(z.string())),
+});
+export type UpdateUserInfoModel = z.infer<typeof UpdateUserInfoSchema>;

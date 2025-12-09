@@ -96,7 +96,7 @@
     {/if}
 
     <!-- show message in small format if previous message is less than five minutes old -->
-    {#if sameDay && !isOlderThanFiveMins(messageList[index - 1].id, msg.id)}
+    {#if sameDay && !isOlderThanFiveMins(messageList[index - 1].id, msg.id) && messageList[index - 1].sender_id === msg.sender_id}
       <MessageSmall {msg} />
     {:else}
       {#if sameDay}

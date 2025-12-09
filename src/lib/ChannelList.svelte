@@ -19,12 +19,8 @@
       errorToast("Can't fetch channels, there is no server selected");
       return;
     }
-    if (!socket.id) {
-      errorToast("Can't fetch channels, not connected to Socket.IO");
-      return;
-    }
 
-    channelList = await get_channels(currentServer.value.id, socket.id);
+    channelList = await get_channels(currentServer.value.id);
 
     if (channelList.length > 0) {
       // select the channel found in localStorage, or just select the first one

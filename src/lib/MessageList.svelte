@@ -29,14 +29,10 @@
       errorToast("Can't fetch chat messages, there is no channel selected");
       return;
     }
-    if (!socket.id) {
-      errorToast("Can't fetch chat messages, not connected to Socket.IO");
-      return;
-    }
+
     const receivedList = await get_messages(
       currentServer.value.id,
-      currentChannel.value.id,
-      socket.id
+      currentChannel.value.id
     );
     messageList = receivedList.reverse();
 

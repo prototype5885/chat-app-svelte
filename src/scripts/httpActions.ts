@@ -90,8 +90,7 @@ export async function create_channel(serverID: string, name: string) {
 }
 
 export async function get_channels(
-  serverID: string,
-  sid: string
+  serverID: string
 ): Promise<m.ChannelModel[]> {
   const params = new URLSearchParams({
     server_id: serverID,
@@ -99,7 +98,6 @@ export async function get_channels(
 
   const response = await fetch(`/api/v1/channel?${params}`, {
     method: "GET",
-    headers: { Sid: sid },
   });
 
   if (!response.ok) errorToast(response.statusText, response.statusText);
@@ -148,8 +146,7 @@ export async function create_message(
 
 export async function get_messages(
   serverID: string,
-  channelID: string,
-  sid: string
+  channelID: string
 ): Promise<m.MessageModel[]> {
   const params = new URLSearchParams({
     server_id: serverID,
@@ -158,8 +155,9 @@ export async function get_messages(
 
   const response = await fetch(`/api/v1/message?${params}`, {
     method: "GET",
-    headers: { Sid: sid },
   });
+
+  if (!response.ok) errorToast(response.statusText, response.statusText);
 
   const result = z.array(m.MessageSchema).safeParse(await response.json());
   if (!result.success) errorToast(result.error.message, result.error.name);

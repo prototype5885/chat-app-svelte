@@ -58,3 +58,10 @@ export const UpdateUserInfoSchema = z.object({
   picture: z.nullable(z.optional(z.string())),
 });
 export type UpdateUserInfoModel = z.infer<typeof UpdateUserInfoSchema>;
+
+export const UserDisplaySchema = z.object({
+  user_id: z.ulid(),
+  display_name: DISPLAY_NAME,
+  picture: z.nullable(z.string()),
+});
+export type UserDisplayModel = z.infer<typeof UserDisplaySchema>;

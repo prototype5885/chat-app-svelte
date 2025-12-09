@@ -19,6 +19,7 @@
     sioReconnectAttempts,
   } from "./scripts/socketio.svelte";
   import Toasts from "./lib/Toasts.svelte";
+  import MemberList from "./lib/MemberList.svelte";
 </script>
 
 <main>
@@ -94,7 +95,11 @@
         class="min-w-64 max-w-64 flex flex-col border-l border-color bg-black/20"
       >
         <Top classValue="flex items-center px-4">idk</Top>
-        <div class="flex-1"></div>
+        {#key currentChannel.value}
+          {#if currentChannel.value}
+            <MemberList />
+          {/if}
+        {/key}
       </div>
     </div>
   {/if}

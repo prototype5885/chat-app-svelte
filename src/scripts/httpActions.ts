@@ -123,6 +123,27 @@ export async function delete_channel(serverID: string, channelID: string) {
   // socket.io response
 }
 
+export async function get_members(
+  serverID: string,
+  channelID: string
+): Promise<m.UserDisplayModel[]> {
+  const params = new URLSearchParams({
+    server_id: serverID,
+    channel_id: channelID,
+  });
+
+  const response = await fetch(`/api/v1/member?${params}`, {
+    method: "GET",
+  });
+
+  if (!response.ok) errorToast(response.statusText, response.statusText);
+
+  const result = z.array(m.UserDisplaySchema).safeParse(await response.json());
+  if (!result.success) errorToast(result.error.message, result.error.name);
+
+  return result.data!;
+}
+
 export async function create_message(
   serverID: string,
   channelID: string,

@@ -95,8 +95,8 @@
         class="min-w-64 max-w-64 flex flex-col border-l border-color bg-black/20"
       >
         <Top classValue="flex items-center px-4">idk</Top>
-        {#key currentChannel.value}
-          {#if currentChannel.value}
+        {#key currentServer.value}
+          {#if currentServer.value && currentChannel.value}
             <MemberList />
           {/if}
         {/key}

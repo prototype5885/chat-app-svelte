@@ -7,6 +7,7 @@
     create_message,
     delete_message,
     socket,
+    subscribe_to_message_list,
   } from "../scripts/socketio.svelte";
   import {
     getMediumDate,
@@ -28,6 +29,16 @@
     if (!currentChannel.value) {
       errorToast("Can't fetch chat messages, there is no channel selected");
       return;
+    }
+
+    const event = subscribe_to_message_list;
+    const issue = await socket.emitWithAck(
+      event,
+      currentServer.value.id,
+      currentChannel.value.id
+    );
+    if (issue) {
+      errorToast(`'${event}' event returned ack '${issue}''`);
     }
 
     const receivedList = await get_messages(
@@ -57,13 +68,6 @@
         `'${delete_message}' event received, but message ID '${messageID}' was not found`
       );
     });
-
-    socket.emit(
-      "enter_room",
-      currentServer.value.id,
-      currentChannel.value.id,
-      "channel"
-    );
   });
 
   onDestroy(() => {

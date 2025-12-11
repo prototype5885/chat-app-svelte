@@ -7,6 +7,7 @@
     create_channel,
     delete_channel,
     socket,
+    subscribe_to_channel_list,
   } from "../scripts/socketio.svelte";
   import ChannelAdd from "./ChannelAdd.svelte";
   import { errorToast } from "../scripts/toast.svelte";
@@ -18,6 +19,12 @@
     if (!currentServer.value) {
       errorToast("Can't fetch channels, there is no server selected");
       return;
+    }
+
+    const event = subscribe_to_channel_list;
+    const issue = await socket.emitWithAck(event, currentServer.value.id);
+    if (issue) {
+      errorToast(`'${event}' event returned ack '${issue}''`);
     }
 
     channelList = await get_channels(currentServer.value.id);
@@ -56,8 +63,6 @@
         `'${delete_channel}' event received, but channel ID '${channelID}' was not found`
       );
     });
-
-    socket.emit("enter_room", currentServer.value.id, undefined, "server");
   });
 
   onDestroy(() => {

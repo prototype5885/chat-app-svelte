@@ -13,6 +13,11 @@ export const delete_message = "delete_message";
 export const start_typing = "start_typing";
 export const stop_typing = "stop_typing";
 
+export const user_status = "user_status";
+
+export const subscribe_to_channel_list = "subscribe_to_channel_list";
+export const subscribe_to_message_list = "subscribe_to_message_list";
+
 export type socketIOstate = "connected" | "disconnected" | "connecting";
 
 export const socket = io();
@@ -56,8 +61,4 @@ socket.io.on("reconnect_attempt", () => {
 
 socket.io.on("reconnect", () => {
   console.log("Socket.IO reconnected!");
-});
-
-socket.on("exception", (errorMessage: string) => {
-  errorToast(errorMessage, "Socket.IO");
 });

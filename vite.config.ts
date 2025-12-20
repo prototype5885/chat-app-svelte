@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [tailwindcss(), svelte()],
   server: {
     host: "127.0.0.1",
-    port: 80,
+    port: 3000,
     proxy: {
       "/api": {
         target: backendAddress,

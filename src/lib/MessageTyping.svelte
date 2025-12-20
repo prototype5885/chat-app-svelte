@@ -80,9 +80,9 @@
   });
 </script>
 
-<div class="px-2 h-8 flex items-center">
-  {#if usersTypingText !== ""}
-    <div class="flex flex-row">
+{#if usersTypingText !== ""}
+  <div class="h-8 flex items-center">
+    <div class="flex flex-row rounded px-2 backdrop-blur-xl">
       <div id="svg-container" class="flex items-center">
         <svg width="6" height="6" xmlns="http://www.w3.org/2000/svg">
           <circle cx="3" cy="3" r="3" fill="white" />
@@ -99,8 +99,8 @@
         <span class="text-white/75 text-xs">{isAreTypingText}</span>
       </div>
     </div>
-  {/if}
-</div>
+  </div>
+{/if}
 
 <style>
   #svg-container svg:nth-child(1) {

@@ -60,8 +60,10 @@
   }
 </script>
 
-<div class="flex flex-col px-2 pb-2">
-  <MessageTyping {chatInput} />
+<div class="flex flex-col px-2 pb-2 relative">
+  <div class="absolute inset-x-2 bottom-full pointer-events-none">
+    <MessageTyping {chatInput} />
+  </div>
   <div class="flex rounded-lg bg-white/3 border border-color overflow-hidden">
     <textarea
       bind:this={textareaRef}

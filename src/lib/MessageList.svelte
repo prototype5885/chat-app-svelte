@@ -109,5 +109,5 @@
       <Message {msg}></Message>
     {/if}
   {/each}
-  <!-- <div class="h-4"></div> -->
+  <div class="h-6"></div>
 </ul>

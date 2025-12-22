@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import Settings from "../icons/Settings.svelte";
-  import { settingsVisible, userData } from "../scripts/globals.svelte";
+  import { settings, userData } from "../scripts/globals.svelte";
   import Avatar from "./Avatar.svelte";
   import UserPanelButton from "./UserPanelButton.svelte";
   import { get_user_info } from "../scripts/httpActions";
@@ -32,7 +32,7 @@
     >
       <UserPanelButton
         onclick={() => {
-          settingsVisible.value = true;
+          settings.value = "user";
         }}
       >
         <Settings />

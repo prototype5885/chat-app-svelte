@@ -9,7 +9,7 @@
   import {
     currentChannel,
     currentServer,
-    settingsVisible,
+    settings,
     theme,
   } from "./scripts/globals.svelte";
   import UserPanel from "./lib/UserPanel.svelte";
@@ -40,8 +40,10 @@
     </div>
   {:else}
     <Toasts />
-    {#if settingsVisible.value}
-      <Settings />
+    {#if settings.value !== "off"}
+      {#key settings.value}
+        <Settings />
+      {/key}
     {/if}
     <ContextMenu />
     <div class={["flex flex-row h-screen select-none", theme.value]}>

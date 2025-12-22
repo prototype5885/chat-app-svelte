@@ -1,13 +1,15 @@
 <script lang="ts">
+  import { type Component } from "svelte";
   import CircleX from "../icons/CircleX.svelte";
-  import { settingsVisible, theme } from "../scripts/globals.svelte";
+  import { settings, theme } from "../scripts/globals.svelte";
   import SettingsAccount from "./SettingsAccount.svelte";
   import SettingsLanguage from "./SettingsLanguage.svelte";
   import SettingsUser from "./SettingsUser.svelte";
+  import { errorToast } from "../scripts/toast.svelte";
 
   interface SettingsElement {
     label: string;
-    component: any;
+    component: Component;
   }
 
   interface SettingsGroup {
@@ -15,22 +17,27 @@
     children: SettingsElement[];
   }
 
-  const elements: SettingsGroup[] = [
-    {
-      label: "User Settings",
-      children: [
-        { label: "Profile", component: SettingsUser },
-        { label: "My Account", component: SettingsAccount },
-      ],
-    },
-    {
-      label: "App Settings",
-      children: [{ label: "Language", component: SettingsLanguage }],
-    },
-  ];
+  const elements = $derived.by<SettingsGroup[]>(() => {
+    if (settings.value === "user") {
+      return [
+        {
+          label: "User Settings",
+          children: [
+            { label: "Profile", component: SettingsUser },
+            { label: "My Account", component: SettingsAccount },
+          ],
+        },
+        {
+          label: "App Settings",
+          children: [{ label: "Language", component: SettingsLanguage }],
+        },
+      ];
+    }
+    errorToast("No 'settings.value' set in Settings.svelte");
+    return [];
+  });
 
-  let selectedLabel = $state(elements[0]?.children[0]?.label ?? "");
-  let SelectedComp = $state(elements[0]?.children[0]?.component ?? null);
+  let selected = $derived<SettingsElement>(elements[0].children[0]);
 </script>
 
 <div class={["fixed flex h-full w-full select-none z-50", theme.value]}>
@@ -46,12 +53,11 @@
           {#each element.children as child (child.label)}
             <button
               class="w-full rounded-md p-2 text-left
-                     {selectedLabel === child.label
+                     {selected?.label === child.label
                 ? 'bg-white/8 text-white'
                 : 'text-white/70 hover:bg-white/5 hover:text-white'}"
               onclick={() => {
-                selectedLabel = child.label;
-                SelectedComp = child.component;
+                selected = child;
               }}
             >
               {child.label}
@@ -62,17 +68,20 @@
     </div>
   </div>
 
-  <!-- middle part -->
+  <!-- right side -->
   <div class="w-2/5">
-    <h1 class="p-8">{selectedLabel}</h1>
-    {@render SelectedComp()}
+    <h1 class="p-8">{selected?.label}</h1>
+    {#if selected}
+      {@const Selected = selected.component}
+      <Selected />
+    {/if}
   </div>
 
-  <!-- right side -->
+  <!-- far right side (close button) -->
   <div>
     <button
       onclick={() => {
-        settingsVisible.value = false;
+        settings.value = "off";
       }}
       class="rounded-full p-2 transition-all hover:bg-white/10"
     >

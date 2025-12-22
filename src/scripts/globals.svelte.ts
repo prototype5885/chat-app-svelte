@@ -35,13 +35,13 @@ export const currentChannel = {
   },
 };
 
-let settingsVisibleState = $state<boolean>(false);
-export const settingsVisible = {
+let settingsState = $state<"user" | "server" | "channel" | "off">("off");
+export const settings = {
   get value() {
-    return settingsVisibleState;
+    return settingsState;
   },
   set value(newValue) {
-    settingsVisibleState = newValue;
+    settingsState = newValue;
   },
 };
 

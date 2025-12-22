@@ -33,7 +33,7 @@
   let SelectedComp = elements[0]?.children[0]?.component ?? null;
 </script>
 
-<div class={["fixed flex h-full w-full select-none", theme.value]}>
+<div class={["fixed flex h-full w-full select-none z-50", theme.value]}>
   <!-- left side -->
   <div class="bg-black/20 flex justify-end w-1/3 p-2">
     <div>

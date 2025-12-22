@@ -1,4 +1,5 @@
 import type { ChannelModel, ServerModel, UserModel } from "./models";
+import type { SettingsType } from "./types";
 
 let userDataState = $state<UserModel>();
 export const userData = {
@@ -35,7 +36,7 @@ export const currentChannel = {
   },
 };
 
-let settingsState = $state<"user" | "server" | "channel" | "off">("off");
+let settingsState = $state<SettingsType>({ mode: "off" });
 export const settings = {
   get value() {
     return settingsState;

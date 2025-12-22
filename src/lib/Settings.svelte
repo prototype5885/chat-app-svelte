@@ -5,11 +5,12 @@
   import SettingsAccount from "./SettingsAccount.svelte";
   import SettingsLanguage from "./SettingsLanguage.svelte";
   import SettingsUser from "./SettingsUser.svelte";
-  import { errorToast } from "../scripts/toast.svelte";
+  import SettingsServer from "./SettingsServer.svelte";
+  import SettingsChannel from "./SettingsChannel.svelte";
 
   interface SettingsElement {
     label: string;
-    component: Component;
+    component: Component | null;
   }
 
   interface SettingsGroup {
@@ -18,23 +19,42 @@
   }
 
   const elements = $derived.by<SettingsGroup[]>(() => {
-    if (settings.value === "user") {
-      return [
-        {
-          label: "User Settings",
-          children: [
-            { label: "Profile", component: SettingsUser },
-            { label: "My Account", component: SettingsAccount },
-          ],
-        },
-        {
-          label: "App Settings",
-          children: [{ label: "Language", component: SettingsLanguage }],
-        },
-      ];
+    switch (settings.value.mode) {
+      case "user":
+        return [
+          {
+            label: "User Settings",
+            children: [
+              { label: "Profile", component: SettingsUser },
+              { label: "My Account", component: SettingsAccount },
+            ],
+          },
+          {
+            label: "App Settings",
+            children: [{ label: "Language", component: SettingsLanguage }],
+          },
+        ];
+      case "server":
+        return [
+          {
+            label: "Server Settings",
+            children: [{ label: "Server Profile", component: SettingsServer }],
+          },
+        ];
+      case "channel":
+        return [
+          {
+            label: "Channel Settings",
+            children: [
+              { label: "Channel Profile", component: SettingsChannel },
+            ],
+          },
+        ];
+      default:
+        return [
+          { label: "Error", children: [{ label: "Error", component: null }] },
+        ];
     }
-    errorToast("No 'settings.value' set in Settings.svelte");
-    return [];
   });
 
   let selected = $derived<SettingsElement>(elements[0].children[0]);
@@ -81,7 +101,7 @@
   <div>
     <button
       onclick={() => {
-        settings.value = "off";
+        settings.value = { mode: "off" };
       }}
       class="rounded-full p-2 transition-all hover:bg-white/10"
     >

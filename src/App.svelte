@@ -40,7 +40,7 @@
     </div>
   {:else}
     <Toasts />
-    {#if settings.value !== "off"}
+    {#if settings.value.mode !== "off"}
       {#key settings.value}
         <Settings />
       {/key}

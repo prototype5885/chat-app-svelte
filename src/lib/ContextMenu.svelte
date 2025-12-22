@@ -6,7 +6,7 @@
     delete_server,
   } from "../scripts/httpActions";
   import { errorToast, infoToast } from "../scripts/toast.svelte";
-  import { currentServer } from "../scripts/globals.svelte";
+  import { currentServer, settings } from "../scripts/globals.svelte";
 
   interface CtxMenuItemBase {
     type: "item" | "separator";
@@ -96,7 +96,7 @@
             label: "Edit server",
             color: "default",
             action: async () => {
-              infoToast(`TODO Editing server ID ${id}`);
+              settings.value = { mode: "server", id: id! };
             },
           },
           {
@@ -120,7 +120,7 @@
             label: "Edit channel",
             color: "default",
             action: async () => {
-              infoToast(`TODO Renaming channel ID ${id}`);
+              settings.value = { mode: "channel", id: id! };
             },
           },
           {

@@ -32,7 +32,7 @@
     >
       <UserPanelButton
         onclick={() => {
-          settings.value = "user";
+          settings.value = { mode: "user" };
         }}
       >
         <Settings />

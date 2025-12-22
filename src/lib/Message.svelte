@@ -10,10 +10,14 @@
   <div
     class="flex px-3 hover-bg select-text hover:bg-white/5"
     data-ctx-type="message"
-    data-ctx-id={props.msg.id}
+    data-ctx-message-id={props.msg.id}
   >
     <!-- avatar -->
-    <div class="pt-1" data-ctx-type="user" data-ctx-id={props.msg.sender_id}>
+    <div
+      class="pt-1"
+      data-ctx-type="user"
+      data-ctx-user-id={props.msg.sender_id}
+    >
       <Avatar size="40" pic={props.msg.picture} name={props.msg.display_name} />
     </div>
 
@@ -23,7 +27,7 @@
         <span
           class="font-bold cursor-pointer content-center hover:underline"
           data-ctx-type="user"
-          data-ctx-id={props.msg.sender_id}
+          data-ctx-user-id={props.msg.sender_id}
         >
           {props.msg.display_name}
         </span>

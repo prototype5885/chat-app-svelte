@@ -9,7 +9,7 @@
   <div
     class="flex flex-row px-1 select-text hover:bg-white/5 group align-baseline"
     data-ctx-type="message"
-    data-ctx-id={props.msg.id}
+    data-ctx-message-id={props.msg.id}
   >
     <div class="flex flex-row pl-3">
       <!-- date -->

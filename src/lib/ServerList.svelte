@@ -19,7 +19,7 @@
     // remove server IDs of left/deleted servers from localStorage
     Object.keys(localStorage).forEach((lastServerID) => {
       const foundServer = serverList.find(
-        (server) => server.id === lastServerID
+        (server) => server.id === lastServerID,
       );
       if (!foundServer) {
         localStorage.removeItem(lastServerID);
@@ -56,7 +56,7 @@
       onclick={() => selectServer(server)}
       selected={server.id === currentServer.value?.id}
       data-ctx-type="server"
-      data-ctx-id={server.id}
+      data-ctx-server-id={server.id}
     >
       <span>{server.name[0].toUpperCase()}</span>
     </ServerBase>

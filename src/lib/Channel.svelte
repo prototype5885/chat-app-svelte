@@ -16,7 +16,8 @@
       currentChannel.value = props.channel;
     }}
     data-ctx-type="channel"
-    data-ctx-id={props.channel.id}
+    data-ctx-server-id={props.channel.server_id}
+    data-ctx-channel-id={props.channel.id}
   >
     <Hash />
     <span class="ml-2">{props.channel.name}<span> </span></span>

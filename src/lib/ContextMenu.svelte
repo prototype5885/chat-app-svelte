@@ -46,17 +46,24 @@
     const target = event.target as HTMLElement;
     const element = target.closest("[data-ctx-type]");
     const type = element?.getAttribute("data-ctx-type");
-    const id = element?.getAttribute("data-ctx-id");
+    const userID = element?.getAttribute("data-ctx-user-id") || null;
+    const serverID = element?.getAttribute("data-ctx-server-id") || null;
+    const channelID = element?.getAttribute("data-ctx-channel-id") || null;
+    const messageID = element?.getAttribute("data-ctx-message-id") || null;
 
     switch (type) {
       case "user": {
+        if (!userID) {
+          errorToast(`User ID is '${userID}' in context menu type '${type}'`);
+          return;
+        }
         menuItems = [
           {
             type: "item",
             label: "Add user",
             color: "default",
             action: () => {
-              infoToast(`TODO Adding user ID ${id}`);
+              infoToast(`TODO Adding user ID ${userID}`);
             },
           },
           { type: "separator" },
@@ -65,7 +72,7 @@
             label: "Remove user",
             color: "red",
             action: () => {
-              infoToast(`TODO Removing user ID ${id}`);
+              infoToast(`TODO Removing user ID ${userID}`);
             },
           },
           {
@@ -73,7 +80,7 @@
             label: "Block User",
             color: "red",
             action: () => {
-              infoToast(`TODO Blocking user ID ${id}`);
+              infoToast(`TODO Blocking user ID ${userID}`);
             },
           },
           { type: "separator" },
@@ -82,21 +89,27 @@
             label: "Copy user ID",
             color: "default",
             action: () => {
-              navigator.clipboard.writeText(id!);
-              infoToast(`Copied user ID ${id} to clipboard`);
+              navigator.clipboard.writeText(userID!);
+              infoToast(`Copied user ID ${userID} to clipboard`);
             },
           },
         ];
         break;
       }
       case "server": {
+        if (!serverID) {
+          errorToast(
+            `Server ID is '${serverID}' in context menu type '${type}'`,
+          );
+          return;
+        }
         menuItems = [
           {
             type: "item",
             label: "Edit server",
             color: "default",
             action: async () => {
-              settings.value = { mode: "server", id: id! };
+              settings.value = { mode: "server", serverID: serverID };
             },
           },
           {
@@ -107,20 +120,36 @@
             label: "Delete server",
             color: "red",
             action: async () => {
-              await delete_server(id!);
+              await delete_server(serverID);
             },
           },
         ];
         break;
       }
       case "channel": {
+        if (!serverID) {
+          errorToast(
+            `Server ID is '${serverID}' in context menu type '${type}'`,
+          );
+          return;
+        }
+        if (!channelID) {
+          errorToast(
+            `Channel ID is '${channelID}' in context menu type '${type}'`,
+          );
+          return;
+        }
         menuItems = [
           {
             type: "item",
             label: "Edit channel",
             color: "default",
             action: async () => {
-              settings.value = { mode: "channel", id: id! };
+              settings.value = {
+                mode: "channel",
+                serverID: serverID,
+                channelID: channelID,
+              };
             },
           },
           {
@@ -131,24 +160,26 @@
             label: "Delete channel",
             color: "red",
             action: async () => {
-              if (!currentServer.value) {
-                errorToast("Can't delete channel, there is no server selected");
-                return;
-              }
-              await delete_channel(currentServer.value.id, id!);
+              await delete_channel(serverID, channelID);
             },
           },
         ];
         break;
       }
       case "message": {
+        if (!messageID) {
+          errorToast(
+            `Message ID is '${messageID}' in context menu type '${type}'`,
+          );
+          return;
+        }
         menuItems = [
           {
             type: "item",
             label: "Edit message",
             color: "default",
             action: () => {
-              infoToast(`TODO Editing message ID ${id}`);
+              infoToast(`TODO Editing message ID ${messageID}`);
             },
           },
           {
@@ -156,7 +187,7 @@
             label: "Delete message",
             color: "red",
             action: async () => {
-              await delete_message(id!);
+              await delete_message(messageID);
             },
           },
         ];

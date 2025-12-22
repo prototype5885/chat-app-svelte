@@ -29,8 +29,8 @@
     },
   ];
 
-  let selectedLabel = elements[0]?.children[0]?.label ?? "";
-  let SelectedComp = elements[0]?.children[0]?.component ?? null;
+  let selectedLabel = $state(elements[0]?.children[0]?.label ?? "");
+  let SelectedComp = $state(elements[0]?.children[0]?.component ?? null);
 </script>
 
 <div class={["fixed flex h-full w-full select-none z-50", theme.value]}>
@@ -49,7 +49,7 @@
                      {selectedLabel === child.label
                 ? 'bg-white/8 text-white'
                 : 'text-white/70 hover:bg-white/5 hover:text-white'}"
-              on:click={() => {
+              onclick={() => {
                 selectedLabel = child.label;
                 SelectedComp = child.component;
               }}
@@ -71,7 +71,7 @@
   <!-- right side -->
   <div>
     <button
-      on:click={() => {
+      onclick={() => {
         settingsVisible.value = false;
       }}
       class="rounded-full p-2 transition-all hover:bg-white/10"

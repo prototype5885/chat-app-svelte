@@ -10,12 +10,12 @@
 
   interface CtxMenuItemBase {
     type: "item" | "separator";
+    hide?: boolean;
   }
 
   interface CtxMenuItemItem extends CtxMenuItemBase {
     type: "item";
     label: string;
-    hide?: boolean;
     color: "default" | "red";
     action: () => void;
   }
@@ -224,6 +224,10 @@
       x: event.clientX,
       y: event.clientY,
     };
+
+    // remove hidden menu items
+    menuItems = menuItems.filter((item) => !item.hide);
+
     visible = true;
   }
 
@@ -246,8 +250,8 @@
       style="top: {position.y}px; left: {position.x}px"
     >
       <ul class="m-0 p-0 list-none">
-        {#each menuItems as item}
-          {#if item.type === "item" && !item.hide}
+        {#each menuItems as item, index}
+          {#if item.type === "item"}
             <li>
               <button
                 class={[
@@ -265,7 +269,9 @@
               >
             </li>
           {/if}
-          {#if item.type === "separator"}
+
+          <!-- don't add separator if index is either the first or last, or if previous was also a separator -->
+          {#if item.type === "separator" && index > 0 && index < menuItems.length - 1 && menuItems[index - 1].type !== "separator"}
             <div class="h-px my-1 mx-2 bg-white/25"></div>
           {/if}
         {/each}

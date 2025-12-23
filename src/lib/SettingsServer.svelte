@@ -60,7 +60,7 @@
       serverData.picture = newData.picture;
     }
 
-    successToast("Updated user data!");
+    successToast("Updated server info!");
   }
 </script>
 

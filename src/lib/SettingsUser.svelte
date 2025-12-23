@@ -56,7 +56,7 @@
       userData.picture = newData.picture;
     }
 
-    successToast("Updated user data!");
+    successToast("Updated user info!");
   }
 </script>
 

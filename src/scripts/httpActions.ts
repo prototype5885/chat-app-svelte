@@ -54,6 +54,44 @@ export async function create_server(name: string): Promise<m.ServerModel> {
   return result.data!;
 }
 
+export async function get_server_info(
+  serverID: string,
+): Promise<m.ServerModel> {
+  const params = new URLSearchParams({
+    server_id: serverID,
+  });
+
+  const response = await fetch(`/api/v1/server?${params}`, { method: "GET" });
+
+  if (!response.ok) errorToast(response.statusText, response.statusText);
+
+  const result = m.ServerSchema.safeParse(await response.json());
+  if (!result.success) errorToast(result.error.message, result.error.name);
+
+  return result.data!;
+}
+
+export async function update_server_info(
+  formData: FormData,
+  serverID: string,
+): Promise<m.UpdateServerInfoModel> {
+  const params = new URLSearchParams({
+    server_id: serverID,
+  });
+
+  const response = await fetch(`/api/v1/server?${params}`, {
+    method: "PATCH",
+    body: formData,
+  });
+
+  if (!response.ok) errorToast(response.statusText, response.statusText);
+
+  const result = m.UpdateServerInfoSchema.safeParse(await response.json());
+  if (!result.success) errorToast(result.error.message, result.error.name);
+
+  return result.data!;
+}
+
 export async function get_servers(): Promise<m.ServerModel[]> {
   const response = await fetch("/api/v1/servers", { method: "GET" });
 

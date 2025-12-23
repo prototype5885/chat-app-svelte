@@ -64,3 +64,9 @@ export const UserDisplaySchema = z.object({
   picture: z.nullable(z.string()),
 });
 export type UserDisplayModel = z.infer<typeof UserDisplaySchema>;
+
+export const UpdateServerInfoSchema = z.object({
+  name: z.nullable(z.optional(SERVER_NAME)),
+  picture: z.nullable(z.optional(z.string())),
+});
+export type UpdateServerInfoModel = z.infer<typeof UpdateServerInfoSchema>;

@@ -1,5 +1,8 @@
+import { get_user_id } from "./httpActions";
 import type { ChannelModel, ServerModel } from "./models";
 import type { SettingsType } from "./types";
+
+export const currentUserID = await get_user_id();
 
 let currentServerState = $state<ServerModel>();
 export const currentServer = {

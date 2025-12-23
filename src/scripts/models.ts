@@ -47,7 +47,6 @@ export type MessageCreateRequestModel = z.infer<
 >;
 
 export const UserSchema = z.object({
-  id: z.ulid(),
   display_name: DISPLAY_NAME,
   picture: z.nullable(z.string()),
 });

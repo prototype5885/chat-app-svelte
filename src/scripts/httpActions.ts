@@ -2,6 +2,14 @@ import * as m from "./models";
 import { errorToast } from "./toast.svelte";
 import * as z from "zod/mini";
 
+export async function get_user_id() {
+  const response = await fetch("/api/v1/user_id", { method: "GET" });
+
+  if (!response.ok) errorToast(response.statusText, response.statusText);
+
+  return await response.text();
+}
+
 export async function get_user_info() {
   const response = await fetch("/api/v1/user", { method: "GET" });
 
@@ -14,7 +22,7 @@ export async function get_user_info() {
 }
 
 export async function update_user_info(
-  formData: FormData
+  formData: FormData,
 ): Promise<m.UpdateUserInfoModel> {
   const response = await fetch("/api/v1/user", {
     method: "PATCH",
@@ -90,7 +98,7 @@ export async function create_channel(serverID: string, name: string) {
 }
 
 export async function get_channels(
-  serverID: string
+  serverID: string,
 ): Promise<m.ChannelModel[]> {
   const params = new URLSearchParams({
     server_id: serverID,
@@ -125,7 +133,7 @@ export async function delete_channel(serverID: string, channelID: string) {
 
 export async function get_members(
   serverID: string,
-  channelID: string
+  channelID: string,
 ): Promise<m.UserDisplayModel[]> {
   const params = new URLSearchParams({
     server_id: serverID,
@@ -147,7 +155,7 @@ export async function get_members(
 export async function create_message(
   serverID: string,
   channelID: string,
-  message: string
+  message: string,
 ) {
   const params = new URLSearchParams({
     server_id: serverID,
@@ -167,7 +175,7 @@ export async function create_message(
 
 export async function get_messages(
   serverID: string,
-  channelID: string
+  channelID: string,
 ): Promise<m.MessageModel[]> {
   const params = new URLSearchParams({
     server_id: serverID,
@@ -203,7 +211,7 @@ export async function delete_message(messageID: string) {
 export async function typing(
   serverID: string,
   channelID: string,
-  value: "start" | "stop"
+  value: "start" | "stop",
 ) {
   const params = new URLSearchParams({
     server_id: serverID,

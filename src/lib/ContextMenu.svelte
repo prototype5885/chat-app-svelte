@@ -6,7 +6,7 @@
     delete_server,
   } from "../scripts/httpActions";
   import { errorToast, infoToast } from "../scripts/toast.svelte";
-  import { currentServer, settings } from "../scripts/globals.svelte";
+  import { settings } from "../scripts/globals.svelte";
 
   interface CtxMenuItemBase {
     type: "item" | "separator";
@@ -15,6 +15,7 @@
   interface CtxMenuItemItem extends CtxMenuItemBase {
     type: "item";
     label: string;
+    hide?: boolean;
     color: "default" | "red";
     action: () => void;
   }
@@ -46,10 +47,16 @@
     const target = event.target as HTMLElement;
     const element = target.closest("[data-ctx-type]");
     const type = element?.getAttribute("data-ctx-type");
-    const userID = element?.getAttribute("data-ctx-user-id") || null;
-    const serverID = element?.getAttribute("data-ctx-server-id") || null;
-    const channelID = element?.getAttribute("data-ctx-channel-id") || null;
-    const messageID = element?.getAttribute("data-ctx-message-id") || null;
+    const userID = element?.getAttribute("data-ctx-user-id") || undefined;
+    const serverID = element?.getAttribute("data-ctx-server-id") || undefined;
+    const channelID = element?.getAttribute("data-ctx-channel-id") || undefined;
+    const messageID = element?.getAttribute("data-ctx-message-id") || undefined;
+
+    const owner = element?.hasAttribute("data-ctx-own")
+      ? element.getAttribute("data-ctx-own") === "true"
+      : false;
+
+    menuItems = [];
 
     switch (type) {
       case "user": {
@@ -107,6 +114,7 @@
           {
             type: "item",
             label: "Edit server",
+            hide: !owner,
             color: "default",
             action: async () => {
               settings.value = { mode: "server", serverID: serverID };
@@ -118,6 +126,7 @@
           {
             type: "item",
             label: "Delete server",
+            hide: !owner,
             color: "red",
             action: async () => {
               await delete_server(serverID);
@@ -177,17 +186,30 @@
           {
             type: "item",
             label: "Edit message",
+            hide: !owner,
             color: "default",
             action: () => {
               infoToast(`TODO Editing message ID ${messageID}`);
             },
           },
+          { type: "separator" },
           {
             type: "item",
             label: "Delete message",
+            hide: !owner,
             color: "red",
             action: async () => {
               await delete_message(messageID);
+            },
+          },
+          { type: "separator" },
+          {
+            type: "item",
+            label: "Copy message ID",
+            color: "default",
+            action: () => {
+              navigator.clipboard.writeText(messageID!);
+              infoToast(`Copied message ID ${messageID} to clipboard`);
             },
           },
         ];
@@ -224,7 +246,7 @@
   >
     <ul class="m-0 p-0 list-none">
       {#each menuItems as item}
-        {#if item.type === "item"}
+        {#if item.type === "item" && !item.hide}
           <li>
             <button
               class={[

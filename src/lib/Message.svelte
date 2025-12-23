@@ -1,5 +1,6 @@
 <script lang="ts">
   import { getLongDate } from "../scripts/date";
+  import { currentUserID } from "../scripts/globals.svelte";
   import type { MessageModel } from "../scripts/models";
   import Avatar from "./Avatar.svelte";
 
@@ -11,6 +12,7 @@
     class="flex px-3 hover-bg select-text hover:bg-white/5"
     data-ctx-type="message"
     data-ctx-message-id={props.msg.id}
+    data-ctx-own={props.msg.sender_id === currentUserID}
   >
     <!-- avatar -->
     <div

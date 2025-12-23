@@ -1,5 +1,6 @@
 <script lang="ts">
   import { getShortDate } from "../scripts/date";
+  import { currentUserID } from "../scripts/globals.svelte";
   import type { MessageModel } from "../scripts/models";
 
   let props: { msg: MessageModel } = $props();
@@ -10,6 +11,7 @@
     class="flex flex-row px-1 select-text hover:bg-white/5 group align-baseline"
     data-ctx-type="message"
     data-ctx-message-id={props.msg.id}
+    data-ctx-own={props.msg.sender_id === currentUserID}
   >
     <div class="flex flex-row pl-3">
       <!-- date -->

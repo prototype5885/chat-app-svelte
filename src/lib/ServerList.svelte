@@ -2,7 +2,11 @@
   import { onMount } from "svelte";
   import type { ServerModel } from "../scripts/models";
   import ServerBase from "./ServerBase.svelte";
-  import { currentChannel, currentServer } from "../scripts/globals.svelte";
+  import {
+    currentChannel,
+    currentServer,
+    currentUserID,
+  } from "../scripts/globals.svelte";
   import Mail from "../icons/Mail.svelte";
   import Plus from "../icons/Plus.svelte";
   import { create_server, get_servers } from "../scripts/httpActions";
@@ -57,6 +61,7 @@
       selected={server.id === currentServer.value?.id}
       data-ctx-type="server"
       data-ctx-server-id={server.id}
+      data-ctx-own={server.owner_id === currentUserID}
     >
       <span>{server.name[0].toUpperCase()}</span>
     </ServerBase>

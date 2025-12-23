@@ -55,7 +55,7 @@ export async function create_server(name: string): Promise<m.ServerModel> {
 }
 
 export async function get_servers(): Promise<m.ServerModel[]> {
-  const response = await fetch("/api/v1/server", { method: "GET" });
+  const response = await fetch("/api/v1/servers", { method: "GET" });
 
   if (!response.ok) errorToast(response.statusText, response.statusText);
 

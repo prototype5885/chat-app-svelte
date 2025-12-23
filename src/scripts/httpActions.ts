@@ -135,6 +135,48 @@ export async function create_channel(serverID: string, name: string) {
   // socket.io response
 }
 
+export async function get_channel_info(
+  serverID: string,
+  channelID: string,
+): Promise<m.ChannelModel> {
+  const params = new URLSearchParams({
+    server_id: serverID,
+    channel_id: channelID,
+  });
+
+  const response = await fetch(`/api/v1/channel?${params}`, { method: "GET" });
+
+  if (!response.ok) errorToast(response.statusText, response.statusText);
+
+  const result = m.ChannelSchema.safeParse(await response.json());
+  if (!result.success) errorToast(result.error.message, result.error.name);
+
+  return result.data!;
+}
+
+export async function update_channel_info(
+  formData: FormData,
+  serverID: string,
+  channelID: string,
+): Promise<m.UpdateChannelInfoModel> {
+  const params = new URLSearchParams({
+    server_id: serverID,
+    channel_id: channelID,
+  });
+
+  const response = await fetch(`/api/v1/channel?${params}`, {
+    method: "PATCH",
+    body: formData,
+  });
+
+  if (!response.ok) errorToast(response.statusText, response.statusText);
+
+  const result = m.UpdateChannelInfoSchema.safeParse(await response.json());
+  if (!result.success) errorToast(result.error.message, result.error.name);
+
+  return result.data!;
+}
+
 export async function get_channels(
   serverID: string,
 ): Promise<m.ChannelModel[]> {
@@ -142,7 +184,7 @@ export async function get_channels(
     server_id: serverID,
   });
 
-  const response = await fetch(`/api/v1/channel?${params}`, {
+  const response = await fetch(`/api/v1/channels?${params}`, {
     method: "GET",
   });
 

@@ -70,3 +70,8 @@ export const UpdateServerInfoSchema = z.object({
   picture: z.nullable(z.optional(z.string())),
 });
 export type UpdateServerInfoModel = z.infer<typeof UpdateServerInfoSchema>;
+
+export const UpdateChannelInfoSchema = z.object({
+  name: z.nullable(z.optional(CHANNEL_NAME)),
+});
+export type UpdateChannelInfoModel = z.infer<typeof UpdateChannelInfoSchema>;

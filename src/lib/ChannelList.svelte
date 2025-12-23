@@ -6,6 +6,7 @@
   import {
     create_channel,
     delete_channel,
+    modify_channel,
     socket,
     subscribe_to_channel_list,
   } from "../scripts/socketio.svelte";
@@ -33,7 +34,7 @@
       // select the channel found in localStorage, or just select the first one
       const lastChannelID = localStorage.getItem(currentServer.value.id);
       const lastChannel = channelList.find(
-        (channel) => channel.id === lastChannelID
+        (channel) => channel.id === lastChannelID,
       );
       currentChannel.value = lastChannel || channelList[0];
     }
@@ -60,7 +61,23 @@
         }
       }
       errorToast(
-        `'${delete_channel}' event received, but channel ID '${channelID}' was not found`
+        `'${delete_channel}' event received, but channel ID '${channelID}' was not found`,
+      );
+    });
+
+    socket.on(modify_channel, (data) => {
+      const result = ChannelSchema.safeParse(data);
+      if (!result.success) errorToast(result.error.message, result.error.name);
+      const channel = result.data!;
+
+      for (let i = 0; i < channelList.length; i++) {
+        if (channelList[i].id === channel.id) {
+          channelList[i] = channel;
+          return;
+        }
+      }
+      errorToast(
+        `'${modify_channel}' event received, but channel ID '${channel.id}' was not found`,
       );
     });
   });
@@ -68,6 +85,7 @@
   onDestroy(() => {
     socket.off(create_channel);
     socket.off(delete_channel);
+    socket.off(modify_channel);
   });
 </script>
 

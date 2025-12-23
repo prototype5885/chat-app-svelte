@@ -67,7 +67,7 @@
 {#if serverData}
   <div>
     <form class="flex flex-col" onsubmit={handleSubmit}>
-      <label for="name">Display name</label>
+      <label for="name">Server name</label>
       <input
         type="text"
         id="name"

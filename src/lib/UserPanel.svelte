@@ -6,6 +6,7 @@
   import UserPanelButton from "./UserPanelButton.svelte";
   import { get_user_info } from "../scripts/httpActions";
   import type { UserModel } from "../scripts/models";
+  import Tooltip from "./Tooltip.svelte";
 
   let userData = $state<UserModel>();
 
@@ -29,13 +30,15 @@
     <div
       class="flex justify-end w-full gap-0.5 h-full align-middle items-center"
     >
-      <UserPanelButton
-        onclick={() => {
-          settings.value = { mode: "user" };
-        }}
-      >
-        <Settings />
-      </UserPanelButton>
+      <Tooltip text="User Settings">
+        <UserPanelButton
+          onclick={() => {
+            settings.value = { mode: "user" };
+          }}
+        >
+          <Settings />
+        </UserPanelButton>
+      </Tooltip>
     </div>
   </div>
 {/if}

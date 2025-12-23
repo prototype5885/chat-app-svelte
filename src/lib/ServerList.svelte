@@ -10,6 +10,7 @@
   import Mail from "../icons/Mail.svelte";
   import Plus from "../icons/Plus.svelte";
   import { create_server, get_servers } from "../scripts/httpActions";
+  import Tooltip from "./Tooltip.svelte";
 
   let serverList = $state<ServerModel[]>([]);
 
@@ -46,9 +47,11 @@
 
 <ul class="flex flex-col items-center py-2" style="scrollbar-width: none;">
   <!-- DM -->
-  <ServerBase onclick={() => {}}>
-    <Mail />
-  </ServerBase>
+  <Tooltip text="Direct Messages" position="right">
+    <ServerBase onclick={() => {}}>
+      <Mail />
+    </ServerBase>
+  </Tooltip>
 
   {#if serverList.length > 0}
     {@render ServerSeparator()}
@@ -56,23 +59,27 @@
 
   <!-- Server List -->
   {#each serverList as server}
-    <ServerBase
-      onclick={() => selectServer(server)}
-      selected={server.id === currentServer.value?.id}
-      data-ctx-type="server"
-      data-ctx-server-id={server.id}
-      data-ctx-own={server.owner_id === currentUserID}
-    >
-      <span>{server.name[0].toUpperCase()}</span>
-    </ServerBase>
+    <Tooltip text={server.name} position="right">
+      <ServerBase
+        onclick={() => selectServer(server)}
+        selected={server.id === currentServer.value?.id}
+        data-ctx-type="server"
+        data-ctx-server-id={server.id}
+        data-ctx-own={server.owner_id === currentUserID}
+      >
+        <span>{server.name[0].toUpperCase()}</span>
+      </ServerBase>
+    </Tooltip>
   {/each}
 
   {@render ServerSeparator()}
 
   <!-- Add Server -->
-  <ServerBase onclick={() => createServer("Server")}>
-    <Plus />
-  </ServerBase>
+  <Tooltip text="Create a Server" position="right">
+    <ServerBase onclick={() => createServer("Server")}>
+      <Plus />
+    </ServerBase>
+  </Tooltip>
 </ul>
 
 {#snippet ServerSeparator()}

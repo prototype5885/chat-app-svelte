@@ -3,6 +3,7 @@
   import { currentServer } from "../scripts/globals.svelte";
   import { create_channel } from "../scripts/httpActions";
   import { errorToast } from "../scripts/toast.svelte";
+  import Tooltip from "./Tooltip.svelte";
 
   async function createChannel() {
     if (!currentServer.value) {
@@ -16,7 +17,9 @@
 
 <div class="flex flex-row justify-between">
   <span class="hover:text-white cursor-pointer">Text Channels</span>
-  <button class="hover:text-white" onclick={createChannel}>
-    <Plus />
-  </button>
+  <Tooltip text="Create Channel">
+    <button class="hover:text-white" onclick={createChannel}>
+      <Plus />
+    </button>
+  </Tooltip>
 </div>

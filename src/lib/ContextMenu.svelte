@@ -239,35 +239,37 @@
 </script>
 
 {#if visible}
-  <div
-    class="fixed z-50 min-w-36 shadow-lg/35 bg-black/40 shadow-black border border-white/10 p-2 backdrop-blur-sm rounded-lg"
-    bind:this={ctxMenu}
-    style="top: {position.y}px; left: {position.x}px"
-  >
-    <ul class="m-0 p-0 list-none">
-      {#each menuItems as item}
-        {#if item.type === "item" && !item.hide}
-          <li>
-            <button
-              class={[
-                "w-full px-2 py-2 text-sm rounded text-left",
-                `${
-                  item.color == "red"
-                    ? "text-red-500 hover:bg-red-500 hover:text-white"
-                    : "text-white hover:bg-blue-500"
-                }`,
-              ]}
-              onclick={() => {
-                item.action();
-                visible = false;
-              }}>{item.label}</button
-            >
-          </li>
-        {/if}
-        {#if item.type === "separator"}
-          <div class="h-px my-1 mx-2 bg-white/25"></div>
-        {/if}
-      {/each}
-    </ul>
+  <div class="w-full h-full absolute z-50">
+    <div
+      class="fixed min-w-36 shadow-lg/35 bg-black/40 shadow-black border border-white/10 p-2 backdrop-blur-sm rounded-lg"
+      bind:this={ctxMenu}
+      style="top: {position.y}px; left: {position.x}px"
+    >
+      <ul class="m-0 p-0 list-none">
+        {#each menuItems as item}
+          {#if item.type === "item" && !item.hide}
+            <li>
+              <button
+                class={[
+                  "w-full px-2 py-2 text-sm rounded text-left",
+                  `${
+                    item.color == "red"
+                      ? "text-red-500 hover:bg-red-500 hover:text-white"
+                      : "text-white hover:bg-blue-500"
+                  }`,
+                ]}
+                onclick={() => {
+                  item.action();
+                  visible = false;
+                }}>{item.label}</button
+              >
+            </li>
+          {/if}
+          {#if item.type === "separator"}
+            <div class="h-px my-1 mx-2 bg-white/25"></div>
+          {/if}
+        {/each}
+      </ul>
+    </div>
   </div>
 {/if}

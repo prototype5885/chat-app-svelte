@@ -1,15 +1,5 @@
-import type { ChannelModel, ServerModel, UserModel } from "./models";
+import type { ChannelModel, ServerModel } from "./models";
 import type { SettingsType } from "./types";
-
-let userDataState = $state<UserModel>();
-export const userData = {
-  get value() {
-    return userDataState;
-  },
-  set value(newValue) {
-    userDataState = newValue;
-  },
-};
 
 let currentServerState = $state<ServerModel>();
 export const currentServer = {

@@ -1,28 +1,27 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import Settings from "../icons/Settings.svelte";
-  import { settings, userData } from "../scripts/globals.svelte";
+  import { settings } from "../scripts/globals.svelte";
   import Avatar from "./Avatar.svelte";
   import UserPanelButton from "./UserPanelButton.svelte";
   import { get_user_info } from "../scripts/httpActions";
+  import type { UserModel } from "../scripts/models";
+
+  let userData = $state<UserModel>();
 
   onMount(async () => {
-    userData.value = await get_user_info();
+    userData = await get_user_info();
   });
 </script>
 
-{#if userData.value}
+{#if userData}
   <div class="flex h-full w-full px-2 pr-4 py-1">
     <button
       class="w-3/5 flex items-center hover:bg-white/5 hover:rounded-lg p-1 transition-all"
     >
-      <Avatar
-        size="36"
-        pic={userData.value.picture}
-        name={userData.value.display_name}
-      />
+      <Avatar size="36" pic={userData.picture} name={userData.display_name} />
       <div class="flex flex-col items-start ml-2">
-        <span class="text-sm">{userData.value.display_name}</span>
+        <span class="text-sm">{userData.display_name}</span>
         <span class="text-xs">Status</span>
       </div>
     </button>

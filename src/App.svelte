@@ -59,8 +59,10 @@
 
           <!-- channel/friend list -->
           <div class="flex flex-col min-w-60 max-w-60 border-l border-color">
-            <Top classValue="flex justify-center items-center">
-              <span>{currentServer.value?.name}</span>
+            <Top classValue="flex items-center px-4">
+              <span class="text-ellipsis overflow-x-hidden"
+                >{currentServer.value?.name}</span
+              >
             </Top>
             <!-- channel or friend list -->
             {#if currentServer.value}

@@ -6,7 +6,7 @@
 
   let preview = $state<string>("");
   if (props.picture) {
-    preview = `"/cdn/avatars/${props.picture}"`;
+    preview = `"/public/avatars/${props.picture}"`;
   }
 
   // const selectedPicture

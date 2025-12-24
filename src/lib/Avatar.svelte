@@ -8,7 +8,7 @@
 >
   {#if props.pic}
     <img
-      src={`/cdn/avatars/${props.pic}`}
+      src={`/public/avatars/small/${props.pic}.webp`}
       alt={props.name[0]}
       class="w-full h-full object-cover"
     />

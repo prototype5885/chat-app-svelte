@@ -14,7 +14,7 @@ export default defineConfig({
       "/api": {
         target: backendAddress,
       },
-      "/cdn": {
+      "/public": {
         target: backendAddress,
       },
       "/socket.io": {

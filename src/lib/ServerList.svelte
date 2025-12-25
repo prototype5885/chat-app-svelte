@@ -67,7 +67,14 @@
         data-ctx-server-id={server.id}
         data-ctx-own={server.owner_id === currentUserID}
       >
-        <span>{server.name[0].toUpperCase()}</span>
+        {#if server.picture}
+          <img
+            src={`/server/icons/${server.picture}.webp`}
+            alt={server.name[0].toUpperCase()}
+          />
+        {:else}
+          <span>{server.name[0].toUpperCase()}</span>
+        {/if}
       </ServerBase>
     </Tooltip>
   {/each}

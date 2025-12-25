@@ -17,6 +17,9 @@ export default defineConfig({
       "/avatars": {
         target: backendAddress,
       },
+      "/server": {
+        target: backendAddress,
+      },
       "/attachments": {
         target: backendAddress,
       },

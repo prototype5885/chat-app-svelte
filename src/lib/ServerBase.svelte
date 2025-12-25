@@ -14,7 +14,7 @@
 
 <button
   class={[
-    "flex justify-center items-center w-12 h-12 my-1 bg-cover bg-center transition-all",
+    "flex justify-center items-center w-12 h-12 overflow-hidden my-1 bg-cover bg-center transition-all",
     `${
       selected
         ? "rounded-[35%] bg-blue-500"

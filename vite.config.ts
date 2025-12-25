@@ -14,7 +14,10 @@ export default defineConfig({
       "/api": {
         target: backendAddress,
       },
-      "/public": {
+      "/avatars": {
+        target: backendAddress,
+      },
+      "/attachments": {
         target: backendAddress,
       },
       "/socket.io": {

@@ -5,7 +5,13 @@ import * as z from "zod/mini";
 export async function get_user_id() {
   const response = await fetch("/api/v1/user_id", { method: "GET" });
 
-  if (!response.ok) errorToast(response.statusText, response.statusText);
+  if (!response.ok) {
+    if (response.status === 401) {
+      window.location.href = "./login.html";
+      return;
+    }
+    errorToast(response.statusText, response.statusText);
+  }
 
   return await response.text();
 }

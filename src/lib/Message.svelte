@@ -9,7 +9,7 @@
 
 <li>
   <div
-    class="flex px-3 hover-bg select-text hover:bg-white/5"
+    class="flex px-4 hover-bg select-text hover:bg-white/5"
     data-ctx-type="message"
     data-ctx-message-id={props.msg.id}
     data-ctx-own={props.msg.sender_id === currentUserID}

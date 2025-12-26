@@ -8,7 +8,7 @@
 
 <li>
   <div
-    class="flex flex-row px-1 select-text hover:bg-white/5 group align-baseline"
+    class="flex flex-row px-2 select-text hover:bg-white/5 group align-baseline"
     data-ctx-type="message"
     data-ctx-message-id={props.msg.id}
     data-ctx-own={props.msg.sender_id === currentUserID}

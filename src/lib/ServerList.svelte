@@ -45,7 +45,7 @@
   }
 </script>
 
-<ul class="flex flex-col items-center py-2" style="scrollbar-width: none;">
+<ul class="flex flex-col py-2" style="scrollbar-width: none;">
   <!-- DM -->
   <Tooltip text="Direct Messages" position="right">
     <ServerBase onclick={() => {}}>
@@ -63,6 +63,7 @@
       <ServerBase
         onclick={() => selectServer(server)}
         selected={server.id === currentServer.value?.id}
+        notification={false}
         data-ctx-type="server"
         data-ctx-server-id={server.id}
         data-ctx-own={server.owner_id === currentUserID}
@@ -83,14 +84,14 @@
 
   <!-- Add Server -->
   <Tooltip text="Create a Server" position="right">
-    <ServerBase onclick={() => createServer("Server")}>
+    <ServerBase onclick={() => createServer("Server")} indicator={false}>
       <Plus />
     </ServerBase>
   </Tooltip>
 </ul>
 
 {#snippet ServerSeparator()}
-  <div class="w-8 py-2">
-    <div class="h-px bg-white/25"></div>
+  <div class="flex justify-center py-2">
+    <div class="h-px bg-white/25 w-8"></div>
   </div>
 {/snippet}

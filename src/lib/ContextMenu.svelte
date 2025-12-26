@@ -120,9 +120,7 @@
               settings.value = { mode: "server", serverID: serverID };
             },
           },
-          {
-            type: "separator",
-          },
+          { type: "separator" },
           {
             type: "item",
             label: "Delete server",
@@ -130,6 +128,16 @@
             color: "red",
             action: async () => {
               await delete_server(serverID);
+            },
+          },
+          { type: "separator" },
+          {
+            type: "item",
+            label: "Copy server ID",
+            color: "default",
+            action: () => {
+              navigator.clipboard.writeText(serverID!);
+              infoToast(`Copied server ID ${serverID} to clipboard`);
             },
           },
         ];
@@ -161,15 +169,23 @@
               };
             },
           },
-          {
-            type: "separator",
-          },
+          { type: "separator" },
           {
             type: "item",
             label: "Delete channel",
             color: "red",
             action: async () => {
               await delete_channel(serverID, channelID);
+            },
+          },
+          { type: "separator" },
+          {
+            type: "item",
+            label: "Copy channel ID",
+            color: "default",
+            action: () => {
+              navigator.clipboard.writeText(channelID!);
+              infoToast(`Copied channel ID ${channelID} to clipboard`);
             },
           },
         ];

@@ -29,6 +29,7 @@
     <li
       class="flex p-1 cursor-pointer hover:bg-white/5 rounded-xl"
       data-ctx-type="user"
+      data-ctx-user-id={member.user_id}
     >
       <Avatar size="36" pic={member.picture} name={member.display_name} />
       <span class="ml-2 text-ellipsis whitespace-nowrap overflow-x-hidden"

@@ -1,29 +1,39 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-  </head>
-  <body>
-    <div class="container">
-      <h1>Register</h1>
-      <form action="/api/v1/user/register" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required />
-
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required />
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required />
-
-        <label for="password_repeat">Password again:</label>
-        <input type="password" id="password_repeat" name="password_repeat" required />
-
-        <button type="submit">Register</button>
-      </form>
-      <div class="link">
-        <a href="/login">Already have an account? Login</a>
-      </div>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="auth-card">
+        <div class="header">
+            <h1>Create an account</h1>
+        </div>
+        <form action="/api/v1/user/register" method="POST" id="register-form">
+            <div class="form-group">
+                <label class="label">Email</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label class="label">Username</label>
+                <input type="text" name="username" required>
+            </div>
+            <div class="form-group">
+                <label class="label">Password</label>
+                <input type="password" name="password" id="password" required>
+            </div>
+            <div class="form-group">
+                <label class="label">Confirm Password</label>
+                <input type="password" name="password_repeat" id="confirm-password" required>
+                <div id="password-error" class="error-message">Passwords do not match</div>
+            </div>
+            <button type="submit">Register</button>
+            <div class="footer-text">
+                <a href="login.html">Already have an account?</a>
+            </div>
+        </form>
     </div>
-  </body>
+</body>
 </html>

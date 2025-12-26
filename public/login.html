@@ -1,23 +1,30 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-  </head>
-  <body>
-    <div class="container">
-      <h1>Login</h1>
-      <form action="/api/v1/user/login" method="post">
-        <label for="email">E-mail:</label>
-        <input type="email" id="email" name="email" required />
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required />
-
-        <button type="submit">Login</button>
-      </form>
-      <div class="link">
-        <a href="/register">Don't have an account? Register</a>
-      </div>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="auth-card">
+        <div class="header">
+            <h1>Login</h1>
+        </div>
+        <form action="/api/v1/user/login" method="POST">
+            <div class="form-group">
+                <label class="label">Email</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label class="label">Password</label>
+                <input type="password" name="password" required>
+            </div>
+            <button type="submit">Log In</button>
+            <div class="footer-text">
+                <a href="register.html">No account? Register</a>
+            </div>
+        </form>
     </div>
-  </body>
+</body>
 </html>

@@ -14,7 +14,6 @@
     isOlderThanFiveMins,
     isSameDay,
   } from "../scripts/date";
-  import MessageSmall from "./MessageSmall.svelte";
   import { errorToast } from "../scripts/toast.svelte";
   import { get_messages } from "../scripts/httpActions";
 
@@ -35,7 +34,7 @@
     const issue = await socket.emitWithAck(
       event,
       currentServer.value.id,
-      currentChannel.value.id
+      currentChannel.value.id,
     );
     if (issue) {
       errorToast(`'${event}' event returned ack '${issue}''`);
@@ -43,7 +42,7 @@
 
     const receivedList = await get_messages(
       currentServer.value.id,
-      currentChannel.value.id
+      currentChannel.value.id,
     );
     messageList = receivedList.reverse();
 
@@ -65,7 +64,7 @@
         }
       }
       errorToast(
-        `'${delete_message}' event received, but message ID '${messageID}' was not found`
+        `'${delete_message}' event received, but message ID '${messageID}' was not found`,
       );
     });
   });
@@ -101,7 +100,7 @@
 
     <!-- show message in small format if previous message is less than five minutes old -->
     {#if sameDay && !isOlderThanFiveMins(messageList[index - 1].id, msg.id) && messageList[index - 1].sender_id === msg.sender_id}
-      <MessageSmall {msg} />
+      <Message {msg} small={true} />
     {:else}
       {#if sameDay}
         <div class="h-4"></div>

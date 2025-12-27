@@ -21,7 +21,7 @@
     {#if indicator}
       <div
         class={[
-          "bg-white rounded-r transition-all group-hover:opacity-100",
+          "bg-white rounded-r transition-[opacity,height] group-hover:opacity-100",
           `${selected ? "h-10 opacity-100" : "group-hover:h-5"}`,
           `${!selected && notification ? "h-2" : "h-0 opacity-0"}`,
         ]}
@@ -30,7 +30,8 @@
   </div>
   <button
     class={[
-      "flex justify-center items-center min-w-12 max-w-12 min-h-12 max-h-12 overflow-hidden bg-cover bg-center transition-all",
+      "flex justify-center items-center min-w-12 max-w-12 min-h-12 max-h-12",
+      "overflow-hidden bg-cover bg-center transition-[border-radius,background-color]",
       `${
         selected
           ? "rounded-[35%] bg-blue-500"

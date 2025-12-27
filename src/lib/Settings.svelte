@@ -103,7 +103,7 @@
       onclick={() => {
         settings.value = { mode: "off" };
       }}
-      class="rounded-full p-2 transition-all hover:bg-white/10"
+      class="rounded-full p-2 hover:bg-white/10"
     >
       <CircleX />
     </button>

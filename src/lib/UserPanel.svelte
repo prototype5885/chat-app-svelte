@@ -18,7 +18,7 @@
 {#if userData}
   <div class="flex h-full w-full px-2 pr-4 py-1">
     <button
-      class="w-3/5 flex items-center hover:bg-white/5 hover:rounded-lg p-1 transition-all"
+      class="w-3/5 flex items-center hover:bg-white/5 hover:rounded-lg p-1"
     >
       <Avatar size="36" pic={userData.picture} name={userData.display_name} />
       <div class="flex flex-col items-start ml-2">

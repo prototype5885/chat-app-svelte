@@ -53,11 +53,15 @@ export function isSameDay(currentID: string, nextID: string): boolean {
 
 export function isOlderThanFiveMins(
   currentID: string,
-  nextID: string
+  nextID: string,
 ): boolean {
   const currentMins = extractTimestamp(currentID) / (1000 * 60);
   const nextMins = extractTimestamp(nextID) / (1000 * 60);
 
   const difference = nextMins - currentMins;
   return difference > 5.0;
+}
+
+export function utcToLocal(date: string) {
+  return new Date(`${date}Z`).toLocaleString();
 }

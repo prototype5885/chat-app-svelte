@@ -32,7 +32,7 @@ export const MessageSchema = z.object({
   picture: z.nullable(z.string()),
   message: MESSAGE,
   attachments: z.nullable(z.array(z.string())),
-  edited: z.nullable(z.boolean()),
+  edited: z.nullable(z.string()),
 });
 export type MessageModel = z.infer<typeof MessageSchema>;
 
@@ -44,6 +44,15 @@ export const MessageCreateRequestSchema = z.object({
 });
 export type MessageCreateRequestModel = z.infer<
   typeof MessageCreateRequestSchema
+>;
+
+export const MessageEditResponseSchema = z.object({
+  message_id: z.ulid(),
+  message: MESSAGE,
+  edited: z.string(),
+});
+export type MessageEditResponseModel = z.infer<
+  typeof MessageEditResponseSchema
 >;
 
 export const UserSchema = z.object({

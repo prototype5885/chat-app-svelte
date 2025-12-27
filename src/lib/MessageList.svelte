@@ -1,11 +1,16 @@
 <script lang="ts">
   import { onDestroy, onMount, tick } from "svelte";
-  import { MessageSchema, type MessageModel } from "../scripts/models";
+  import {
+    type MessageModel,
+    MessageSchema,
+    MessageEditResponseSchema,
+  } from "../scripts/models";
   import { currentServer, currentChannel } from "../scripts/globals.svelte";
   import Message from "./Message.svelte";
   import {
     create_message,
     delete_message,
+    edit_message,
     socket,
     subscribe_to_message_list,
   } from "../scripts/socketio.svelte";
@@ -56,6 +61,23 @@
       scrollToBottom("smooth");
     });
 
+    socket.on(edit_message, (data) => {
+      const result = MessageEditResponseSchema.safeParse(data);
+      if (!result.success) errorToast(result.error.message, result.error.name);
+
+      const editedMessage = result.data!;
+      for (let i = 0; i < messageList.length; i++) {
+        if (messageList[i].id === editedMessage.message_id) {
+          messageList[i].message = editedMessage.message;
+          messageList[i].edited = editedMessage.edited;
+          return;
+        }
+      }
+      errorToast(
+        `'${edit_message}' event received, but message ID '${editedMessage.message_id}' was not found`,
+      );
+    });
+
     socket.on(delete_message, (messageID: string) => {
       for (let i = 0; i < messageList.length; i++) {
         if (messageList[i].id === messageID) {
@@ -71,6 +93,7 @@
 
   onDestroy(() => {
     socket.off(create_message);
+    socket.off(edit_message);
     socket.off(delete_message);
   });
 

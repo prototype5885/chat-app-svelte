@@ -6,7 +6,7 @@
     delete_server,
   } from "../scripts/httpActions";
   import { errorToast, infoToast } from "../scripts/toast.svelte";
-  import { settings } from "../scripts/globals.svelte";
+  import { editingMessage, settings } from "../scripts/globals.svelte";
 
   interface CtxMenuItemBase {
     type: "item" | "separator";
@@ -205,7 +205,7 @@
             hide: !owner,
             color: "default",
             action: () => {
-              infoToast(`TODO Editing message ID ${messageID}`);
+              editingMessage.value = messageID;
             },
           },
           { type: "separator" },

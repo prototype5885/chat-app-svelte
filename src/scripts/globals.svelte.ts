@@ -4,6 +4,16 @@ import type { SettingsType } from "./types";
 
 export const currentUserID = await get_user_id();
 
+let editingMessageState = $state<string | null>(null);
+export const editingMessage = {
+  get value() {
+    return editingMessageState;
+  },
+  set value(newValue) {
+    editingMessageState = newValue;
+  },
+};
+
 let currentServerState = $state<ServerModel>();
 export const currentServer = {
   get value() {
@@ -21,6 +31,9 @@ export const currentChannel = {
   },
   set value(newValue) {
     currentChannelIDState = newValue;
+
+    // reset editing message value
+    editingMessage.value = null;
 
     // set last selected channel on a server
     if (currentServer.value && currentChannel.value) {

@@ -1,16 +1,21 @@
 <script lang="ts">
-  import { getLongDate, getShortDate } from "../scripts/date";
-  import { currentUserID } from "../scripts/globals.svelte";
+  import { getLongDate, getShortDate, utcToLocal } from "../scripts/date";
+  import { currentUserID, editingMessage } from "../scripts/globals.svelte";
   import type { MessageModel } from "../scripts/models";
   import Avatar from "./Avatar.svelte";
+  import MessageEditor from "./MessageEditor.svelte";
+  import Tooltip from "./Tooltip.svelte";
 
   let props: { msg: MessageModel; small?: boolean } = $props();
 </script>
 
-{#if !props.small}
-  <li>
+<li>
+  {#if !props.small}
     <div
-      class="flex px-4 hover-bg select-text hover:bg-white/5"
+      class={[
+        "flex px-4 hover-bg select-text hover:bg-white/5",
+        props.msg.id === editingMessage.value ? "bg-white/5" : "",
+      ]}
       data-ctx-type="message"
       data-ctx-message-id={props.msg.id}
       data-ctx-own={props.msg.sender_id === currentUserID}
@@ -28,7 +33,7 @@
         />
       </div>
 
-      <div class="pl-3">
+      <div class="pl-3 grow">
         <div class="flex">
           <!-- name -->
           <span
@@ -46,19 +51,24 @@
           </span>
         </div>
         <!-- message -->
-        <span class="break-all">{props.msg.message}</span>
+        {#if props.msg.id === editingMessage.value}
+          <MessageEditor msg={props.msg} />
+        {:else}
+          {@render MessageText(props.msg.message, props.msg.edited)}
+        {/if}
       </div>
     </div>
-  </li>
-{:else}
-  <li>
+  {:else}
     <div
-      class="flex flex-row px-2 select-text hover:bg-white/5 group align-baseline"
+      class={[
+        "flex flex-row px-2 select-text hover:bg-white/5 group align-baseline",
+        props.msg.id === editingMessage.value ? "bg-white/5" : "",
+      ]}
       data-ctx-type="message"
       data-ctx-message-id={props.msg.id}
       data-ctx-own={props.msg.sender_id === currentUserID}
     >
-      <div class="flex flex-row pl-3">
+      <div class="flex flex-row pl-3 grow">
         <!-- date -->
         <div
           class="text-[10px] mr-3 text-white/50 flex items-center min-w-9 max-w-9 cursor-default invisible group-hover:visible"
@@ -66,8 +76,23 @@
           {getShortDate(props.msg.id)}
         </div>
         <!-- message -->
-        <span class="break-all py-0.5">{props.msg.message}</span>
+        {#if props.msg.id === editingMessage.value}
+          <MessageEditor msg={props.msg} />
+        {:else}
+          <div class="py-0.5">
+            {@render MessageText(props.msg.message, props.msg.edited)}
+          </div>
+        {/if}
       </div>
     </div>
-  </li>
-{/if}
+  {/if}
+</li>
+
+{#snippet MessageText(text: string, edited: string | null)}
+  <span class="break-all">{text}</span>
+  {#if edited}
+    <Tooltip text={utcToLocal(edited)}>
+      <span class="text-xs text-gray-400 select-none pl-0.5">(edited)</span>
+    </Tooltip>
+  {/if}
+{/snippet}

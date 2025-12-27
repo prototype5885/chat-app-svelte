@@ -259,6 +259,31 @@ export async function create_message(
   // socket.io response
 }
 
+export async function edit_message(
+  serverID: string,
+  channelID: string,
+  messageID: string,
+  message: string,
+) {
+  const params = new URLSearchParams({
+    server_id: serverID,
+  });
+
+  const response = await fetch(`/api/v1/message?${params}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      channel_id: channelID,
+      message_id: messageID,
+      message: message,
+    }),
+  });
+
+  if (!response.ok) errorToast(response.statusText, response.statusText);
+
+  // socket.io response
+}
+
 export async function get_messages(
   serverID: string,
   channelID: string,

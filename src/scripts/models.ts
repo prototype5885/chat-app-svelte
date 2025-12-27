@@ -37,15 +37,6 @@ export const MessageSchema = z.object({
 export type MessageModel = z.infer<typeof MessageSchema>;
 
 // DTOs
-export const MessageCreateRequestSchema = z.object({
-  message: MESSAGE,
-  channel_id: z.ulid(),
-  reply_id: z.nullable(z.ulid()),
-});
-export type MessageCreateRequestModel = z.infer<
-  typeof MessageCreateRequestSchema
->;
-
 export const MessageEditResponseSchema = z.object({
   message_id: z.ulid(),
   message: MESSAGE,

@@ -38,7 +38,7 @@ export type MessageModel = z.infer<typeof MessageSchema>;
 
 // DTOs
 export const MessageEditResponseSchema = z.object({
-  message_id: z.ulid(),
+  id: z.ulid(),
   message: MESSAGE,
   edited: z.string(),
 });

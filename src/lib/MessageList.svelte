@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onDestroy, onMount, tick } from "svelte";
   import {
+    MessageEditResponseSchema,
     type MessageModel,
     MessageSchema,
-    MessageEditResponseSchema,
   } from "../scripts/models";
   import { currentServer, currentChannel } from "../scripts/globals.svelte";
   import Message from "./Message.svelte";
@@ -67,14 +67,14 @@
 
       const editedMessage = result.data!;
       for (let i = 0; i < messageList.length; i++) {
-        if (messageList[i].id === editedMessage.message_id) {
+        if (messageList[i].id === editedMessage.id) {
           messageList[i].message = editedMessage.message;
           messageList[i].edited = editedMessage.edited;
           return;
         }
       }
       errorToast(
-        `'${edit_message}' event received, but message ID '${editedMessage.message_id}' was not found`,
+        `'${edit_message}' event received, but message ID '${editedMessage.id}' was not found`,
       );
     });
 

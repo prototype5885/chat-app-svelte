@@ -261,7 +261,6 @@ export async function create_message(
 
 export async function edit_message(
   serverID: string,
-  channelID: string,
   messageID: string,
   message: string,
 ) {
@@ -273,7 +272,6 @@ export async function edit_message(
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      channel_id: channelID,
       message_id: messageID,
       message: message,
     }),

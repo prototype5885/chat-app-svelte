@@ -23,12 +23,7 @@
       return;
     }
 
-    await edit_message(
-      currentServer.value.id,
-      currentChannel.value.id,
-      props.msg.id,
-      editedMessage,
-    );
+    await edit_message(currentServer.value.id, props.msg.id, editedMessage);
 
     cancel();
   }

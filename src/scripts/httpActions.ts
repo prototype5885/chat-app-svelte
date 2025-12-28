@@ -2,6 +2,8 @@ import * as m from "./models";
 import { errorToast } from "./toast.svelte";
 import * as z from "zod/mini";
 
+const JSON_HEADER = { "Content-Type": "application/json" };
+
 export async function get_user_id() {
   const response = await fetch("/api/v1/user_id", { method: "GET" });
 
@@ -44,12 +46,10 @@ export async function update_user_info(
 }
 
 export async function create_server(name: string): Promise<m.ServerModel> {
-  const params = new URLSearchParams({
-    name: name,
-  });
-
-  const response = await fetch(`/api/v1/server?${params}`, {
+  const response = await fetch("/api/v1/server", {
     method: "POST",
+    headers: JSON_HEADER,
+    body: JSON.stringify({ name: name }),
   });
 
   if (!response.ok) errorToast(response.statusText, response.statusText);
@@ -63,11 +63,7 @@ export async function create_server(name: string): Promise<m.ServerModel> {
 export async function get_server_info(
   serverID: string,
 ): Promise<m.ServerModel> {
-  const params = new URLSearchParams({
-    server_id: serverID,
-  });
-
-  const response = await fetch(`/api/v1/server?${params}`, { method: "GET" });
+  const response = await fetch(`/api/v1/server/${serverID}`, { method: "GET" });
 
   if (!response.ok) errorToast(response.statusText, response.statusText);
 
@@ -81,11 +77,7 @@ export async function update_server_info(
   formData: FormData,
   serverID: string,
 ): Promise<m.UpdateServerInfoModel> {
-  const params = new URLSearchParams({
-    server_id: serverID,
-  });
-
-  const response = await fetch(`/api/v1/server?${params}`, {
+  const response = await fetch(`/api/v1/server/${serverID}`, {
     method: "PATCH",
     body: formData,
   });
@@ -110,11 +102,7 @@ export async function get_servers(): Promise<m.ServerModel[]> {
 }
 
 export async function delete_server(serverID: string) {
-  const params = new URLSearchParams({
-    server_id: serverID,
-  });
-
-  const response = await fetch(`/api/v1/server?${params}`, {
+  const response = await fetch(`/api/v1/server/${serverID}`, {
     method: "DELETE",
   });
 
@@ -127,13 +115,10 @@ export async function delete_server(serverID: string) {
 }
 
 export async function create_channel(serverID: string, name: string) {
-  const params = new URLSearchParams({
-    server_id: serverID,
-    name: name,
-  });
-
-  const response = await fetch(`/api/v1/channel?${params}`, {
+  const response = await fetch(`/api/v1/server/${serverID}/channel`, {
     method: "POST",
+    headers: JSON_HEADER,
+    body: JSON.stringify({ name: name }),
   });
 
   if (!response.ok) errorToast(response.statusText, response.statusText);
@@ -145,12 +130,10 @@ export async function get_channel_info(
   serverID: string,
   channelID: string,
 ): Promise<m.ChannelModel> {
-  const params = new URLSearchParams({
-    server_id: serverID,
-    channel_id: channelID,
-  });
-
-  const response = await fetch(`/api/v1/channel?${params}`, { method: "GET" });
+  const response = await fetch(
+    `/api/v1/server/${serverID}/channel/${channelID}`,
+    { method: "GET" },
+  );
 
   if (!response.ok) errorToast(response.statusText, response.statusText);
 
@@ -165,15 +148,13 @@ export async function update_channel_info(
   serverID: string,
   channelID: string,
 ): Promise<m.UpdateChannelInfoModel> {
-  const params = new URLSearchParams({
-    server_id: serverID,
-    channel_id: channelID,
-  });
-
-  const response = await fetch(`/api/v1/channel?${params}`, {
-    method: "PATCH",
-    body: formData,
-  });
+  const response = await fetch(
+    `/api/v1/server/${serverID}/channel/${channelID}`,
+    {
+      method: "PATCH",
+      body: formData,
+    },
+  );
 
   if (!response.ok) errorToast(response.statusText, response.statusText);
 
@@ -203,14 +184,12 @@ export async function get_channels(
 }
 
 export async function delete_channel(serverID: string, channelID: string) {
-  const params = new URLSearchParams({
-    server_id: serverID,
-    channel_id: channelID,
-  });
-
-  const response = await fetch(`/api/v1/channel?${params}`, {
-    method: "DELETE",
-  });
+  const response = await fetch(
+    `/api/v1/server/${serverID}/channel/${channelID}`,
+    {
+      method: "DELETE",
+    },
+  );
 
   if (!response.ok) errorToast(response.statusText, response.statusText);
 
@@ -219,14 +198,8 @@ export async function delete_channel(serverID: string, channelID: string) {
 
 export async function get_members(
   serverID: string,
-  channelID: string,
 ): Promise<m.UserDisplayModel[]> {
-  const params = new URLSearchParams({
-    server_id: serverID,
-    channel_id: channelID,
-  });
-
-  const response = await fetch(`/api/v1/member?${params}`, {
+  const response = await fetch(`/api/v1/server/${serverID}/members`, {
     method: "GET",
   });
 
@@ -243,38 +216,25 @@ export async function create_message(
   channelID: string,
   message: string,
 ) {
-  const params = new URLSearchParams({
-    server_id: serverID,
-    channel_id: channelID,
-  });
-
-  const response = await fetch(`/api/v1/message?${params}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message: message }),
-  });
+  const response = await fetch(
+    `/api/v1/server/${serverID}/channel/${channelID}/message`,
+    {
+      method: "POST",
+      headers: JSON_HEADER,
+      body: JSON.stringify({ message: message }),
+    },
+  );
 
   if (!response.ok) errorToast(response.statusText, response.statusText);
 
   // socket.io response
 }
 
-export async function edit_message(
-  serverID: string,
-  messageID: string,
-  message: string,
-) {
-  const params = new URLSearchParams({
-    server_id: serverID,
-  });
-
-  const response = await fetch(`/api/v1/message?${params}`, {
+export async function edit_message(messageID: string, message: string) {
+  const response = await fetch(`/api/v1/message/${messageID}`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      message_id: messageID,
-      message: message,
-    }),
+    headers: JSON_HEADER,
+    body: JSON.stringify({ message: message }),
   });
 
   if (!response.ok) errorToast(response.statusText, response.statusText);
@@ -286,14 +246,10 @@ export async function get_messages(
   serverID: string,
   channelID: string,
 ): Promise<m.MessageModel[]> {
-  const params = new URLSearchParams({
-    server_id: serverID,
-    channel_id: channelID,
-  });
-
-  const response = await fetch(`/api/v1/message?${params}`, {
-    method: "GET",
-  });
+  const response = await fetch(
+    `/api/v1/server/${serverID}/channel/${channelID}/messages`,
+    { method: "GET" },
+  );
 
   if (!response.ok) errorToast(response.statusText, response.statusText);
 
@@ -304,11 +260,7 @@ export async function get_messages(
 }
 
 export async function delete_message(messageID: string) {
-  const params = new URLSearchParams({
-    message_id: messageID,
-  });
-
-  const response = await fetch(`/api/v1/message?${params}`, {
+  const response = await fetch(`/api/v1/message/${messageID}`, {
     method: "DELETE",
   });
 
@@ -322,15 +274,12 @@ export async function typing(
   channelID: string,
   value: "start" | "stop",
 ) {
-  const params = new URLSearchParams({
-    server_id: serverID,
-    channel_id: channelID,
-    value: value,
-  });
-
-  const response = await fetch(`/api/v1/typing?${params}`, {
-    method: "POST",
-  });
+  const response = await fetch(
+    `/api/v1/server/${serverID}/channel/${channelID}/typing/${value}`,
+    {
+      method: "POST",
+    },
+  );
 
   if (!response.ok) errorToast(response.statusText, response.statusText);
 

@@ -13,14 +13,8 @@
       errorToast("Can't fetch members, there is no server selected");
       return;
     }
-    if (!currentChannel.value) {
-      errorToast("Can't fetch members, there is no channel selected");
-      return;
-    }
-    members = await get_members(
-      currentServer.value.id,
-      currentChannel.value.id,
-    );
+
+    members = await get_members(currentServer.value.id);
   });
 </script>
 

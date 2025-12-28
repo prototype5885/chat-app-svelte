@@ -14,16 +14,12 @@
 
   async function editMessage() {
     if (props.msg.message === editedMessage) return;
-    if (!currentServer.value) {
-      errorToast("Can't edit chat message, there is no server selected");
-      return;
-    }
     if (!currentChannel.value) {
       errorToast("Can't edit chat message, there is no channel selected");
       return;
     }
 
-    await edit_message(currentServer.value.id, props.msg.id, editedMessage);
+    await edit_message(props.msg.id, editedMessage);
 
     cancel();
   }

@@ -26,21 +26,13 @@
   let element: HTMLUListElement;
 
   onMount(async () => {
-    if (!currentServer.value) {
-      errorToast("Can't fetch chat messages, there is no server selected");
-      return;
-    }
     if (!currentChannel.value) {
       errorToast("Can't fetch chat messages, there is no channel selected");
       return;
     }
 
     const event = subscribe_to_message_list;
-    const issue = await socket.emitWithAck(
-      event,
-      currentServer.value.id,
-      currentChannel.value.id,
-    );
+    const issue = await socket.emitWithAck(event, currentChannel.value.id);
     if (issue) {
       errorToast(`'${event}' event returned ack '${issue}''`);
     }

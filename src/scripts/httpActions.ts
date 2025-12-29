@@ -10,7 +10,7 @@ async function fetchWrapper(
 async function fetchWrapper<T>(
   endpoint: string,
   options: RequestInit,
-  schema?: z.ZodMiniType<T>,
+  schema: z.ZodMiniType<T>,
 ): Promise<T>;
 
 async function fetchWrapper<T>(

@@ -45,10 +45,7 @@
       errorToast(`'${event}' event returned ack '${issue}''`);
     }
 
-    const receivedList = await get_messages(
-      currentServer.value.id,
-      currentChannel.value.id,
-    );
+    const receivedList = await get_messages(currentChannel.value.id);
     messageList = receivedList.reverse();
 
     scrollToBottom("instant");

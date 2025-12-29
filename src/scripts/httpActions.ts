@@ -167,11 +167,7 @@ export async function update_channel_info(
 export async function get_channels(
   serverID: string,
 ): Promise<m.ChannelModel[]> {
-  const params = new URLSearchParams({
-    server_id: serverID,
-  });
-
-  const response = await fetch(`/api/v1/channels?${params}`, {
+  const response = await fetch(`/api/v1/server/${serverID}/channels`, {
     method: "GET",
   });
 
@@ -211,19 +207,12 @@ export async function get_members(
   return result.data!;
 }
 
-export async function create_message(
-  serverID: string,
-  channelID: string,
-  message: string,
-) {
-  const response = await fetch(
-    `/api/v1/server/${serverID}/channel/${channelID}/message`,
-    {
-      method: "POST",
-      headers: JSON_HEADER,
-      body: JSON.stringify({ message: message }),
-    },
-  );
+export async function create_message(channelID: string, message: string) {
+  const response = await fetch(`/api/v1/channel/${channelID}/message`, {
+    method: "POST",
+    headers: JSON_HEADER,
+    body: JSON.stringify({ message: message }),
+  });
 
   if (!response.ok) errorToast(response.statusText, response.statusText);
 
@@ -243,13 +232,11 @@ export async function edit_message(messageID: string, message: string) {
 }
 
 export async function get_messages(
-  serverID: string,
   channelID: string,
 ): Promise<m.MessageModel[]> {
-  const response = await fetch(
-    `/api/v1/server/${serverID}/channel/${channelID}/messages`,
-    { method: "GET" },
-  );
+  const response = await fetch(`/api/v1/channel/${channelID}/messages`, {
+    method: "GET",
+  });
 
   if (!response.ok) errorToast(response.statusText, response.statusText);
 
@@ -269,17 +256,10 @@ export async function delete_message(messageID: string) {
   // socket.io response
 }
 
-export async function typing(
-  serverID: string,
-  channelID: string,
-  value: "start" | "stop",
-) {
-  const response = await fetch(
-    `/api/v1/server/${serverID}/channel/${channelID}/typing/${value}`,
-    {
-      method: "POST",
-    },
-  );
+export async function typing(channelID: string, value: "start" | "stop") {
+  const response = await fetch(`/api/v1/channel/${channelID}/typing/${value}`, {
+    method: "POST",
+  });
 
   if (!response.ok) errorToast(response.statusText, response.statusText);
 

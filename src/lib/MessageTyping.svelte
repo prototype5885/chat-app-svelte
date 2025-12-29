@@ -25,7 +25,7 @@
     socket.on(stop_typing, (userID: string) => {
       if (!usersTyping.delete(userID)) {
         errorToast(
-          `'${stop_typing}' event received, but user ID '${userID}' was not found`
+          `'${stop_typing}' event received, but user ID '${userID}' was not found`,
         );
       }
       values_changed();
@@ -51,15 +51,11 @@
   }
 
   async function typingValueChanged(value: "start" | "stop") {
-    if (!currentServer.value) {
-      errorToast("Can't send typing, there is no server selected");
-      return;
-    }
     if (!currentChannel.value) {
       errorToast("Can't send typing, there is no channel selected");
       return;
     }
-    await typing(currentServer.value.id, currentChannel.value.id, value);
+    await typing(currentChannel.value.id, value);
   }
 
   $effect(() => {

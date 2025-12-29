@@ -9,20 +9,12 @@
 
   async function sendMessage() {
     if (chatInput === "") return;
-    if (!currentServer.value) {
-      errorToast("Can't send chat message, there is no server selected");
-      return;
-    }
     if (!currentChannel.value) {
       errorToast("Can't send chat message, there is no channel selected");
       return;
     }
 
-    await create_message(
-      currentServer.value.id,
-      currentChannel.value.id,
-      chatInput,
-    );
+    await create_message(currentChannel.value.id, chatInput);
 
     chatInput = "";
   }

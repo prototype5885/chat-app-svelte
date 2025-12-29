@@ -15,7 +15,7 @@
   }
 </script>
 
-<div class="fixed bottom-5 right-5 flex flex-col gap-2.5 z-50 w-72">
+<div class="fixed bottom-5 right-5 flex flex-col gap-2.5 z-50 w-96">
   {#each toasts as toast (toast.id)}
     <div class={["px-5 py-3 rounded-md flex flex-col", toastType(toast.type)]}>
       {#if toast.name}

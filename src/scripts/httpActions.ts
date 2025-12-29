@@ -127,13 +127,11 @@ export async function create_channel(serverID: string, name: string) {
 }
 
 export async function get_channel_info(
-  serverID: string,
   channelID: string,
 ): Promise<m.ChannelModel> {
-  const response = await fetch(
-    `/api/v1/server/${serverID}/channel/${channelID}`,
-    { method: "GET" },
-  );
+  const response = await fetch(`/api/v1/channel/${channelID}`, {
+    method: "GET",
+  });
 
   if (!response.ok) errorToast(response.statusText, response.statusText);
 
@@ -145,16 +143,12 @@ export async function get_channel_info(
 
 export async function update_channel_info(
   formData: FormData,
-  serverID: string,
   channelID: string,
 ): Promise<m.UpdateChannelInfoModel> {
-  const response = await fetch(
-    `/api/v1/server/${serverID}/channel/${channelID}`,
-    {
-      method: "PATCH",
-      body: formData,
-    },
-  );
+  const response = await fetch(`/api/v1/channel/${channelID}`, {
+    method: "PATCH",
+    body: formData,
+  });
 
   if (!response.ok) errorToast(response.statusText, response.statusText);
 
@@ -179,13 +173,10 @@ export async function get_channels(
   return result.data!;
 }
 
-export async function delete_channel(serverID: string, channelID: string) {
-  const response = await fetch(
-    `/api/v1/server/${serverID}/channel/${channelID}`,
-    {
-      method: "DELETE",
-    },
-  );
+export async function delete_channel(channelID: string) {
+  const response = await fetch(`/api/v1/channel/${channelID}`, {
+    method: "DELETE",
+  });
 
   if (!response.ok) errorToast(response.statusText, response.statusText);
 

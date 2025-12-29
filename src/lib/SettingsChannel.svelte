@@ -13,10 +13,7 @@
   let modifiedName = $state<string>("");
 
   onMount(async () => {
-    channelData = await get_channel_info(
-      settings.value.serverID!,
-      settings.value.channelID!,
-    );
+    channelData = await get_channel_info(settings.value.channelID!);
     modifiedName = channelData.name;
   });
 
@@ -56,7 +53,6 @@
 
     const newData = await update_channel_info(
       formData,
-      settings.value.serverID!,
       settings.value.channelID!,
     );
     if (newData.name) {

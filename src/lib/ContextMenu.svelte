@@ -175,7 +175,7 @@
             label: "Delete channel",
             color: "red",
             action: async () => {
-              await delete_channel(serverID, channelID);
+              await delete_channel(channelID);
             },
           },
           { type: "separator" },

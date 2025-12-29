@@ -5,34 +5,40 @@
     start_typing,
     stop_typing,
   } from "../scripts/socketio.svelte";
-  import { currentChannel, currentServer } from "../scripts/globals.svelte";
+  import { currentChannel } from "../scripts/globals.svelte";
   import { errorToast } from "../scripts/toast.svelte";
   import { typing } from "../scripts/httpActions";
 
   let props: { chatInput: string } = $props();
   let isTyping = false;
 
-  let usersTyping = new Set<string>([]);
+  interface UserTyping {
+    user_id: string;
+    display_name: string;
+  }
+
+  let usersTyping = $state(new Map<string, string>());
+
   let usersTypingText = $state<string>("");
   let isAreTypingText = $state<string>("");
 
   onMount(async () => {
-    socket.on(start_typing, (userID: string) => {
-      usersTyping.add(userID);
-      values_changed();
+    socket.on(start_typing, (userTyping: UserTyping) => {
+      usersTyping.set(userTyping.user_id, userTyping.display_name);
+      valuesChanged();
     });
 
     socket.on(stop_typing, (userID: string) => {
       if (!usersTyping.delete(userID)) {
         errorToast(
-          `'${stop_typing}' event received, but user ID '${userID}' was not found`,
+          `'${stop_typing}' event received, but user ID '${userID}' was not found in usersTyping`,
         );
       }
-      values_changed();
+      valuesChanged();
     });
   });
 
-  function values_changed() {
+  function valuesChanged() {
     usersTypingText = "";
     let i = 0;
     usersTyping.forEach((user) => {

@@ -22,7 +22,7 @@ export function successToast(message: string) {
 export function errorToast(
   message: string,
   name: string = "Error",
-  throwError: boolean = true
+  throwError: boolean = true,
 ) {
   showToast(message, "error", name);
   if (throwError) {
@@ -38,13 +38,18 @@ export function warningToast(message: string) {
 function showToast(
   message: string | undefined = undefined,
   type: ToastType,
-  name: string | undefined = undefined
+  name: string | undefined = undefined,
 ) {
   const id = Math.random().toString(36).substring(2);
   toasts.push({ id, message, type, name });
 
+  let timeout = 5000;
+  if (type === "error") {
+    timeout = 10000;
+  }
+
   setTimeout(() => {
     const index = toasts.findIndex((t) => t.id === id);
     if (index > -1) toasts.splice(index, 1);
-  }, 5000);
+  }, timeout);
 }

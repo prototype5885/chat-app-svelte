@@ -31,7 +31,7 @@ async function fetchWrapper<T>(
 
   if (!response.ok) {
     const errJson = await response.json();
-    errorToast(errJson.detail, response.status.toString());
+    errorToast(JSON.stringify(errJson), response.status.toString());
   }
 
   if (!schema) {

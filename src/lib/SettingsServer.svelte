@@ -49,17 +49,7 @@
       return;
     }
 
-    const newData = await update_server_info(
-      formData,
-      settings.value.serverID!,
-    );
-    if (newData.name) {
-      serverData.name = newData.name;
-    }
-    if (newData.picture) {
-      serverData.picture = newData.picture;
-    }
-
+    await update_server_info(formData, settings.value.serverID!);
     successToast("Updated server info!");
   }
 </script>

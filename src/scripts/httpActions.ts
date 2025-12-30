@@ -68,14 +68,10 @@ export async function get_user_info() {
 }
 
 export async function update_user_info(formData: FormData) {
-  return await fetchWrapper(
-    "/api/v1/user",
-    {
-      method: "PATCH",
-      body: formData,
-    },
-    m.UpdateUserInfoSchema,
-  );
+  await fetchWrapper("/api/v1/user", {
+    method: "PATCH",
+    body: formData,
+  });
 }
 
 export async function create_server(name: string) {
@@ -98,14 +94,10 @@ export async function get_server_info(serverID: string) {
 }
 
 export async function update_server_info(formData: FormData, serverID: string) {
-  return await fetchWrapper(
-    `/api/v1/server/${serverID}`,
-    {
-      method: "PATCH",
-      body: formData,
-    },
-    m.UpdateServerInfoSchema,
-  );
+  await fetchWrapper(`/api/v1/server/${serverID}`, {
+    method: "PATCH",
+    body: formData,
+  });
 }
 
 export async function get_servers() {
@@ -150,14 +142,10 @@ export async function update_channel_info(
   formData: FormData,
   channelID: string,
 ) {
-  return await fetchWrapper(
-    `/api/v1/channel/${channelID}`,
-    {
-      method: "PATCH",
-      body: formData,
-    },
-    m.UpdateChannelInfoSchema,
-  );
+  await fetchWrapper(`/api/v1/channel/${channelID}`, {
+    method: "PATCH",
+    body: formData,
+  });
 
   // socket.io response
 }

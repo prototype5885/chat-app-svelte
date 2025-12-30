@@ -47,8 +47,10 @@ export type MessageEditResponseModel = z.infer<
 >;
 
 export const UserSchema = z.object({
+  username: USERNAME,
   display_name: DISPLAY_NAME,
   picture: z.nullable(z.string()),
+  custom_status: z.nullable(z.string()),
 });
 export type UserModel = z.infer<typeof UserSchema>;
 
@@ -62,6 +64,7 @@ export const UserDisplaySchema = z.object({
   user_id: z.ulid(),
   display_name: DISPLAY_NAME,
   picture: z.nullable(z.string()),
+  custom_status: z.nullable(z.string()),
 });
 export type UserDisplayModel = z.infer<typeof UserDisplaySchema>;
 

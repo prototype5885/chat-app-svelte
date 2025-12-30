@@ -48,14 +48,7 @@
       return;
     }
 
-    const newData = await update_user_info(formData);
-    if (newData.display_name) {
-      userData.display_name = newData.display_name;
-    }
-    if (newData.picture) {
-      userData.picture = newData.picture;
-    }
-
+    await update_user_info(formData);
     successToast("Updated user info!");
   }
 </script>

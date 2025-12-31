@@ -1,15 +1,11 @@
 <script lang="ts">
-  import {
-    currentChannel,
-    currentServer,
-    editingMessage,
-  } from "../scripts/globals.svelte";
+  import { currentChannel, editingMessage } from "../scripts/globals.svelte";
   import { edit_message } from "../scripts/httpActions";
-  import type { MessageModel } from "../scripts/models";
+  import type { MessageResponse } from "../scripts/schemas";
   import { errorToast } from "../scripts/toast.svelte";
   import AutoResizeTextarea from "./AutoResizeTextarea.svelte";
 
-  const props: { msg: MessageModel } = $props();
+  const props: { msg: MessageResponse } = $props();
   let editedMessage = $state<string>(props.msg.message);
 
   async function editMessage() {

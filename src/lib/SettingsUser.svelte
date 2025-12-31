@@ -2,16 +2,16 @@
   import { onMount } from "svelte";
   import { get_user_info, update_user_info } from "../scripts/httpActions";
   import { successToast } from "../scripts/toast.svelte";
-  import type { UserModel } from "../scripts/models";
+  import type { UserInfoResponse } from "../scripts/schemas";
 
-  let userData = $state<UserModel>();
+  let userData = $state<UserInfoResponse>();
 
   let modifiedDisplayName = $state<string>("");
   let modifiedPicture: File | null = null;
 
   onMount(async () => {
     userData = await get_user_info();
-    modifiedDisplayName = userData.display_name;
+    modifiedDisplayName = userData!.display_name;
   });
 
   function wasNameChanged(): boolean {

@@ -1,12 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { get_members } from "../scripts/httpActions";
-  import { currentChannel, currentServer } from "../scripts/globals.svelte";
+  import { currentServer } from "../scripts/globals.svelte";
   import { errorToast } from "../scripts/toast.svelte";
-  import type { UserDisplayModel } from "../scripts/models";
   import Avatar from "./Avatar.svelte";
+  import type { UserMemberResponse } from "../scripts/schemas";
 
-  let members = $state<UserDisplayModel[]>([]);
+  let members = $state<UserMemberResponse[]>([]);
 
   onMount(async () => {
     if (!currentServer.value) {

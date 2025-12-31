@@ -2,19 +2,19 @@
   import { onMount } from "svelte";
   import { successToast } from "../scripts/toast.svelte";
   import { settings } from "../scripts/globals.svelte";
-  import type { ChannelModel } from "../scripts/models";
   import {
     get_channel_info,
     update_channel_info,
   } from "../scripts/httpActions";
+  import type { ChannelSchema } from "../scripts/schemas";
 
-  let channelData = $state<ChannelModel>();
+  let channelData = $state<ChannelSchema>();
 
   let modifiedName = $state<string>("");
 
   onMount(async () => {
     channelData = await get_channel_info(settings.value.channelID!);
-    modifiedName = channelData.name;
+    modifiedName = channelData!.name;
   });
 
   function wasNameChanged(): boolean {

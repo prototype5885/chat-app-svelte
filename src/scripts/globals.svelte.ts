@@ -1,5 +1,5 @@
 import { get_user_id } from "./httpActions";
-import type { ChannelModel, ServerModel } from "./models";
+import type { ChannelSchema, ServerSchema } from "./schemas";
 import type { SettingsType } from "./types";
 
 export const currentUserID = await get_user_id();
@@ -14,7 +14,7 @@ export const editingMessage = {
   },
 };
 
-let currentServerState = $state<ServerModel>();
+let currentServerState = $state<ServerSchema>();
 export const currentServer = {
   get value() {
     return currentServerState;
@@ -24,7 +24,7 @@ export const currentServer = {
   },
 };
 
-let currentChannelIDState = $state<ChannelModel>();
+let currentChannelIDState = $state<ChannelSchema>();
 export const currentChannel = {
   get value() {
     return currentChannelIDState;

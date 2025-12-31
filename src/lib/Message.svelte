@@ -1,12 +1,12 @@
 <script lang="ts">
   import { getLongDate, getShortDate, utcToLocal } from "../scripts/date";
   import { currentUserID, editingMessage } from "../scripts/globals.svelte";
-  import type { MessageModel } from "../scripts/models";
+  import type { MessageResponse } from "../scripts/schemas";
   import Avatar from "./Avatar.svelte";
   import MessageEditor from "./MessageEditor.svelte";
   import Tooltip from "./Tooltip.svelte";
 
-  let props: { msg: MessageModel; small?: boolean } = $props();
+  let props: { msg: MessageResponse; small?: boolean } = $props();
 </script>
 
 <li>

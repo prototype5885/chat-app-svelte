@@ -1,9 +1,9 @@
 <script lang="ts">
   import Hash from "../icons/Hash.svelte";
   import { currentChannel } from "../scripts/globals.svelte";
-  import type { ChannelModel } from "../scripts/models";
+  import type { ChannelSchema } from "../scripts/schemas";
 
-  let props: { channel: ChannelModel } = $props();
+  let props: { channel: ChannelSchema } = $props();
 </script>
 
 <li>

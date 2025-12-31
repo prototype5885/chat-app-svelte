@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { ServerModel } from "../scripts/models";
   import ServerBase from "./ServerBase.svelte";
   import {
     currentChannel,
@@ -11,8 +10,9 @@
   import Plus from "../icons/Plus.svelte";
   import { create_server, get_servers } from "../scripts/httpActions";
   import Tooltip from "./Tooltip.svelte";
+  import type { ServerSchema } from "../scripts/schemas";
 
-  let serverList = $state<ServerModel[]>([]);
+  let serverList = $state<ServerSchema[]>([]);
 
   onMount(async () => {
     serverList = await get_servers();
@@ -32,13 +32,13 @@
     });
   });
 
-  function selectServer(server: ServerModel) {
+  function selectServer(server: ServerSchema) {
     currentServer.value = server;
     currentChannel.value = undefined;
   }
 
   async function createServer(name: string) {
-    const newServer: ServerModel = await create_server(name);
+    const newServer: ServerSchema = await create_server(name);
     serverList.push(newServer);
 
     selectServer(newServer);

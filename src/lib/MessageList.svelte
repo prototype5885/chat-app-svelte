@@ -1,11 +1,6 @@
 <script lang="ts">
   import { onDestroy, onMount, tick } from "svelte";
-  import {
-    MessageEditResponseSchema,
-    type MessageModel,
-    MessageSchema,
-  } from "../scripts/models";
-  import { currentServer, currentChannel } from "../scripts/globals.svelte";
+  import { currentChannel } from "../scripts/globals.svelte";
   import Message from "./Message.svelte";
   import {
     create_message,
@@ -21,8 +16,9 @@
   } from "../scripts/date";
   import { errorToast } from "../scripts/toast.svelte";
   import { get_messages } from "../scripts/httpActions";
+  import type { MessageResponse } from "../scripts/schemas";
 
-  let messageList: MessageModel[] = $state([]);
+  let messageList: MessageResponse[] = $state([]);
   let element: HTMLUListElement;
 
   onMount(async () => {
@@ -42,19 +38,12 @@
 
     scrollToBottom("instant");
 
-    socket.on(create_message, (data) => {
-      const result = MessageSchema.safeParse(data);
-      if (!result.success) errorToast(result.error.message, result.error.name);
-
-      messageList.push(result.data!);
+    socket.on(create_message, (message: MessageResponse) => {
+      messageList.push(message);
       scrollToBottom("smooth");
     });
 
-    socket.on(edit_message, (data) => {
-      const result = MessageEditResponseSchema.safeParse(data);
-      if (!result.success) errorToast(result.error.message, result.error.name);
-
-      const editedMessage = result.data!;
+    socket.on(edit_message, (editedMessage: MessageResponse) => {
       for (let i = 0; i < messageList.length; i++) {
         if (messageList[i].id === editedMessage.id) {
           messageList[i].message = editedMessage.message;

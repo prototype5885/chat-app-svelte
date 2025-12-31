@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
-  import { ChannelSchema, type ChannelModel } from "../scripts/models";
+  import type { ChannelSchema } from "../scripts/schemas";
   import Channel from "./Channel.svelte";
   import { currentChannel, currentServer } from "../scripts/globals.svelte";
   import {
@@ -14,7 +14,7 @@
   import { errorToast } from "../scripts/toast.svelte";
   import { get_channels } from "../scripts/httpActions";
 
-  let channelList = $state<ChannelModel[]>([]);
+  let channelList = $state<ChannelSchema[]>([]);
 
   onMount(async () => {
     if (!currentServer.value) {
@@ -39,11 +39,8 @@
       currentChannel.value = lastChannel || channelList[0];
     }
 
-    socket.on(create_channel, (data) => {
-      const result = ChannelSchema.safeParse(data);
-      if (!result.success) errorToast(result.error.message, result.error.name);
-
-      channelList.push(result.data!);
+    socket.on(create_channel, (channel: ChannelSchema) => {
+      channelList.push(channel);
     });
 
     socket.on(delete_channel, (channelID: string) => {
@@ -65,11 +62,7 @@
       );
     });
 
-    socket.on(modify_channel, (data) => {
-      const result = ChannelSchema.safeParse(data);
-      if (!result.success) errorToast(result.error.message, result.error.name);
-      const channel = result.data!;
-
+    socket.on(modify_channel, (channel: ChannelSchema) => {
       for (let i = 0; i < channelList.length; i++) {
         if (channelList[i].id === channel.id) {
           channelList[i] = channel;

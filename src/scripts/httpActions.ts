@@ -1,23 +1,7 @@
-import * as m from "./models";
+import type * as s from "./schemas";
 import { errorToast } from "./toast.svelte";
-import * as z from "zod/mini";
 
-async function fetchWrapper(
-  endpoint: string,
-  options: RequestInit,
-): Promise<void>;
-
-async function fetchWrapper<T>(
-  endpoint: string,
-  options: RequestInit,
-  schema: z.ZodMiniType<T>,
-): Promise<T>;
-
-async function fetchWrapper<T>(
-  endpoint: string,
-  options: RequestInit,
-  schema?: z.ZodMiniType<T> | undefined,
-): Promise<void | T> {
+async function fetchWrapper(endpoint: string, options: RequestInit) {
   const headers = new Headers(options.headers);
 
   if (options.body && !(options.body instanceof FormData)) {
@@ -34,28 +18,24 @@ async function fetchWrapper<T>(
     errorToast(JSON.stringify(errJson), response.status.toString());
   }
 
-  if (!schema) {
-    return;
+  const contentType = response.headers.get("content-type");
+
+  switch (contentType) {
+    case "application/json":
+      return await response.json();
+    case "text/plain":
+      return await response.text();
+    default:
+      return;
   }
-
-  const json = await response.json();
-
-  const result = schema.safeParse(json);
-  if (!result.success) {
-    errorToast(result.error.message, result.error.name, false);
-    throw result.error;
-  }
-
-  return result.data;
 }
 
-export async function get_user_id() {
+export async function get_user_id(): Promise<string> {
   const response = await fetch("/api/v1/user_id", { method: "GET" });
 
   if (!response.ok) {
     if (response.status === 401) {
       window.location.href = "./login.html";
-      return;
     }
     errorToast(response.statusText, response.status.toString());
   }
@@ -63,8 +43,8 @@ export async function get_user_id() {
   return await response.text();
 }
 
-export async function get_user_info() {
-  return await fetchWrapper("/api/v1/user", { method: "GET" }, m.UserSchema);
+export async function get_user_info(): Promise<s.UserInfoResponse> {
+  return await fetchWrapper("/api/v1/user", { method: "GET" });
 }
 
 export async function update_user_info(formData: FormData) {
@@ -74,23 +54,17 @@ export async function update_user_info(formData: FormData) {
   });
 }
 
-export async function create_server(name: string) {
-  return await fetchWrapper(
-    "/api/v1/server",
-    {
-      method: "POST",
-      body: JSON.stringify({ name: name }),
-    },
-    m.ServerSchema,
-  );
+export async function create_server(name: string): Promise<s.ServerSchema> {
+  return await fetchWrapper("/api/v1/server", {
+    method: "POST",
+    body: JSON.stringify({ name: name }),
+  });
 }
 
-export async function get_server_info(serverID: string) {
-  return await fetchWrapper(
-    `/api/v1/server/${serverID}`,
-    { method: "GET" },
-    m.ServerSchema,
-  );
+export async function get_server_info(
+  serverID: string,
+): Promise<s.ServerSchema> {
+  return await fetchWrapper(`/api/v1/server/${serverID}`, { method: "GET" });
 }
 
 export async function update_server_info(formData: FormData, serverID: string) {
@@ -100,12 +74,8 @@ export async function update_server_info(formData: FormData, serverID: string) {
   });
 }
 
-export async function get_servers() {
-  return await fetchWrapper(
-    "/api/v1/servers",
-    { method: "GET" },
-    z.array(m.ServerSchema),
-  );
+export async function get_servers(): Promise<s.ServerSchema[]> {
+  return await fetchWrapper("/api/v1/servers", { method: "GET" });
 }
 
 export async function delete_server(serverID: string) {
@@ -128,14 +98,12 @@ export async function create_channel(serverID: string, name: string) {
   // socket.io response
 }
 
-export async function get_channel_info(channelID: string) {
-  return await fetchWrapper(
-    `/api/v1/channel/${channelID}`,
-    {
-      method: "GET",
-    },
-    m.ChannelSchema,
-  );
+export async function get_channel_info(
+  channelID: string,
+): Promise<s.ChannelSchema> {
+  return await fetchWrapper(`/api/v1/channel/${channelID}`, {
+    method: "GET",
+  });
 }
 
 export async function update_channel_info(
@@ -150,12 +118,12 @@ export async function update_channel_info(
   // socket.io response
 }
 
-export async function get_channels(serverID: string) {
-  return await fetchWrapper(
-    `/api/v1/server/${serverID}/channels`,
-    { method: "GET" },
-    z.array(m.ChannelSchema),
-  );
+export async function get_channels(
+  serverID: string,
+): Promise<s.ChannelSchema[]> {
+  return await fetchWrapper(`/api/v1/server/${serverID}/channels`, {
+    method: "GET",
+  });
 }
 
 export async function delete_channel(channelID: string) {
@@ -166,12 +134,12 @@ export async function delete_channel(channelID: string) {
   // socket.io response
 }
 
-export async function get_members(serverID: string) {
-  return await fetchWrapper(
-    `/api/v1/server/${serverID}/members`,
-    { method: "GET" },
-    z.array(m.UserDisplaySchema),
-  );
+export async function get_members(
+  serverID: string,
+): Promise<s.UserMemberResponse[]> {
+  return await fetchWrapper(`/api/v1/server/${serverID}/members`, {
+    method: "GET",
+  });
 }
 
 export async function create_message(channelID: string, message: string) {
@@ -192,12 +160,12 @@ export async function edit_message(messageID: string, message: string) {
   // socket.io response
 }
 
-export async function get_messages(channelID: string) {
-  return await fetchWrapper(
-    `/api/v1/channel/${channelID}/messages`,
-    { method: "GET" },
-    z.array(m.MessageSchema),
-  );
+export async function get_messages(
+  channelID: string,
+): Promise<s.MessageResponse[]> {
+  return await fetchWrapper(`/api/v1/channel/${channelID}/messages`, {
+    method: "GET",
+  });
 }
 
 export async function delete_message(messageID: string) {

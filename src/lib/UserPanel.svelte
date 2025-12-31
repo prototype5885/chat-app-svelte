@@ -5,10 +5,10 @@
   import Avatar from "./Avatar.svelte";
   import UserPanelButton from "./UserPanelButton.svelte";
   import { get_user_info } from "../scripts/httpActions";
-  import type { UserModel } from "../scripts/models";
   import Tooltip from "./Tooltip.svelte";
+  import type { UserInfoResponse } from "../scripts/schemas";
 
-  let userData = $state<UserModel>();
+  let userData = $state<UserInfoResponse>();
 
   onMount(async () => {
     userData = await get_user_info();

@@ -2,17 +2,17 @@
   import { onMount } from "svelte";
   import { get_server_info, update_server_info } from "../scripts/httpActions";
   import { successToast } from "../scripts/toast.svelte";
-  import type { ServerModel } from "../scripts/models";
   import { settings } from "../scripts/globals.svelte";
+  import type { ServerSchema } from "../scripts/schemas";
 
-  let serverData = $state<ServerModel>();
+  let serverData = $state<ServerSchema>();
 
   let modifiedServerName = $state<string>("");
   let modifiedPicture: File | null = null;
 
   onMount(async () => {
     serverData = await get_server_info(settings.value.serverID!);
-    modifiedServerName = serverData.name;
+    modifiedServerName = serverData!.name;
   });
 
   function wasNameChanged(): boolean {

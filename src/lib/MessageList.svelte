@@ -97,11 +97,13 @@
       // since message list isn't scrollable, it most likely means chat is still very new
       // this would also trigger if chat is zoomed out and all 50 message can fit in without scrolling
       // so as safety measure, request older messages just to be sure there really are no more messages
-      await requestRelativeMessages(
-        currentChannel.value.id,
-        messageList[0].id,
-        "before",
-      );
+      if (messageList.length > 0) {
+        await requestRelativeMessages(
+          currentChannel.value.id,
+          messageList[0].id,
+          "before",
+        );
+      }
     }
   });
 

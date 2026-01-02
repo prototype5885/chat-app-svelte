@@ -162,8 +162,21 @@ export async function edit_message(messageID: string, message: string) {
 
 export async function get_messages(
   channelID: string,
+  messageID: string | null = null,
+  direction: "before" | "after" | null = null,
+  count: 50 | 75 | 100 | null = null,
 ): Promise<s.MessageResponse[]> {
-  return await fetchWrapper(`/api/v1/channel/${channelID}/messages`, {
+  const params = new URLSearchParams();
+  if (messageID) params.append("message_id", messageID);
+  if (direction) params.append("direction", direction);
+  if (count) params.append("count", count.toString());
+
+  let url = `/api/v1/channel/${channelID}/messages`;
+  if (params.size !== 0) {
+    url += `?${params}`;
+  }
+
+  return await fetchWrapper(url, {
     method: "GET",
   });
 }

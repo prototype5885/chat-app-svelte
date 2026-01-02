@@ -89,7 +89,8 @@
         </Top>
         {#key currentChannel.value}
           {#if currentChannel.value}
-            <MessageList />
+            <div class="grow"></div>
+            <MessageList channelName={currentChannel.value.name} />
             <MessageInput />
           {/if}
         {/key}

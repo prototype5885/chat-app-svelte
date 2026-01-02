@@ -164,12 +164,10 @@ export async function get_messages(
   channelID: string,
   messageID: string | null = null,
   direction: "before" | "after" | null = null,
-  count: 50 | 75 | 100 | null = null,
 ): Promise<s.MessageResponse[]> {
   const params = new URLSearchParams();
   if (messageID) params.append("message_id", messageID);
   if (direction) params.append("direction", direction);
-  if (count) params.append("count", count.toString());
 
   let url = `/api/v1/channel/${channelID}/messages`;
   if (params.size !== 0) {

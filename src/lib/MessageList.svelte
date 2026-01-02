@@ -18,11 +18,14 @@
   import { get_messages } from "../scripts/httpActions";
   import type { MessageResponse } from "../scripts/schemas";
 
-  // these will happen if distance from bottom is above this:
+  // these will happen if the scroll distance from bottom is above this:
   // won't autoscroll down on new message
   // will display button about viewing older messages
   // will display how many new messages were received
   const OLD_ABOVE_THIS = 1000;
+
+  const MESSAGE_LIST_LIMIT = 100; // maximum messages allowed in list
+  const OFFSET = 15; // delete old ones if exceeding it by this
 
   const props: { channelName: string } = $props();
 
@@ -120,13 +123,24 @@
     }
   };
 
+  function trimOldMessages() {
+    const previousLength = messageList.length;
+    if (messageList.length > MESSAGE_LIST_LIMIT + OFFSET) {
+      messageList = messageList.slice(-MESSAGE_LIST_LIMIT);
+      reachedBeginning = false;
+      console.log(
+        `Deleted old chat messages, count before: '${previousLength}', after: '${messageList.length}'`,
+      );
+    }
+  }
+
   async function requestRelativeMessages(
     channelID: string,
     messageID: string,
     direction: "before" | "after",
   ) {
     requestInProgress = true;
-    const result = await get_messages(channelID, messageID, direction, 100);
+    const result = await get_messages(channelID, messageID, direction);
 
     if (result.length === 0) {
       reachedBeginning = true;
@@ -148,6 +162,12 @@
       isViewingOlder = true;
     } else {
       isViewingOlder = false;
+    }
+
+    // trim old messages if reached bottom
+    // TODO it runs on every new message while it shouldn't
+    if (scrollBottom < 1) {
+      trimOldMessages();
     }
 
     // request new messages if distance is less than 500 from top

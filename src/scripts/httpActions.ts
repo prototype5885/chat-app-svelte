@@ -25,14 +25,20 @@ async function fetchWrapper(endpoint: string, options: RequestInit) {
 
   const contentType = response.headers.get("content-type");
 
-  switch (contentType) {
-    case "application/json":
-      return await response.json();
-    case "text/plain":
-      return await response.text();
-    default:
-      return;
+  if (!contentType) {
+    errorToast(`Missing Content-Type header`);
+    return;
   }
+
+  if (contentType.includes("application/json")) {
+    return await response.json();
+  }
+
+  if (contentType.includes("text/plain")) {
+    return await response.text();
+  }
+
+  errorToast(`Unknown content-type: '${contentType}'`);
 }
 
 export async function get_user_id(): Promise<string> {

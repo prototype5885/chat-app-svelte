@@ -57,41 +57,18 @@
       reachedBeginning = true;
     }
 
-    scrollToBottom("instant");
+    initialDisplayMessages();
 
     socket.on(create_message, (message: MessageResponse) => {
-      messageList.push(message);
-
-      if (scrollBottom < OLD_ABOVE_THIS) {
-        scrollToBottom("instant");
-      } else {
-        newMessagesCount += 1;
-      }
+      addNewMessage(message);
     });
 
     socket.on(edit_message, (editedMessage: MessageResponse) => {
-      for (let i = 0; i < messageList.length; i++) {
-        if (messageList[i].id === editedMessage.id) {
-          messageList[i].message = editedMessage.message;
-          messageList[i].edited = editedMessage.edited;
-          return;
-        }
-      }
-      errorToast(
-        `'${edit_message}' event received, but message ID '${editedMessage.id}' was not found`,
-      );
+      editMessage(editedMessage);
     });
 
     socket.on(delete_message, (messageID: string) => {
-      for (let i = 0; i < messageList.length; i++) {
-        if (messageList[i].id === messageID) {
-          messageList.splice(i, 1);
-          return;
-        }
-      }
-      errorToast(
-        `'${delete_message}' event received, but message ID '${messageID}' was not found`,
-      );
+      deleteMessage(messageID);
     });
 
     await tick();
@@ -124,14 +101,55 @@
   };
 
   function trimOldMessages() {
-    const previousLength = messageList.length;
     if (messageList.length > MESSAGE_LIST_LIMIT + OFFSET) {
+      const previousLength = messageList.length;
       messageList = messageList.slice(-MESSAGE_LIST_LIMIT);
       reachedBeginning = false;
       console.log(
         `Deleted old chat messages, count before: '${previousLength}', after: '${messageList.length}'`,
       );
     }
+  }
+
+  function initialDisplayMessages() {
+    scrollToBottom("instant");
+  }
+
+  function addNewMessage(message: MessageResponse) {
+    messageList.push(message);
+
+    if (scrollBottom < OLD_ABOVE_THIS) {
+      scrollToBottom("instant");
+    } else {
+      newMessagesCount += 1;
+    }
+  }
+
+  function editMessage(editedMessage: MessageResponse) {
+    for (let i = 0; i < messageList.length; i++) {
+      if (messageList[i].id === editedMessage.id) {
+        messageList[i].message = editedMessage.message;
+        messageList[i].edited = editedMessage.edited;
+        return;
+      }
+    }
+  }
+
+  function deleteMessage(messageID: string) {
+    for (let i = 0; i < messageList.length; i++) {
+      if (messageList[i].id === messageID) {
+        messageList.splice(i, 1);
+        return;
+      }
+    }
+  }
+
+  function addOlderMessages(messages: MessageResponse[]) {
+    messageList = [...messages.reverse(), ...messageList];
+  }
+
+  function addNewerMessages(messages: MessageResponse[]) {
+    messageList = [...messageList, ...messages];
   }
 
   async function requestRelativeMessages(
@@ -145,7 +163,11 @@
     if (result.length === 0) {
       reachedBeginning = true;
     } else {
-      messageList = [...result.reverse(), ...messageList];
+      if (direction === "before") {
+        addOlderMessages(result);
+      } else {
+        addNewerMessages(result);
+      }
     }
     requestInProgress = false;
   }
@@ -165,7 +187,6 @@
     }
 
     // trim old messages if reached bottom
-    // TODO it runs on every new message while it shouldn't
     if (scrollBottom < 1) {
       trimOldMessages();
     }

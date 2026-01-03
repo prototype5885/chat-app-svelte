@@ -13,6 +13,11 @@ async function fetchWrapper(endpoint: string, options: RequestInit) {
     headers,
   });
 
+  if (response.redirected) {
+    window.location.href = response.url;
+    return;
+  }
+
   if (!response.ok) {
     const errJson = await response.json();
     errorToast(JSON.stringify(errJson), response.status.toString());
@@ -31,16 +36,7 @@ async function fetchWrapper(endpoint: string, options: RequestInit) {
 }
 
 export async function get_user_id(): Promise<string> {
-  const response = await fetch("/api/v1/user_id", { method: "GET" });
-
-  if (!response.ok) {
-    if (response.status === 401) {
-      window.location.href = "./login.html";
-    }
-    errorToast(response.statusText, response.status.toString());
-  }
-
-  return await response.text();
+  return await fetchWrapper("/api/v1/user_id", { method: "GET" });
 }
 
 export async function get_user_info(): Promise<s.UserInfoResponse> {

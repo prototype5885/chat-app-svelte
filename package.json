@@ -19,6 +19,7 @@
     "vite": "7.3.0"
   },
   "dependencies": {
+    "@fontsource/inter": "5.2.8",
     "@tailwindcss/vite": "4.1.18",
     "socket.io-client": "4.8.3",
     "tailwindcss": "4.1.18"

@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+body {
+  font-family: Inter;
+}
+
 .theme-diskord {
   color: white;
   background-color: rgb(66, 68, 75);

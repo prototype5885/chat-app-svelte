@@ -20,6 +20,7 @@
   } from "./scripts/socketio.svelte";
   import Toasts from "./lib/Toasts.svelte";
   import MemberList from "./lib/MemberList.svelte";
+  import "@fontsource/inter";
 </script>
 
 <main>

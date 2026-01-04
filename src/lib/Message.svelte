@@ -4,7 +4,7 @@
   import type { MessageResponse } from "../scripts/schemas";
   import Avatar from "./Avatar.svelte";
   import MessageEditor from "./MessageEditor.svelte";
-  import Tooltip from "./Tooltip.svelte";
+  import MessageText from "./MessageText.svelte";
 
   let props: { msg: MessageResponse; small?: boolean } = $props();
 </script>
@@ -54,7 +54,7 @@
         {#if props.msg.id === editingMessage.value}
           <MessageEditor msg={props.msg} />
         {:else}
-          {@render MessageText(props.msg.message, props.msg.edited)}
+          <MessageText text={props.msg.message} edited={props.msg.edited} />
         {/if}
       </div>
     </div>
@@ -80,19 +80,10 @@
           <MessageEditor msg={props.msg} />
         {:else}
           <div class="py-0.5">
-            {@render MessageText(props.msg.message, props.msg.edited)}
+            <MessageText text={props.msg.message} edited={props.msg.edited} />
           </div>
         {/if}
       </div>
     </div>
   {/if}
 </li>
-
-{#snippet MessageText(text: string, edited: string | null)}
-  <span class="break-all text-gray-200">{text}</span>
-  {#if edited}
-    <Tooltip text={utcToLocal(edited)}>
-      <span class="text-xs text-gray-400 select-none pl-0.5">(edited)</span>
-    </Tooltip>
-  {/if}
-{/snippet}

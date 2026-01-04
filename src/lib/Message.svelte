@@ -89,7 +89,7 @@
 </li>
 
 {#snippet MessageText(text: string, edited: string | null)}
-  <span class="break-all">{text}</span>
+  <span class="break-all text-gray-200">{text}</span>
   {#if edited}
     <Tooltip text={utcToLocal(edited)}>
       <span class="text-xs text-gray-400 select-none pl-0.5">(edited)</span>

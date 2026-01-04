@@ -211,7 +211,7 @@
 
 <div class="relative w-full overflow-hidden">
   <ul
-    class="h-full overflow-y-auto py-3 scrollbar-hover"
+    class="h-full overflow-y-auto py-3"
     style="overflow-anchor: none;"
     bind:this={msgList}
     onscroll={onDivScroll}

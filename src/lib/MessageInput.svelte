@@ -4,6 +4,7 @@
   import { create_message } from "../scripts/httpActions";
   import MessageTyping from "./MessageTyping.svelte";
   import AutoResizeTextarea from "./AutoResizeTextarea.svelte";
+  import Plus from "../icons/Plus.svelte";
 
   let chatInput = $state<string>("");
 
@@ -24,7 +25,14 @@
   <div class="absolute bottom-full pointer-events-none">
     <MessageTyping {chatInput} />
   </div>
-  <div class="flex rounded-lg bg-white/3 border border-color overflow-hidden">
+  <div
+    class="flex rounded-lg bg-white/3 border border-color overflow-hidden px-2"
+  >
+    <div class="flex justify-center items-center">
+      <button class="hover:bg-white/10 m-1 rounded-lg">
+        <Plus />
+      </button>
+    </div>
     <AutoResizeTextarea
       bind:value={chatInput}
       onEnter={sendMessage}

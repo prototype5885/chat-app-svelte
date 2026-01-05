@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import { get_members } from "../scripts/httpActions";
   import { currentServer } from "../scripts/globals.svelte";
   import { errorToast } from "../scripts/toast.svelte";
   import Avatar from "./Avatar.svelte";
-  import type { UserMemberResponse } from "../scripts/schemas";
+  import type { AvatarChanged, UserMemberResponse } from "../scripts/schemas";
+  import { socket, user_avatar_changed } from "../scripts/socketio.svelte";
 
   let members = $state<UserMemberResponse[]>([]);
 
@@ -15,6 +16,19 @@
     }
 
     members = await get_members(currentServer.value.id);
+
+    socket.on(user_avatar_changed, (data: AvatarChanged) => {
+      members.forEach((member) => {
+        if (member.user_id === data.id) {
+          member.picture = data.picture;
+          return;
+        }
+      });
+    });
+  });
+
+  onDestroy(() => {
+    socket.off(user_avatar_changed);
   });
 </script>
 

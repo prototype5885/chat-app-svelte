@@ -77,3 +77,8 @@ export interface TypingSchema {
   user_id: string;
   display_name: string | null;
 }
+
+export interface AvatarChanged {
+  id: string;
+  picture: string | null;
+}

@@ -53,13 +53,15 @@ export async function update_user_info(formData: FormData) {
   });
 }
 
-export async function upload_user_avatar(file: File | null) {
+export async function upload_user_avatar(
+  file: File | null,
+): Promise<string | null> {
   const formData = new FormData();
   if (file) {
     formData.append("file", file);
   }
 
-  await fetchWrapper("/api/v1/user/upload/avatar", {
+  return await fetchWrapper("/api/v1/user/upload/avatar", {
     method: "POST",
     body: formData,
   });
@@ -88,13 +90,13 @@ export async function update_server_info(formData: FormData, serverID: string) {
 export async function upload_server_avatar(
   file: File | null,
   serverID: string,
-) {
+): Promise<string | null> {
   const formData = new FormData();
   if (file) {
     formData.append("file", file);
   }
 
-  await fetchWrapper(`/api/v1/server/${serverID}/upload/avatar`, {
+  return await fetchWrapper(`/api/v1/server/${serverID}/upload/avatar`, {
     method: "POST",
     body: formData,
   });

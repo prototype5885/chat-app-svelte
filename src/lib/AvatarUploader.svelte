@@ -37,29 +37,18 @@
     }
   }
 
-  async function uploadAvatar() {
-    if (!selectedFile) return;
-
+  async function changeAvatar() {
+    let name: string | null = null;
     if (props.serverID) {
-      await upload_server_avatar(selectedFile, props.serverID);
+      name = await upload_server_avatar(selectedFile, props.serverID);
       successToast("Server avatar changed!");
     } else {
-      await upload_user_avatar(selectedFile);
+      name = await upload_user_avatar(selectedFile);
       successToast("User avatar changed!");
     }
 
+    preview = name ? `/avatars/${name}.webp` : "";
     selectedFile = null;
-  }
-
-  async function removeAvatar() {
-    if (props.serverID) {
-      await upload_server_avatar(null, props.serverID);
-      successToast("Server avatar removed!");
-    } else {
-      await upload_user_avatar(null);
-      successToast("User avatar removed!");
-    }
-    preview = "";
   }
 
   onDestroy(() => {
@@ -99,14 +88,14 @@
 
   {#if selectedFile}
     <button
-      onclick={uploadAvatar}
+      onclick={changeAvatar}
       class="bg-blue-500 rounded disabled:bg-black/20 py-1 px-2"
     >
       Upload
     </button>
   {:else if preview}
     <button
-      onclick={removeAvatar}
+      onclick={changeAvatar}
       class="bg-red-500 rounded disabled:bg-black/20 py-1 px-2"
     >
       Remove avatar

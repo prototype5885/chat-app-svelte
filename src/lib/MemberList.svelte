@@ -4,10 +4,10 @@
   import { currentServer } from "../scripts/globals.svelte";
   import { errorToast } from "../scripts/toast.svelte";
   import Avatar from "./Avatar.svelte";
-  import type { AvatarChanged, UserMemberResponse } from "../scripts/schemas";
+  import type { AvatarChanged, UserSchema } from "../scripts/schemas";
   import { socket, user_avatar_changed } from "../scripts/socketio.svelte";
 
-  let members = $state<UserMemberResponse[]>([]);
+  let members = $state<UserSchema[]>([]);
 
   onMount(async () => {
     if (!currentServer.value) {
@@ -19,7 +19,7 @@
 
     socket.on(user_avatar_changed, (data: AvatarChanged) => {
       members.forEach((member) => {
-        if (member.user_id === data.id) {
+        if (member.id === data.id) {
           member.picture = data.picture;
           return;
         }
@@ -37,7 +37,7 @@
     <li
       class="flex p-1 cursor-pointer hover:bg-white/5 rounded-xl"
       data-ctx-type="user"
-      data-ctx-user-id={member.user_id}
+      data-ctx-user-id={member.id}
     >
       <Avatar size="36" pic={member.picture} name={member.display_name} />
       <span class="ml-2 text-ellipsis whitespace-nowrap overflow-x-hidden"

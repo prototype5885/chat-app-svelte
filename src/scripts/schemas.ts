@@ -1,5 +1,6 @@
-export interface UserInfoResponse {
-  username: string;
+export interface UserSchema {
+  id: string;
+  username: string | null;
   display_name: string;
   picture: string | null;
   custom_status: string | null;
@@ -7,13 +8,6 @@ export interface UserInfoResponse {
 
 export interface UserEditRequest {
   display_name: string | null;
-}
-
-export interface UserMemberResponse {
-  user_id: string;
-  display_name: string;
-  picture: string | null;
-  custom_status: string | null;
 }
 
 export interface ServerSchema {

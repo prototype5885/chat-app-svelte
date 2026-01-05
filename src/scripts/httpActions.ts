@@ -42,7 +42,7 @@ export async function get_user_id(): Promise<string> {
   return await fetchWrapper("/api/v1/user_id", { method: "GET" });
 }
 
-export async function get_user_info(): Promise<s.UserInfoResponse> {
+export async function get_user_info(): Promise<s.UserSchema> {
   return await fetchWrapper("/api/v1/user", { method: "GET" });
 }
 
@@ -150,9 +150,7 @@ export async function delete_channel(channelID: string) {
   // socket.io response
 }
 
-export async function get_members(
-  serverID: string,
-): Promise<s.UserMemberResponse[]> {
+export async function get_members(serverID: string): Promise<s.UserSchema[]> {
   return await fetchWrapper(`/api/v1/server/${serverID}/members`, {
     method: "GET",
   });

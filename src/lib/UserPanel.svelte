@@ -6,9 +6,9 @@
   import UserPanelButton from "./UserPanelButton.svelte";
   import { get_user_info } from "../scripts/httpActions";
   import Tooltip from "./Tooltip.svelte";
-  import type { UserInfoResponse } from "../scripts/schemas";
+  import type { UserSchema } from "../scripts/schemas";
 
-  let userData = $state<UserInfoResponse>();
+  let userData = $state<UserSchema>();
 
   onMount(async () => {
     userData = await get_user_info();

@@ -2,10 +2,10 @@
   import { onMount } from "svelte";
   import { get_user_info, update_user_info } from "../scripts/httpActions";
   import { successToast } from "../scripts/toast.svelte";
-  import type { UserInfoResponse } from "../scripts/schemas";
+  import type { UserSchema } from "../scripts/schemas";
   import AvatarUploader from "./AvatarUploader.svelte";
 
-  let userData = $state<UserInfoResponse>();
+  let userData = $state<UserSchema>();
 
   let modifiedDisplayName = $state<string>("");
 

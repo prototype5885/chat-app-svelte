@@ -53,6 +53,13 @@ export async function update_user_info(formData: FormData) {
   });
 }
 
+export async function upload_user_avatar(formData: FormData) {
+  await fetchWrapper("/api/v1/user/upload/avatar", {
+    method: "POST",
+    body: formData,
+  });
+}
+
 export async function create_server(name: string): Promise<s.ServerSchema> {
   return await fetchWrapper("/api/v1/server", {
     method: "POST",
@@ -69,6 +76,16 @@ export async function get_server_info(
 export async function update_server_info(formData: FormData, serverID: string) {
   await fetchWrapper(`/api/v1/server/${serverID}`, {
     method: "PATCH",
+    body: formData,
+  });
+}
+
+export async function upload_server_avatar(
+  formData: FormData,
+  serverID: string,
+) {
+  await fetchWrapper(`/api/v1/server/${serverID}/upload/avatar`, {
+    method: "POST",
     body: formData,
   });
 }

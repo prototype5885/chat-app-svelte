@@ -4,6 +4,7 @@
   import { successToast } from "../scripts/toast.svelte";
   import { settings } from "../scripts/globals.svelte";
   import type { ServerSchema } from "../scripts/schemas";
+  import AvatarUploader from "./AvatarUploader.svelte";
 
   let serverData = $state<ServerSchema>();
 
@@ -56,6 +57,8 @@
 
 {#if serverData}
   <div>
+    <AvatarUploader preview={serverData.picture} serverID={serverData.id} />
+    <br />
     <form class="flex flex-col" onsubmit={handleSubmit}>
       <label for="name">Server name</label>
       <input

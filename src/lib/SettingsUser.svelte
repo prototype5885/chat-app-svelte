@@ -3,11 +3,11 @@
   import { get_user_info, update_user_info } from "../scripts/httpActions";
   import { successToast } from "../scripts/toast.svelte";
   import type { UserInfoResponse } from "../scripts/schemas";
+  import AvatarUploader from "./AvatarUploader.svelte";
 
   let userData = $state<UserInfoResponse>();
 
   let modifiedDisplayName = $state<string>("");
-  let modifiedPicture: File | null = null;
 
   onMount(async () => {
     userData = await get_user_info();
@@ -55,6 +55,8 @@
 
 {#if userData}
   <div>
+    <AvatarUploader preview={userData.picture} />
+    <br />
     <form class="flex flex-col" onsubmit={handleSubmit}>
       <label for="display_name">Display name</label>
       <input

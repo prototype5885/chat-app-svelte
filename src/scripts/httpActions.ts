@@ -53,7 +53,7 @@ export async function update_user_info(formData: FormData) {
   });
 }
 
-export async function upload_user_avatar(formData: FormData) {
+export async function upload_user_avatar(formData: FormData | null) {
   await fetchWrapper("/api/v1/user/upload/avatar", {
     method: "POST",
     body: formData,
@@ -81,7 +81,7 @@ export async function update_server_info(formData: FormData, serverID: string) {
 }
 
 export async function upload_server_avatar(
-  formData: FormData,
+  formData: FormData | null,
   serverID: string,
 ) {
   await fetchWrapper(`/api/v1/server/${serverID}/upload/avatar`, {

@@ -41,7 +41,7 @@
     if (!selectedFile) return;
 
     const formData = new FormData();
-    formData.append("avatar", selectedFile);
+    formData.append("file", selectedFile);
 
     if (props.serverID) {
       await upload_server_avatar(formData, props.serverID);
@@ -52,6 +52,17 @@
     }
 
     selectedFile = null;
+  }
+
+  async function removeAvatar() {
+    if (props.serverID) {
+      await upload_server_avatar(null, props.serverID);
+      successToast("Server avatar removed!");
+    } else {
+      await upload_user_avatar(null);
+      successToast("User avatar removed!");
+    }
+    preview = "";
   }
 
   onDestroy(() => {
@@ -92,9 +103,16 @@
   {#if selectedFile}
     <button
       onclick={uploadAvatar}
-      class="bg-blue-500 rounded disabled:bg-black/20"
+      class="bg-blue-500 rounded disabled:bg-black/20 py-1 px-2"
     >
-      Upload avatar
+      Upload
+    </button>
+  {:else if preview}
+    <button
+      onclick={removeAvatar}
+      class="bg-red-500 rounded disabled:bg-black/20 py-1 px-2"
+    >
+      Remove avatar
     </button>
   {/if}
 </div>

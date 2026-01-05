@@ -40,14 +40,11 @@
   async function uploadAvatar() {
     if (!selectedFile) return;
 
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-
     if (props.serverID) {
-      await upload_server_avatar(formData, props.serverID);
+      await upload_server_avatar(selectedFile, props.serverID);
       successToast("Server avatar changed!");
     } else {
-      await upload_user_avatar(formData);
+      await upload_user_avatar(selectedFile);
       successToast("User avatar changed!");
     }
 

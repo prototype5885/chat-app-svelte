@@ -46,8 +46,10 @@ export async function get_user_info(): Promise<s.UserSchema> {
   return await fetchWrapper("/api/v1/user", { method: "GET" });
 }
 
-export async function update_user_info(formData: FormData) {
-  await fetchWrapper("/api/v1/user", {
+export async function update_user_info(
+  formData: FormData,
+): Promise<s.UserEditResponse> {
+  return await fetchWrapper("/api/v1/user", {
     method: "PATCH",
     body: formData,
   });

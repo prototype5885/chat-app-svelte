@@ -75,7 +75,12 @@
     socket.on(user_info, (data: UserEditResponse) => {
       messageList.forEach((msg) => {
         if (msg.sender_id === data.id) {
-          msg.picture = data.picture;
+          if (data.picture !== undefined) {
+            msg.picture = data.picture;
+          }
+          if (data.display_name !== undefined) {
+            msg.display_name = data.display_name;
+          }
         }
       });
     });

@@ -20,7 +20,15 @@
     socket.on(user_info, (data: UserEditResponse) => {
       members.forEach((member) => {
         if (member.id === data.id) {
-          member.picture = data.picture;
+          if (data.picture !== undefined) {
+            member.picture = data.picture;
+          }
+          if (data.display_name !== undefined) {
+            member.display_name = data.display_name;
+          }
+          if (data.custom_status !== undefined) {
+            member.custom_status = data.custom_status;
+          }
           return;
         }
       });

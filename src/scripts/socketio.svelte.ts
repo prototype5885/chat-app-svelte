@@ -1,5 +1,4 @@
 import { io } from "socket.io-client";
-import { errorToast } from "./toast.svelte";
 
 export const create_server = "create_server";
 export const delete_server = "delete_server";

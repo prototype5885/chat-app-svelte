@@ -48,7 +48,13 @@
       return;
     }
 
-    await update_user_info(formData);
+    const data = await update_user_info(formData);
+    if (data.display_name !== undefined) {
+      userData.display_name = data.display_name;
+    }
+    if (data.custom_status !== undefined) {
+      userData.custom_status = data.custom_status;
+    }
     successToast("Updated user info!");
   }
 </script>

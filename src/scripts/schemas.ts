@@ -12,9 +12,9 @@ export interface UserEditRequest {
 
 export interface UserEditResponse {
   id: string;
-  display_name: string | null;
-  picture: string | null;
-  custom_status: string | null;
+  display_name?: string;
+  picture?: string | null;
+  custom_status?: string | null;
 }
 
 export interface ServerSchema {

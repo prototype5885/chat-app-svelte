@@ -21,7 +21,7 @@ export interface ServerSchema {
   id: string;
   owner_id: string;
   name: string;
-  picture: string;
+  picture: string | null;
   banner: string | null;
   roles: string | null;
 }
@@ -32,6 +32,14 @@ export interface ServerCreateRequest {
 
 export interface ServerEditRequest {
   name: string | null;
+}
+
+export interface ServerEditResponse {
+  id: string;
+  name?: string;
+  picture?: string | null;
+  banner?: string | null;
+  role?: string | null;
 }
 
 export interface ChannelSchema {

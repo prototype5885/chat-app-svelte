@@ -19,6 +19,7 @@ export const user_status = "user_status";
 export const user_info = "user_info";
 export const server_info = "server_info";
 
+export const subscribe_to_server_list = "subscribe_to_server_list";
 export const subscribe_to_channel_list = "subscribe_to_channel_list";
 export const subscribe_to_message_list = "subscribe_to_message_list";
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import ServerBase from "./ServerBase.svelte";
   import {
     currentChannel,
@@ -10,7 +10,13 @@
   import Plus from "../icons/Plus.svelte";
   import { create_server, get_servers } from "../scripts/httpActions";
   import Tooltip from "./Tooltip.svelte";
-  import type { ServerSchema } from "../scripts/schemas";
+  import type { ServerEditResponse, ServerSchema } from "../scripts/schemas";
+  import {
+    server_info,
+    socket,
+    subscribe_to_server_list,
+  } from "../scripts/socketio.svelte";
+  import { errorToast } from "../scripts/toast.svelte";
 
   let serverList = $state<ServerSchema[]>([]);
 
@@ -30,6 +36,31 @@
         localStorage.removeItem(lastServerID);
       }
     });
+
+    // subscribe to servers to receive real time changes
+    const event = subscribe_to_server_list;
+    const serverIDs: string[] = await socket.emitWithAck(event);
+
+    // confirm if they match with previously received server IDs
+    const isCorrect =
+      serverIDs.length === serverList.length &&
+      serverIDs.every((id) => serverList.some((server) => server.id === id));
+    if (!isCorrect) {
+      errorToast(
+        `Received server list and the '${event}' event server IDs don't match`,
+        "Error",
+        false,
+      );
+    }
+
+    // process changes
+    socket.on(server_info, (data: ServerEditResponse) => {
+      updateServerInfo(data);
+    });
+  });
+
+  onDestroy(() => {
+    socket.off(server_info);
   });
 
   function selectServer(server: ServerSchema) {
@@ -42,6 +73,23 @@
     serverList.push(newServer);
 
     selectServer(newServer);
+  }
+
+  function updateServerInfo(data: ServerEditResponse) {
+    serverList.forEach((server) => {
+      if (server.id === data.id) {
+        if (data.name !== undefined) {
+          server.name = data.name;
+        }
+        if (data.picture !== undefined) {
+          server.picture = data.picture;
+        }
+        if (data.banner !== undefined) {
+          server.banner = data.banner;
+        }
+        return;
+      }
+    });
   }
 </script>
 

@@ -17,8 +17,8 @@ export const stop_typing = "stop_typing";
 
 export const user_status = "user_status";
 
-export const user_avatar_changed = "user_avatar_changed";
-export const server_avatar_Changed = "server_avatar_changed";
+export const user_info = "user_info";
+export const server_info = "server_info";
 
 export const subscribe_to_channel_list = "subscribe_to_channel_list";
 export const subscribe_to_message_list = "subscribe_to_message_list";

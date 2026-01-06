@@ -10,6 +10,13 @@ export interface UserEditRequest {
   display_name: string | null;
 }
 
+export interface UserEditResponse {
+  id: string;
+  display_name: string | null;
+  picture: string | null;
+  custom_status: string | null;
+}
+
 export interface ServerSchema {
   id: string;
   owner_id: string;
@@ -70,9 +77,4 @@ export interface MessageResponse {
 export interface TypingSchema {
   user_id: string;
   display_name: string | null;
-}
-
-export interface AvatarChanged {
-  id: string;
-  picture: string | null;
 }

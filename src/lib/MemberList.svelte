@@ -4,8 +4,8 @@
   import { currentServer } from "../scripts/globals.svelte";
   import { errorToast } from "../scripts/toast.svelte";
   import Avatar from "./Avatar.svelte";
-  import type { AvatarChanged, UserSchema } from "../scripts/schemas";
-  import { socket, user_avatar_changed } from "../scripts/socketio.svelte";
+  import type { UserEditResponse, UserSchema } from "../scripts/schemas";
+  import { socket, user_info } from "../scripts/socketio.svelte";
 
   let members = $state<UserSchema[]>([]);
 
@@ -17,7 +17,7 @@
 
     members = await get_members(currentServer.value.id);
 
-    socket.on(user_avatar_changed, (data: AvatarChanged) => {
+    socket.on(user_info, (data: UserEditResponse) => {
       members.forEach((member) => {
         if (member.id === data.id) {
           member.picture = data.picture;
@@ -28,7 +28,7 @@
   });
 
   onDestroy(() => {
-    socket.off(user_avatar_changed);
+    socket.off(user_info);
   });
 </script>
 

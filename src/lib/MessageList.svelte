@@ -8,7 +8,7 @@
     edit_message,
     socket,
     subscribe_to_message_list,
-    user_avatar_changed,
+    user_info,
   } from "../scripts/socketio.svelte";
   import {
     getMediumDate,
@@ -17,7 +17,7 @@
   } from "../scripts/date";
   import { errorToast } from "../scripts/toast.svelte";
   import { get_messages } from "../scripts/httpActions";
-  import type { AvatarChanged, MessageResponse } from "../scripts/schemas";
+  import type { UserEditResponse, MessageResponse } from "../scripts/schemas";
 
   // these will happen if the scroll distance from bottom is above this:
   // won't autoscroll down on new message
@@ -72,7 +72,7 @@
       deleteMessage(messageID);
     });
 
-    socket.on(user_avatar_changed, (data: AvatarChanged) => {
+    socket.on(user_info, (data: UserEditResponse) => {
       messageList.forEach((msg) => {
         if (msg.sender_id === data.id) {
           msg.picture = data.picture;
@@ -100,7 +100,7 @@
     socket.off(create_message);
     socket.off(edit_message);
     socket.off(delete_message);
-    socket.off(user_avatar_changed);
+    socket.off(user_info);
   });
 
   const scrollToBottom = async (behavior: ScrollBehavior) => {

@@ -50,7 +50,8 @@
       return;
     }
 
-    await update_server_info(formData, settings.value.serverID!);
+    serverData = await update_server_info(formData, settings.value.serverID!);
+
     successToast("Updated server info!");
   }
 </script>

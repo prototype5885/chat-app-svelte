@@ -34,14 +34,6 @@ export interface ServerEditRequest {
   name: string | null;
 }
 
-export interface ServerEditResponse {
-  id: string;
-  name?: string;
-  picture?: string | null;
-  banner?: string | null;
-  role?: string | null;
-}
-
 export interface ChannelSchema {
   id: string;
   server_id: string;

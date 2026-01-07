@@ -10,7 +10,7 @@
   import Plus from "../icons/Plus.svelte";
   import { create_server, get_servers } from "../scripts/httpActions";
   import Tooltip from "./Tooltip.svelte";
-  import type { ServerEditResponse, ServerSchema } from "../scripts/schemas";
+  import type { ServerSchema } from "../scripts/schemas";
   import {
     server_info,
     socket,
@@ -54,7 +54,7 @@
     }
 
     // process changes
-    socket.on(server_info, (data: ServerEditResponse) => {
+    socket.on(server_info, (data: ServerSchema) => {
       updateServerInfo(data);
     });
   });
@@ -75,21 +75,13 @@
     selectServer(newServer);
   }
 
-  function updateServerInfo(data: ServerEditResponse) {
-    serverList.forEach((server) => {
-      if (server.id === data.id) {
-        if (data.name !== undefined) {
-          server.name = data.name;
-        }
-        if (data.picture !== undefined) {
-          server.picture = data.picture;
-        }
-        if (data.banner !== undefined) {
-          server.banner = data.banner;
-        }
+  function updateServerInfo(data: ServerSchema) {
+    for (let i = 0; i < serverList.length; i++) {
+      if (serverList[i].id === data.id) {
+        serverList[i] = data;
         return;
       }
-    });
+    }
   }
 </script>
 

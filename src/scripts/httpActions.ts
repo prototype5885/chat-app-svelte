@@ -82,8 +82,11 @@ export async function get_server_info(
   return await fetchWrapper(`/api/v1/server/${serverID}`, { method: "GET" });
 }
 
-export async function update_server_info(formData: FormData, serverID: string) {
-  await fetchWrapper(`/api/v1/server/${serverID}`, {
+export async function update_server_info(
+  formData: FormData,
+  serverID: string,
+): Promise<s.ServerSchema> {
+  return await fetchWrapper(`/api/v1/server/${serverID}`, {
     method: "PATCH",
     body: formData,
   });

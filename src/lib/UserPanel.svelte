@@ -6,12 +6,35 @@
   import UserPanelButton from "./UserPanelButton.svelte";
   import { get_user_info } from "../scripts/httpActions";
   import Tooltip from "./Tooltip.svelte";
-  import type { UserSchema } from "../scripts/schemas";
+  import type { UserEditResponse, UserSchema } from "../scripts/schemas";
+  import { self_user_info, wsSubscribe } from "../scripts/websocket.svelte";
 
   let userData = $state<UserSchema>();
 
   onMount(async () => {
     userData = await get_user_info();
+  });
+
+  $effect(() => {
+    wsSubscribe(self_user_info, (event: Event) => {
+      const { detail } = event as CustomEvent;
+      const user: UserEditResponse = JSON.parse(detail);
+
+      if (user.id !== userData?.id) {
+        return;
+      }
+
+      if (user.picture !== undefined) {
+        userData.picture = user.picture;
+      }
+      if (user.display_name !== undefined) {
+        userData.display_name = user.display_name;
+      }
+      if (user.custom_status !== undefined) {
+        userData.custom_status = user.custom_status;
+      }
+      return;
+    });
   });
 </script>
 

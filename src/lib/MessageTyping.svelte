@@ -1,13 +1,12 @@
 <script lang="ts">
-  import { onDestroy, onMount } from "svelte";
-  import {
-    socket,
-    start_typing,
-    stop_typing,
-  } from "../scripts/socketio.svelte";
   import { currentChannel } from "../scripts/globals.svelte";
   import { errorToast } from "../scripts/toast.svelte";
   import { typing } from "../scripts/httpActions";
+  import {
+    start_typing,
+    stop_typing,
+    wsSubscribe,
+  } from "../scripts/websocket.svelte";
 
   let props: { chatInput: string } = $props();
   let isTyping = false;
@@ -22,13 +21,19 @@
   let usersTypingText = $state<string>("");
   let isAreTypingText = $state<string>("");
 
-  onMount(async () => {
-    socket.on(start_typing, (userTyping: UserTyping) => {
+  $effect(() => {
+    wsSubscribe(start_typing, (event: Event) => {
+      const { detail } = event as CustomEvent;
+      const userTyping: UserTyping = JSON.parse(detail);
+
       usersTyping.set(userTyping.user_id, userTyping.display_name);
       valuesChanged();
     });
 
-    socket.on(stop_typing, (userID: string) => {
+    wsSubscribe(stop_typing, (event: Event) => {
+      const { detail } = event as CustomEvent;
+      const userID: string = detail;
+
       if (!usersTyping.delete(userID)) {
         errorToast(
           `'${stop_typing}' event received, but user ID '${userID}' was not found in usersTyping`,
@@ -74,11 +79,6 @@
       isTyping = false;
       typingValueChanged("stop");
     }
-  });
-
-  onDestroy(() => {
-    socket.off(start_typing);
-    socket.off(stop_typing);
   });
 </script>
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy, onMount } from "svelte";
+  import { onMount } from "svelte";
   import ServerBase from "./ServerBase.svelte";
   import {
     currentChannel,
@@ -12,11 +12,13 @@
   import Tooltip from "./Tooltip.svelte";
   import type { ServerSchema } from "../scripts/schemas";
   import {
+    delete_server,
+    sendWs,
     server_info,
-    socket,
+    subscribe_to_server,
     subscribe_to_server_list,
-  } from "../scripts/socketio.svelte";
-  import { errorToast } from "../scripts/toast.svelte";
+    wsSubscribe,
+  } from "../scripts/websocket.svelte";
 
   let serverList = $state<ServerSchema[]>([]);
 
@@ -38,29 +40,28 @@
     });
 
     // subscribe to servers to receive real time changes
-    const event = subscribe_to_server_list;
-    const serverIDs: string[] = await socket.emitWithAck(event);
-
-    // confirm if they match with previously received server IDs
-    const isCorrect =
-      serverIDs.length === serverList.length &&
-      serverIDs.every((id) => serverList.some((server) => server.id === id));
-    if (!isCorrect) {
-      errorToast(
-        `Received server list and the '${event}' event server IDs don't match`,
-        "Error",
-        false,
-      );
-    }
-
-    // process changes
-    socket.on(server_info, (data: ServerSchema) => {
-      updateServerInfo(data);
-    });
+    sendWs(subscribe_to_server_list, null);
   });
 
-  onDestroy(() => {
-    socket.off(server_info);
+  $effect(() => {
+    wsSubscribe(server_info, (event: Event) => {
+      const { detail } = event as CustomEvent;
+      const server: ServerSchema = JSON.parse(detail);
+
+      updateServerInfo(server);
+    });
+
+    wsSubscribe(delete_server, (event: Event) => {
+      const { detail } = event as CustomEvent;
+      const serverID: string = detail;
+
+      for (let i = 0; i < serverList.length; i++) {
+        if (serverList[i].id === serverID) {
+          serverList.splice(i, 1);
+          return;
+        }
+      }
+    });
   });
 
   function selectServer(server: ServerSchema) {
@@ -73,6 +74,9 @@
     serverList.push(newServer);
 
     selectServer(newServer);
+
+    // subscribe to this new server to receive real time changes
+    sendWs(subscribe_to_server, newServer.id);
   }
 
   function updateServerInfo(data: ServerSchema) {

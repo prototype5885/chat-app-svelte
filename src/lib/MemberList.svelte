@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { onDestroy, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { get_members } from "../scripts/httpActions";
   import { currentServer } from "../scripts/globals.svelte";
   import { errorToast } from "../scripts/toast.svelte";
   import Avatar from "./Avatar.svelte";
   import type { UserEditResponse, UserSchema } from "../scripts/schemas";
-  import { socket, user_info } from "../scripts/socketio.svelte";
+  import { user_info, wsSubscribe } from "../scripts/websocket.svelte";
 
   let members = $state<UserSchema[]>([]);
 
@@ -16,27 +16,28 @@
     }
 
     members = await get_members(currentServer.value.id);
+  });
 
-    socket.on(user_info, (data: UserEditResponse) => {
+  $effect(() => {
+    wsSubscribe(user_info, (event: Event) => {
+      const { detail } = event as CustomEvent;
+      const user: UserEditResponse = JSON.parse(detail);
+
       members.forEach((member) => {
-        if (member.id === data.id) {
-          if (data.picture !== undefined) {
-            member.picture = data.picture;
+        if (member.id === user.id) {
+          if (user.picture !== undefined) {
+            member.picture = user.picture;
           }
-          if (data.display_name !== undefined) {
-            member.display_name = data.display_name;
+          if (user.display_name !== undefined) {
+            member.display_name = user.display_name;
           }
-          if (data.custom_status !== undefined) {
-            member.custom_status = data.custom_status;
+          if (user.custom_status !== undefined) {
+            member.custom_status = user.custom_status;
           }
           return;
         }
       });
     });
-  });
-
-  onDestroy(() => {
-    socket.off(user_info);
   });
 </script>
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy, onMount } from "svelte";
+  import { onMount } from "svelte";
   import type { ChannelSchema } from "../scripts/schemas";
   import Channel from "./Channel.svelte";
   import { currentChannel, currentServer } from "../scripts/globals.svelte";
@@ -7,9 +7,10 @@
     create_channel,
     delete_channel,
     modify_channel,
-    socket,
+    sendWs,
     subscribe_to_channel_list,
-  } from "../scripts/socketio.svelte";
+    wsSubscribe,
+  } from "../scripts/websocket.svelte";
   import ChannelAdd from "./ChannelAdd.svelte";
   import { errorToast } from "../scripts/toast.svelte";
   import { get_channels } from "../scripts/httpActions";
@@ -23,10 +24,7 @@
     }
 
     const event = subscribe_to_channel_list;
-    const issue = await socket.emitWithAck(event, currentServer.value.id);
-    if (issue) {
-      errorToast(`'${event}' event returned ack '${issue}''`);
-    }
+    sendWs(event, currentServer.value.id);
 
     channelList = await get_channels(currentServer.value.id);
 
@@ -38,12 +36,20 @@
       );
       currentChannel.value = lastChannel || channelList[0];
     }
+  });
 
-    socket.on(create_channel, (channel: ChannelSchema) => {
+  $effect(() => {
+    wsSubscribe(create_channel, (event: Event) => {
+      const { detail } = event as CustomEvent;
+      const channel: ChannelSchema = JSON.parse(detail);
+
       channelList.push(channel);
     });
 
-    socket.on(delete_channel, (channelID: string) => {
+    wsSubscribe(delete_channel, (event: Event) => {
+      const { detail } = event as CustomEvent;
+      const channelID: string = detail;
+
       for (let i = 0; i < channelList.length; i++) {
         if (channelList[i].id === channelID) {
           channelList.splice(i, 1);
@@ -62,7 +68,10 @@
       );
     });
 
-    socket.on(modify_channel, (channel: ChannelSchema) => {
+    wsSubscribe(modify_channel, (event: Event) => {
+      const { detail } = event as CustomEvent;
+      const channel: ChannelSchema = JSON.parse(detail);
+
       for (let i = 0; i < channelList.length; i++) {
         if (channelList[i].id === channel.id) {
           channelList[i] = channel;
@@ -73,12 +82,6 @@
         `'${modify_channel}' event received, but channel ID '${channel.id}' was not found`,
       );
     });
-  });
-
-  onDestroy(() => {
-    socket.off(create_channel);
-    socket.off(delete_channel);
-    socket.off(modify_channel);
   });
 </script>
 

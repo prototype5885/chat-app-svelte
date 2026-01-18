@@ -1,15 +1,7 @@
 <script lang="ts">
-  import { onDestroy, onMount, tick } from "svelte";
+  import { onMount, tick } from "svelte";
   import { currentChannel } from "../scripts/globals.svelte";
   import Message from "./Message.svelte";
-  import {
-    create_message,
-    delete_message,
-    edit_message,
-    socket,
-    subscribe_to_message_list,
-    user_info,
-  } from "../scripts/socketio.svelte";
   import {
     getMediumDate,
     isOlderThanFiveMins,
@@ -17,7 +9,16 @@
   } from "../scripts/date";
   import { errorToast } from "../scripts/toast.svelte";
   import { get_messages } from "../scripts/httpActions";
-  import type { UserEditResponse, MessageResponse } from "../scripts/schemas";
+  import type { MessageResponse, UserEditResponse } from "../scripts/schemas";
+  import {
+    create_message,
+    delete_message,
+    edit_message,
+    sendWs,
+    subscribe_to_message_list,
+    user_info,
+    wsSubscribe,
+  } from "../scripts/websocket.svelte";
 
   // these will happen if the scroll distance from bottom is above this:
   // won't autoscroll down on new message
@@ -47,10 +48,7 @@
     }
 
     const event = subscribe_to_message_list;
-    const issue = await socket.emitWithAck(event, currentChannel.value.id);
-    if (issue) {
-      errorToast(`'${event}' event returned ack '${issue}''`);
-    }
+    sendWs(event, currentChannel.value.id);
 
     messageList = (await get_messages(currentChannel.value.id)).reverse();
     if (messageList.length === 0) {
@@ -59,31 +57,6 @@
     }
 
     initialDisplayMessages();
-
-    socket.on(create_message, (message: MessageResponse) => {
-      addNewMessage(message);
-    });
-
-    socket.on(edit_message, (editedMessage: MessageResponse) => {
-      editMessage(editedMessage);
-    });
-
-    socket.on(delete_message, (messageID: string) => {
-      deleteMessage(messageID);
-    });
-
-    socket.on(user_info, (data: UserEditResponse) => {
-      messageList.forEach((msg) => {
-        if (msg.sender_id === data.id) {
-          if (data.picture !== undefined) {
-            msg.picture = data.picture;
-          }
-          if (data.display_name !== undefined) {
-            msg.display_name = data.display_name;
-          }
-        }
-      });
-    });
 
     await tick();
     const canScroll = msgList.scrollHeight > msgList.clientHeight;
@@ -101,11 +74,60 @@
     }
   });
 
-  onDestroy(() => {
-    socket.off(create_message);
-    socket.off(edit_message);
-    socket.off(delete_message);
-    socket.off(user_info);
+  $effect(() => {
+    wsSubscribe(create_message, (event: Event) => {
+      const { detail } = event as CustomEvent;
+      const message: MessageResponse = JSON.parse(detail);
+
+      messageList.push(message);
+
+      if (scrollBottom < OLD_ABOVE_THIS) {
+        scrollToBottom("instant");
+      } else {
+        newMessagesCount += 1;
+      }
+    });
+
+    wsSubscribe(edit_message, (event: Event) => {
+      const { detail } = event as CustomEvent;
+      const editedMessage: MessageResponse = JSON.parse(detail);
+
+      for (let i = 0; i < messageList.length; i++) {
+        if (messageList[i].id === editedMessage.id) {
+          messageList[i].message = editedMessage.message;
+          messageList[i].edited = editedMessage.edited;
+          return;
+        }
+      }
+    });
+
+    wsSubscribe(delete_message, (event: Event) => {
+      const { detail } = event as CustomEvent;
+      const messageID: string = detail;
+
+      for (let i = 0; i < messageList.length; i++) {
+        if (messageList[i].id === messageID) {
+          messageList.splice(i, 1);
+          return;
+        }
+      }
+    });
+
+    wsSubscribe(user_info, (event: Event) => {
+      const { detail } = event as CustomEvent;
+      const user: UserEditResponse = JSON.parse(detail);
+
+      messageList.forEach((msg) => {
+        if (msg.sender_id === user.id) {
+          if (user.picture !== undefined) {
+            msg.picture = user.picture;
+          }
+          if (user.display_name !== undefined) {
+            msg.display_name = user.display_name;
+          }
+        }
+      });
+    });
   });
 
   const scrollToBottom = async (behavior: ScrollBehavior) => {
@@ -128,35 +150,6 @@
 
   function initialDisplayMessages() {
     scrollToBottom("instant");
-  }
-
-  function addNewMessage(message: MessageResponse) {
-    messageList.push(message);
-
-    if (scrollBottom < OLD_ABOVE_THIS) {
-      scrollToBottom("instant");
-    } else {
-      newMessagesCount += 1;
-    }
-  }
-
-  function editMessage(editedMessage: MessageResponse) {
-    for (let i = 0; i < messageList.length; i++) {
-      if (messageList[i].id === editedMessage.id) {
-        messageList[i].message = editedMessage.message;
-        messageList[i].edited = editedMessage.edited;
-        return;
-      }
-    }
-  }
-
-  function deleteMessage(messageID: string) {
-    for (let i = 0; i < messageList.length; i++) {
-      if (messageList[i].id === messageID) {
-        messageList.splice(i, 1);
-        return;
-      }
-    }
   }
 
   function addOlderMessages(messages: MessageResponse[]) {

@@ -23,7 +23,7 @@ export default defineConfig({
       "/attachments": {
         target: backendAddress,
       },
-      "/socket.io": {
+      "/ws": {
         target: backendAddress,
         ws: true,
       },

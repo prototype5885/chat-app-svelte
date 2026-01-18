@@ -119,7 +119,7 @@ export async function delete_server(serverID: string) {
   // no need to store last channel ID of this server anymore
   localStorage.removeItem(serverID);
 
-  // socket.io response
+  // Websocket response
 }
 
 export async function create_channel(serverID: string, name: string) {
@@ -128,7 +128,7 @@ export async function create_channel(serverID: string, name: string) {
     body: JSON.stringify({ name: name }),
   });
 
-  // socket.io response
+  // Websocket response
 }
 
 export async function get_channel_info(
@@ -148,7 +148,7 @@ export async function update_channel_info(
     body: formData,
   });
 
-  // socket.io response
+  // Websocket response
 }
 
 export async function get_channels(
@@ -164,7 +164,7 @@ export async function delete_channel(channelID: string) {
     method: "DELETE",
   });
 
-  // socket.io response
+  // Websocket response
 }
 
 export async function get_members(serverID: string): Promise<s.UserSchema[]> {
@@ -179,7 +179,7 @@ export async function create_message(channelID: string, message: string) {
     body: JSON.stringify({ message: message }),
   });
 
-  // socket.io response
+  // Websocket response
 }
 
 export async function edit_message(messageID: string, message: string) {
@@ -188,7 +188,7 @@ export async function edit_message(messageID: string, message: string) {
     body: JSON.stringify({ message: message }),
   });
 
-  // socket.io response
+  // Websocket response
 }
 
 export async function get_messages(
@@ -213,7 +213,7 @@ export async function get_messages(
 export async function delete_message(messageID: string) {
   await fetchWrapper(`/api/v1/message/${messageID}`, { method: "DELETE" });
 
-  // socket.io response
+  // Websocket response
 }
 
 export async function typing(channelID: string, value: "start" | "stop") {
@@ -221,5 +221,5 @@ export async function typing(channelID: string, value: "start" | "stop") {
     method: "POST",
   });
 
-  // socket.io response
+  // Websocket response
 }

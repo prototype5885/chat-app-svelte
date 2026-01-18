@@ -14,17 +14,17 @@
   } from "./scripts/globals.svelte";
   import UserPanel from "./lib/UserPanel.svelte";
   import Settings from "./lib/Settings.svelte";
-  import {
-    sioConnection,
-    sioReconnectAttempts,
-  } from "./scripts/socketio.svelte";
   import Toasts from "./lib/Toasts.svelte";
   import MemberList from "./lib/MemberList.svelte";
   import "@fontsource/inter";
+  import {
+    wsConnection,
+    wsReconnectAttempts,
+  } from "./scripts/websocket.svelte";
 </script>
 
 <main>
-  {#if sioConnection.value !== "connected"}
+  {#if wsConnection.value !== "connected"}
     <div
       class={[
         "flex flex-col h-screen justify-center items-center select-none",
@@ -32,11 +32,11 @@
       ]}
     >
       <b>State:</b>
-      <b class="text-2xl">{sioConnection.value}</b>
-      {#if sioReconnectAttempts.value !== 0}
+      <b class="text-2xl">{wsConnection.value}</b>
+      {#if wsReconnectAttempts.value !== 0}
         <br />
-        <b>Socket.IO connection attempts:</b>
-        <b class="text-2xl">{sioReconnectAttempts.value}</b>
+        <b>Websocket reconnection attempts:</b>
+        <b class="text-2xl">{wsReconnectAttempts.value}</b>
       {/if}
     </div>
   {:else}

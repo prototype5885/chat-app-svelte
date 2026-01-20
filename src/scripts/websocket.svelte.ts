@@ -41,6 +41,13 @@ export const wsReconnectAttempts = {
   },
 };
 
+let errorText = $state<string>("");
+export const wsErrorText = {
+  get value() {
+    return errorText;
+  },
+};
+
 let socket: WebSocket | null = null;
 const wsEvent = new EventTarget();
 
@@ -78,7 +85,9 @@ export function connect() {
   };
 
   socket.onerror = () => {
-    console.error("Websocket error");
+    errorText =
+      "Websocket connection error, server is either offline or you tried to connect from too many tabs/clients";
+    console.error(errorText);
     socket?.close();
   };
 }

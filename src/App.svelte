@@ -19,6 +19,7 @@
   import "@fontsource/inter";
   import {
     wsConnection,
+    wsErrorText,
     wsReconnectAttempts,
   } from "./scripts/websocket.svelte";
 </script>
@@ -34,6 +35,8 @@
       <b>State:</b>
       <b class="text-2xl">{wsConnection.value}</b>
       {#if wsReconnectAttempts.value !== 0}
+        <br />
+        <b>{wsErrorText.value}</b>
         <br />
         <b>Websocket reconnection attempts:</b>
         <b class="text-2xl">{wsReconnectAttempts.value}</b>

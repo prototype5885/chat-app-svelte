@@ -18,6 +18,14 @@ async function fetchWrapper(endpoint: string, options: RequestInit) {
     return;
   }
 
+  if (response.status === 429) {
+    errorToast("Being rate limited", response.status.toString());
+  }
+
+  if (response.status === 413) {
+    errorToast("Content too large", response.status.toString());
+  }
+
   if (!response.ok) {
     const errJson = await response.json();
     errorToast(JSON.stringify(errJson), response.status.toString());

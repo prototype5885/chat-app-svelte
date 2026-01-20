@@ -68,6 +68,12 @@ export function connect() {
     if (firstSpace !== -1) {
       const eventName = event.data.slice(0, firstSpace);
       const eventData = event.data.slice(firstSpace + 1);
+
+      if (eventName === "exception") {
+        errorToast(eventData);
+        return;
+      }
+
       wsEvent.dispatchEvent(new CustomEvent(eventName, { detail: eventData }));
     } else {
       errorToast(`Server sent invalid message: '${event.data}'`);

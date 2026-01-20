@@ -13,10 +13,7 @@
   import type { ServerSchema } from "../scripts/schemas";
   import {
     delete_server,
-    sendWs,
     server_info,
-    subscribe_to_server,
-    subscribe_to_server_list,
     wsSubscribe,
   } from "../scripts/websocket.svelte";
 
@@ -38,9 +35,6 @@
         localStorage.removeItem(lastServerID);
       }
     });
-
-    // subscribe to servers to receive real time changes
-    sendWs(subscribe_to_server_list, null);
   });
 
   $effect(() => {
@@ -74,9 +68,6 @@
     serverList.push(newServer);
 
     selectServer(newServer);
-
-    // subscribe to this new server to receive real time changes
-    sendWs(subscribe_to_server, newServer.id);
   }
 
   function updateServerInfo(data: ServerSchema) {

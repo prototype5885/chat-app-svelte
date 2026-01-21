@@ -46,11 +46,15 @@
     });
 
     wsSubscribe(delete_server, (event: Event) => {
+      interface ServerToDelete {
+        id: string;
+      }
+
       const { detail } = event as CustomEvent;
-      const serverID: string = detail;
+      const server: ServerToDelete = JSON.parse(detail);
 
       for (let i = 0; i < serverList.length; i++) {
-        if (serverList[i].id === serverID) {
+        if (serverList[i].id === server.id) {
           serverList.splice(i, 1);
           return;
         }

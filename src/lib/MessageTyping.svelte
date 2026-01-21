@@ -12,8 +12,8 @@
   let isTyping = false;
 
   interface UserTyping {
-    user_id: string;
-    display_name: string;
+    id: string;
+    display_name: string | null;
   }
 
   let usersTyping = $state(new Map<string, string>());
@@ -26,17 +26,17 @@
       const { detail } = event as CustomEvent;
       const userTyping: UserTyping = JSON.parse(detail);
 
-      usersTyping.set(userTyping.user_id, userTyping.display_name);
+      usersTyping.set(userTyping.id, userTyping.display_name!);
       valuesChanged();
     });
 
     wsSubscribe(stop_typing, (event: Event) => {
       const { detail } = event as CustomEvent;
-      const userID: string = detail;
+      const userTyping: UserTyping = JSON.parse(detail);
 
-      if (!usersTyping.delete(userID)) {
+      if (!usersTyping.delete(userTyping.id)) {
         errorToast(
-          `'${stop_typing}' event received, but user ID '${userID}' was not found in usersTyping`,
+          `'${stop_typing}' event received, but user ID '${userTyping.id}' was not found in usersTyping`,
         );
       }
       valuesChanged();

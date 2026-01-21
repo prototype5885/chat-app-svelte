@@ -102,11 +102,15 @@
     });
 
     wsSubscribe(delete_message, (event: Event) => {
+      interface MessageToDelete {
+        id: string;
+      }
+
       const { detail } = event as CustomEvent;
-      const messageID: string = detail;
+      const message: MessageToDelete = JSON.parse(detail);
 
       for (let i = 0; i < messageList.length; i++) {
-        if (messageList[i].id === messageID) {
+        if (messageList[i].id === message.id) {
           messageList.splice(i, 1);
           return;
         }

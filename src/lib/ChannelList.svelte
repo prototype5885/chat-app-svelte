@@ -47,13 +47,17 @@
     });
 
     wsSubscribe(delete_channel, (event: Event) => {
+      interface ChannelToDelete {
+        id: string;
+      }
+
       const { detail } = event as CustomEvent;
-      const channelID: string = detail;
+      const channel: ChannelToDelete = JSON.parse(detail);
 
       for (let i = 0; i < channelList.length; i++) {
-        if (channelList[i].id === channelID) {
+        if (channelList[i].id === channel.id) {
           channelList.splice(i, 1);
-          if (currentChannel.value!.id === channelID) {
+          if (currentChannel.value!.id === channel.id) {
             if (channelList.length > 0) {
               currentChannel.value = channelList[0];
             } else {
@@ -64,7 +68,7 @@
         }
       }
       errorToast(
-        `'${delete_channel}' event received, but channel ID '${channelID}' was not found`,
+        `'${delete_channel}' event received, but channel ID '${channel.id}' was not found`,
       );
     });
 

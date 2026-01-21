@@ -20,8 +20,7 @@
 
   $effect(() => {
     wsSubscribe(user_info, (event: Event) => {
-      const { detail } = event as CustomEvent;
-      const user: UserEditResponse = JSON.parse(detail);
+      const { detail: user } = event as CustomEvent<UserEditResponse>;
 
       members.forEach((member) => {
         if (member.id === user.id) {

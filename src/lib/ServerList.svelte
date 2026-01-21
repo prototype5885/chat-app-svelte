@@ -39,8 +39,7 @@
 
   $effect(() => {
     wsSubscribe(server_info, (event: Event) => {
-      const { detail } = event as CustomEvent;
-      const server: ServerSchema = JSON.parse(detail);
+      const { detail: server } = event as CustomEvent<ServerSchema>;
 
       updateServerInfo(server);
     });
@@ -50,8 +49,7 @@
         id: string;
       }
 
-      const { detail } = event as CustomEvent;
-      const server: ServerToDelete = JSON.parse(detail);
+      const { detail: server } = event as CustomEvent<ServerToDelete>;
 
       for (let i = 0; i < serverList.length; i++) {
         if (serverList[i].id === server.id) {

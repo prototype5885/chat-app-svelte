@@ -40,10 +40,22 @@
 
   $effect(() => {
     wsSubscribe(create_channel, (event: Event) => {
-      const { detail } = event as CustomEvent;
-      const channel: ChannelSchema = JSON.parse(detail);
-
+      const { detail: channel } = event as CustomEvent<ChannelSchema>;
       channelList.push(channel);
+    });
+
+    wsSubscribe(modify_channel, (event: Event) => {
+      const { detail: channel } = event as CustomEvent<ChannelSchema>;
+
+      for (let i = 0; i < channelList.length; i++) {
+        if (channelList[i].id === channel.id) {
+          channelList[i] = channel;
+          return;
+        }
+      }
+      errorToast(
+        `'${modify_channel}' event received, but channel ID '${channel.id}' was not found`,
+      );
     });
 
     wsSubscribe(delete_channel, (event: Event) => {
@@ -51,8 +63,7 @@
         id: string;
       }
 
-      const { detail } = event as CustomEvent;
-      const channel: ChannelToDelete = JSON.parse(detail);
+      const { detail: channel } = event as CustomEvent<ChannelToDelete>;
 
       for (let i = 0; i < channelList.length; i++) {
         if (channelList[i].id === channel.id) {
@@ -69,21 +80,6 @@
       }
       errorToast(
         `'${delete_channel}' event received, but channel ID '${channel.id}' was not found`,
-      );
-    });
-
-    wsSubscribe(modify_channel, (event: Event) => {
-      const { detail } = event as CustomEvent;
-      const channel: ChannelSchema = JSON.parse(detail);
-
-      for (let i = 0; i < channelList.length; i++) {
-        if (channelList[i].id === channel.id) {
-          channelList[i] = channel;
-          return;
-        }
-      }
-      errorToast(
-        `'${modify_channel}' event received, but channel ID '${channel.id}' was not found`,
       );
     });
   });

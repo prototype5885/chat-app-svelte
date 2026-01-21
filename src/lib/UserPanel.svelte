@@ -17,8 +17,7 @@
 
   $effect(() => {
     wsSubscribe(self_user_info, (event: Event) => {
-      const { detail } = event as CustomEvent;
-      const user: UserEditResponse = JSON.parse(detail);
+      const { detail: user } = event as CustomEvent<UserEditResponse>;
 
       if (user.id !== userData?.id) {
         return;

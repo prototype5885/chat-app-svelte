@@ -23,16 +23,14 @@
 
   $effect(() => {
     wsSubscribe(start_typing, (event: Event) => {
-      const { detail } = event as CustomEvent;
-      const userTyping: UserTyping = JSON.parse(detail);
+      const { detail: userTyping } = event as CustomEvent<UserTyping>;
 
       usersTyping.set(userTyping.id, userTyping.display_name!);
       valuesChanged();
     });
 
     wsSubscribe(stop_typing, (event: Event) => {
-      const { detail } = event as CustomEvent;
-      const userTyping: UserTyping = JSON.parse(detail);
+      const { detail: userTyping } = event as CustomEvent<UserTyping>;
 
       if (!usersTyping.delete(userTyping.id)) {
         errorToast(

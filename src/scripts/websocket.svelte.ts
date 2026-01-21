@@ -74,7 +74,12 @@ export function connect() {
         return;
       }
 
-      wsEvent.dispatchEvent(new CustomEvent(eventName, { detail: eventData }));
+      try {
+        const parsed = JSON.parse(eventData);
+        wsEvent.dispatchEvent(new CustomEvent(eventName, { detail: parsed }));
+      } catch (e) {
+        errorToast(`${e}`, "Error parsing received json string");
+      }
     } else {
       errorToast(`Server sent invalid message: '${event.data}'`);
     }

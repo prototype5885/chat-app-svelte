@@ -76,8 +76,7 @@
 
   $effect(() => {
     wsSubscribe(create_message, (event: Event) => {
-      const { detail } = event as CustomEvent;
-      const message: MessageResponse = JSON.parse(detail);
+      const { detail: message } = event as CustomEvent<MessageResponse>;
 
       messageList.push(message);
 
@@ -89,13 +88,12 @@
     });
 
     wsSubscribe(edit_message, (event: Event) => {
-      const { detail } = event as CustomEvent;
-      const editedMessage: MessageResponse = JSON.parse(detail);
+      const { detail: message } = event as CustomEvent<MessageResponse>;
 
       for (let i = 0; i < messageList.length; i++) {
-        if (messageList[i].id === editedMessage.id) {
-          messageList[i].message = editedMessage.message;
-          messageList[i].edited = editedMessage.edited;
+        if (messageList[i].id === message.id) {
+          messageList[i].message = message.message;
+          messageList[i].edited = message.edited;
           return;
         }
       }
@@ -106,8 +104,7 @@
         id: string;
       }
 
-      const { detail } = event as CustomEvent;
-      const message: MessageToDelete = JSON.parse(detail);
+      const { detail: message } = event as CustomEvent<MessageToDelete>;
 
       for (let i = 0; i < messageList.length; i++) {
         if (messageList[i].id === message.id) {
@@ -118,8 +115,7 @@
     });
 
     wsSubscribe(user_info, (event: Event) => {
-      const { detail } = event as CustomEvent;
-      const user: UserEditResponse = JSON.parse(detail);
+      const { detail: user } = event as CustomEvent<UserEditResponse>;
 
       messageList.forEach((msg) => {
         if (msg.sender_id === user.id) {

@@ -71,7 +71,7 @@
             <!-- channel or friend list -->
             {#if currentServer.value}
               {#key currentServer.value.id}
-                <ChannelList />
+                <ChannelList server={currentServer.value} />
               {/key}
             {/if}
           </div>

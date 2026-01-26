@@ -1,8 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { ChannelSchema } from "../scripts/schemas";
+  import type { ChannelSchema, ServerSchema } from "../scripts/schemas";
   import Channel from "./Channel.svelte";
-  import { currentChannel, currentServer } from "../scripts/globals.svelte";
+  import {
+    currentChannel,
+    currentServer,
+    currentUserID,
+  } from "../scripts/globals.svelte";
   import {
     create_channel,
     delete_channel,
@@ -14,6 +18,9 @@
   import ChannelAdd from "./ChannelAdd.svelte";
   import { errorToast } from "../scripts/toast.svelte";
   import { get_channels } from "../scripts/httpActions";
+
+  let props: { server: ServerSchema } = $props();
+  const owned = props.server.owner_id === currentUserID;
 
   let channelList = $state<ChannelSchema[]>([]);
 
@@ -89,7 +96,7 @@
   <ChannelAdd />
   <ul>
     {#each channelList as channel}
-      <Channel {channel} />
+      <Channel {channel} {owned} />
     {/each}
   </ul>
 </div>

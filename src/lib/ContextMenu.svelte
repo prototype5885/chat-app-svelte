@@ -160,6 +160,7 @@
           {
             type: "item",
             label: "Edit channel",
+            hide: !owner,
             color: "default",
             action: async () => {
               settings.value = {
@@ -173,6 +174,7 @@
           {
             type: "item",
             label: "Delete channel",
+            hide: !owner,
             color: "red",
             action: async () => {
               await delete_channel(channelID);

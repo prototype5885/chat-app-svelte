@@ -3,7 +3,7 @@
   import { currentChannel } from "../scripts/globals.svelte";
   import type { ChannelSchema } from "../scripts/schemas";
 
-  let props: { channel: ChannelSchema } = $props();
+  const props: { channel: ChannelSchema; owned: boolean } = $props();
 </script>
 
 <li>
@@ -18,6 +18,7 @@
     data-ctx-type="channel"
     data-ctx-server-id={props.channel.server_id}
     data-ctx-channel-id={props.channel.id}
+    data-ctx-own={props.owned}
   >
     <Hash />
     <span class="ml-2">{props.channel.name}<span> </span></span>

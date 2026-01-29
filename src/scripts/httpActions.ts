@@ -27,8 +27,8 @@ async function fetchWrapper(endpoint: string, options: RequestInit) {
   }
 
   if (!response.ok) {
-    const errJson = await response.json();
-    errorToast(JSON.stringify(errJson), response.status.toString());
+    const errJson = await response.text();
+    errorToast(errJson, response.status.toString());
   }
 
   const contentType = response.headers.get("content-type");

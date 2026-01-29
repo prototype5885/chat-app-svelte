@@ -152,29 +152,21 @@
     scrollToBottom("instant");
   }
 
-  function addOlderMessages(messages: MessageResponse[]) {
-    messageList = [...messages.reverse(), ...messageList];
-  }
-
-  function addNewerMessages(messages: MessageResponse[]) {
-    messageList = [...messageList, ...messages];
-  }
-
   async function requestRelativeMessages(
     channelID: string,
     messageID: string,
     direction: "before" | "after",
   ) {
     requestInProgress = true;
-    const result = await get_messages(channelID, messageID, direction);
+    const messages = await get_messages(channelID, messageID, direction);
 
-    if (result.length === 0) {
+    if (messages.length === 0) {
       reachedBeginning = true;
     } else {
       if (direction === "before") {
-        addOlderMessages(result);
+        messageList = [...messages.reverse(), ...messageList];
       } else {
-        addNewerMessages(result);
+        messageList = [...messageList, ...messages];
       }
     }
     requestInProgress = false;

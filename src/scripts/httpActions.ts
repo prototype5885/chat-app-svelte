@@ -150,13 +150,11 @@ export async function get_channel_info(
 export async function update_channel_info(
   formData: FormData,
   channelID: string,
-) {
-  await fetchWrapper(`/api/v1/channel/${channelID}`, {
+): Promise<s.ChannelSchema> {
+  return await fetchWrapper(`/api/v1/channel/${channelID}`, {
     method: "PATCH",
     body: formData,
   });
-
-  // Websocket response
 }
 
 export async function get_channels(

@@ -51,7 +51,11 @@
       return;
     }
 
-    await update_channel_info(formData, settings.value.channelID!);
+    const data = await update_channel_info(formData, settings.value.channelID!);
+    if (data.name !== undefined) {
+      channelData.name = data.name;
+    }
+
     successToast("Updated channel info!");
   }
 </script>

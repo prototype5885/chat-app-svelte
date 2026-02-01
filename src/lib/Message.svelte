@@ -33,7 +33,7 @@
         />
       </div>
 
-      <div class="pl-3 grow">
+      <div class="pl-3 grow break-all">
         <div class="flex">
           <!-- name -->
           <span
@@ -61,7 +61,7 @@
   {:else}
     <div
       class={[
-        "flex flex-row px-2 select-text hover:bg-white/5 group align-baseline",
+        "flex flex-row px-2 select-text hover:bg-white/5 group align-baseline break-all",
         props.msg.id === editingMessage.value ? "bg-white/5" : "",
       ]}
       data-ctx-type="message"

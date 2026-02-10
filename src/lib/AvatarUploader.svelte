@@ -14,7 +14,7 @@
   let lastBlobUrl = "";
 
   if (props.preview) {
-    preview = `/avatars/${props.preview}.webp`;
+    preview = `/avatars/${props.preview}`;
   }
 
   function handleFileSelect(e: Event) {
@@ -24,7 +24,8 @@
       if (
         selectedFile.type === "image/jpeg" ||
         selectedFile.type === "image/png" ||
-        selectedFile.type === "image/webp"
+        selectedFile.type === "image/webp" ||
+        selectedFile.type === "image/gif"
       ) {
         if (lastBlobUrl) {
           URL.revokeObjectURL(lastBlobUrl);
@@ -47,7 +48,7 @@
       successToast("User avatar changed!");
     }
 
-    preview = name ? `/avatars/${name}.webp` : "";
+    preview = name ? `/avatars/${name}` : "";
     selectedFile = null;
   }
 
@@ -80,7 +81,7 @@
     </div>
     <input
       type="file"
-      accept=".jpg,.jpeg,.png,.webp"
+      accept=".jpg,.jpeg,.png,.webp,.gif"
       onchange={handleFileSelect}
       class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
     />

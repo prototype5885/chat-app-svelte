@@ -107,7 +107,7 @@
       >
         {#if server.picture}
           <img
-            src={`/avatars/${server.picture}.webp?size=96`}
+            src={`/avatars/${server.picture}?size=96`}
             alt={server.name[0].toUpperCase()}
           />
         {:else}

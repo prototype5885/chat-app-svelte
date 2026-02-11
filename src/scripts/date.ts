@@ -30,8 +30,31 @@ export function getMediumDate(id: string): string {
 
 export function getLongDate(id: string): string {
   const timestamp = extractTimestamp(id);
+  const date = new Date(timestamp);
 
-  return new Date(timestamp).toLocaleString(undefined, {
+  // check if msg is from today
+  const today = new Date();
+  if (
+    date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear()
+  ) {
+    return date.toLocaleString(undefined, { timeStyle: "short" });
+  }
+
+  // check if msg is from yesterday
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  if (
+    date.getDate() === yesterday.getDate() &&
+    date.getMonth() === yesterday.getMonth() &&
+    date.getFullYear() === yesterday.getFullYear()
+  ) {
+    return `Yesterday at ${date.toLocaleString(undefined, { timeStyle: "short" })}`;
+  }
+
+  // return long date if older than above
+  return date.toLocaleString(undefined, {
     year: "numeric",
     month: "long",
     day: "numeric",

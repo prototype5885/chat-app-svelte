@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, tick } from "svelte";
+  import { onDestroy, onMount, tick } from "svelte";
   import { currentChannel } from "../scripts/globals.svelte";
   import Message from "./Message.svelte";
   import {
@@ -40,6 +40,7 @@
 
   let scrollBottom = 0;
   let requestInProgress = false;
+  let abortController: AbortController | null = null;
 
   onMount(async () => {
     if (!currentChannel.value) {
@@ -50,7 +51,15 @@
     const event = subscribe_to_message_list;
     sendWs(event, currentChannel.value.id);
 
-    messageList = (await get_messages(currentChannel.value.id)).reverse();
+    abortController = new AbortController();
+    messageList = (
+      await get_messages(
+        currentChannel.value.id,
+        null,
+        null,
+        abortController.signal,
+      )
+    ).reverse();
     if (messageList.length === 0) {
       // if chat is empty
       reachedBeginning = true;
@@ -158,7 +167,13 @@
     direction: "before" | "after",
   ) {
     requestInProgress = true;
-    const messages = await get_messages(channelID, messageID, direction);
+    abortController = new AbortController();
+    const messages = await get_messages(
+      channelID,
+      messageID,
+      direction,
+      abortController.signal,
+    );
 
     if (messages.length === 0) {
       reachedBeginning = true;
@@ -207,6 +222,12 @@
       msgList.scrollTop += msgList.scrollHeight - oldScrollHeight;
     }
   }
+
+  onDestroy(() => {
+    if (abortController) {
+      abortController.abort();
+    }
+  });
 </script>
 
 <div class="relative w-full overflow-hidden">

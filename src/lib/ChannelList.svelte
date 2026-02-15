@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import type { ChannelSchema, ServerSchema } from "../scripts/schemas";
   import Channel from "./Channel.svelte";
   import {
@@ -24,6 +24,8 @@
 
   let channelList = $state<ChannelSchema[]>([]);
 
+  let abortController: AbortController | null = null;
+
   onMount(async () => {
     if (!currentServer.value) {
       errorToast("Can't fetch channels, there is no server selected");
@@ -33,7 +35,11 @@
     const event = subscribe_to_channel_list;
     sendWs(event, currentServer.value.id);
 
-    channelList = await get_channels(currentServer.value.id);
+    abortController = new AbortController();
+    channelList = await get_channels(
+      currentServer.value.id,
+      abortController.signal,
+    );
 
     if (channelList.length > 0) {
       // select the channel found in localStorage, or just select the first one
@@ -89,6 +95,12 @@
         `'${delete_channel}' event received, but channel ID '${channel.id}' was not found`,
       );
     });
+  });
+
+  onDestroy(() => {
+    if (abortController) {
+      abortController.abort();
+    }
   });
 </script>
 

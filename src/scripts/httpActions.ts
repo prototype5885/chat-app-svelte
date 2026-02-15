@@ -1,7 +1,11 @@
 import type * as s from "./schemas";
 import { errorToast } from "./toast.svelte";
 
-async function fetchWrapper(endpoint: string, options: RequestInit) {
+async function fetchWrapper(
+  endpoint: string,
+  options: RequestInit,
+  signal?: AbortSignal,
+) {
   const headers = new Headers(options.headers);
 
   if (options.body && !(options.body instanceof FormData)) {
@@ -11,6 +15,7 @@ async function fetchWrapper(endpoint: string, options: RequestInit) {
   const response = await fetch(endpoint, {
     ...options,
     headers,
+    signal: signal,
   });
 
   if (response.redirected) {
@@ -159,10 +164,15 @@ export async function update_channel_info(
 
 export async function get_channels(
   serverID: string,
+  signal: AbortSignal,
 ): Promise<s.ChannelSchema[]> {
-  return await fetchWrapper(`/api/v1/server/${serverID}/channels`, {
-    method: "GET",
-  });
+  return await fetchWrapper(
+    `/api/v1/server/${serverID}/channels`,
+    {
+      method: "GET",
+    },
+    signal,
+  );
 }
 
 export async function delete_channel(channelID: string) {
@@ -201,6 +211,7 @@ export async function get_messages(
   channelID: string,
   messageID: string | null = null,
   direction: "before" | "after" | null = null,
+  signal: AbortSignal,
 ): Promise<s.MessageResponse[]> {
   const params = new URLSearchParams();
   if (messageID) params.append("message_id", messageID);
@@ -211,9 +222,13 @@ export async function get_messages(
     url += `?${params}`;
   }
 
-  return await fetchWrapper(url, {
-    method: "GET",
-  });
+  return await fetchWrapper(
+    url,
+    {
+      method: "GET",
+    },
+    signal,
+  );
 }
 
 export async function delete_message(messageID: string) {

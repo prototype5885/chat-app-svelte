@@ -1,30 +1,30 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <div class="auth-card">
-        <div class="header">
-            <h1>Login</h1>
+      <div class="header">
+        <h1>Login</h1>
+      </div>
+      <form action="/api/v1/user/login" method="POST">
+        <div class="form-group">
+          <label class="label">Username</label>
+          <input type="text" name="username" required />
         </div>
-        <form action="/api/v1/user/login" method="POST">
-            <div class="form-group">
-                <label class="label">Email</label>
-                <input type="email" name="email" required>
-            </div>
-            <div class="form-group">
-                <label class="label">Password</label>
-                <input type="password" name="password" required>
-            </div>
-            <button type="submit">Log In</button>
-            <div class="footer-text">
-                <a href="register.html">No account? Register</a>
-            </div>
-        </form>
+        <div class="form-group">
+          <label class="label">Password</label>
+          <input type="password" name="password" required />
+        </div>
+        <button type="submit">Log In</button>
+        <div class="footer-text">
+          <a href="register.html">No account? Register</a>
+        </div>
+      </form>
     </div>
-</body>
+  </body>
 </html>

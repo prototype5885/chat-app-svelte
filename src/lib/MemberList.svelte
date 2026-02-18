@@ -16,6 +16,28 @@
   } from "../scripts/websocket.svelte";
 
   let members = $state<UserSchema[]>([]);
+  let onlineMembers = $derived(
+    members
+      .filter((m) => m.online)
+      .sort((a, b) =>
+        a.display_name
+          .toLowerCase()
+          .localeCompare(b.display_name.toLowerCase()),
+      ),
+  );
+
+  let offlineMembers = $derived(
+    members
+      .filter((m) => !m.online)
+      .sort((a, b) =>
+        a.display_name
+          .toLowerCase()
+          .localeCompare(b.display_name.toLowerCase()),
+      ),
+  );
+
+  let onlineCount = $derived(onlineMembers.length);
+  let offlineCount = $derived(offlineMembers.length);
 
   onMount(async () => {
     if (!currentServer.value) {
@@ -59,26 +81,66 @@
 </script>
 
 <ul class="flex flex-col grow overflow-x-hidden gap-0.5 m-2">
-  {#each members as member}
+  <!-- online members -->
+  {#if onlineCount > 0}
     <li
-      class={[
-        "flex p-1 cursor-pointer hover:bg-white/5 rounded-xl",
-        member.online === false
-          ? "grayscale opacity-50 hover:grayscale-0 hover:opacity-100"
-          : "",
-      ]}
-      data-ctx-type="user"
-      data-ctx-user-id={member.id}
+      class="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wider"
     >
-      <Avatar
-        size="36"
-        pic={member.picture}
-        name={member.display_name}
-        online={member.online}
-      />
-      <span class="ml-2 text-ellipsis whitespace-nowrap overflow-x-hidden"
-        >{member.display_name}</span
-      >
+      Online — {onlineCount}
     </li>
-  {/each}
+
+    {#each onlineMembers as member}
+      <li
+        class="flex p-1 cursor-pointer hover:bg-white/5 rounded-xl"
+        data-ctx-type="user"
+        data-ctx-user-id={member.id}
+      >
+        <Avatar
+          size="36"
+          pic={member.picture}
+          name={member.display_name}
+          online={member.online}
+        />
+        <span class="ml-2 text-ellipsis whitespace-nowrap overflow-x-hidden">
+          {member.display_name}
+        </span>
+      </li>
+    {/each}
+  {/if}
+
+  <!-- offline members -->
+  {#if offlineCount > 0}
+    <li
+      class="px-3 py-2.5 mt-3 text-xs font-semibold text-gray-400 uppercase tracking-wider"
+    >
+      Offline — {offlineCount}
+    </li>
+
+    {#each offlineMembers as member}
+      <li
+        class={[
+          "flex p-1 cursor-pointer hover:bg-white/5 rounded-xl",
+          "grayscale opacity-50 hover:grayscale-0 hover:opacity-100",
+        ]}
+        data-ctx-type="user"
+        data-ctx-user-id={member.id}
+      >
+        <Avatar
+          size="36"
+          pic={member.picture}
+          name={member.display_name}
+          online={member.online}
+        />
+        <span
+          class="ml-2 text-ellipsis whitespace-nowrap overflow-x-hidden text-gray-300"
+        >
+          {member.display_name}
+        </span>
+      </li>
+    {/each}
+  {/if}
+
+  {#if members.length === 0}
+    <li class="text-center text-gray-500 py-6 text-sm">No members</li>
+  {/if}
 </ul>

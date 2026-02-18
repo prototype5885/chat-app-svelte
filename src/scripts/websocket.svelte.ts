@@ -19,6 +19,7 @@ export const user_status = "user_status";
 export const user_info = "user_info";
 export const self_user_info = "self_user_info"; // this is only sent to a single user
 export const server_info = "server_info";
+export const user_online = "user_online";
 
 export const subscribe_to_channel_list = "subscribe_to_channel_list";
 export const subscribe_to_message_list = "subscribe_to_message_list";

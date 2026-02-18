@@ -4,6 +4,7 @@ export interface UserSchema {
   display_name: string;
   picture: string | null;
   custom_status: string | null;
+  online: boolean | null;
 }
 
 export interface UserEditRequest {
@@ -15,6 +16,11 @@ export interface UserEditResponse {
   display_name?: string;
   picture?: string | null;
   custom_status?: string | null;
+}
+
+export interface UserOnline {
+  id: string;
+  online: boolean;
 }
 
 export interface ServerSchema {

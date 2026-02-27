@@ -10,12 +10,10 @@
   const props: { preview?: string | null; serverID?: string } = $props();
 
   let selectedFile = $state<File | null>(null);
-  let preview = $state<string>("");
+  let preview = $derived<string>(
+    props.preview ? `/avatars/${props.preview}` : "",
+  );
   let lastBlobUrl = "";
-
-  if (props.preview) {
-    preview = `/avatars/${props.preview}`;
-  }
 
   function handleFileSelect(e: Event) {
     const input = e.target as HTMLInputElement;

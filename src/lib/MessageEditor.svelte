@@ -6,7 +6,7 @@
   import AutoResizeTextarea from "./AutoResizeTextarea.svelte";
 
   const props: { msg: MessageResponse } = $props();
-  let editedMessage = $state<string>(props.msg.message);
+  let editedMessage = $derived(props.msg.message);
 
   async function editMessage() {
     if (props.msg.message === editedMessage) return;

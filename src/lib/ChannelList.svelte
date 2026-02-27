@@ -20,7 +20,7 @@
   import { get_channels } from "../scripts/httpActions";
 
   let props: { server: ServerSchema } = $props();
-  const owned = props.server.owner_id === currentUserID;
+  const owned = $derived(props.server.owner_id === currentUserID);
 
   let channelList = $state<ChannelSchema[]>([]);
 

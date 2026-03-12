@@ -30,6 +30,7 @@
           size="40"
           pic={props.msg.picture}
           name={props.msg.display_name}
+          online={null}
         />
       </div>
 

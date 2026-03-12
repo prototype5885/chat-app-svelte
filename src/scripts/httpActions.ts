@@ -1,4 +1,5 @@
 import type * as s from "./schemas";
+import { sessionID } from "./session.svelte";
 import { errorToast } from "./toast.svelte";
 
 async function fetchWrapper(
@@ -170,6 +171,7 @@ export async function get_channels(
     `/api/v1/server/${serverID}/channels`,
     {
       method: "GET",
+      headers: { "Session-ID": sessionID },
     },
     signal,
   );
@@ -214,8 +216,10 @@ export async function get_messages(
   signal: AbortSignal,
 ): Promise<s.MessageResponse[]> {
   const params = new URLSearchParams();
-  if (messageID) params.append("message_id", messageID);
-  if (direction) params.append("direction", direction);
+  if (messageID && direction) {
+    params.append("messageID", messageID);
+    params.append("direction", direction);
+  }
 
   let url = `/api/v1/channel/${channelID}/messages`;
   if (params.size !== 0) {
@@ -226,6 +230,7 @@ export async function get_messages(
     url,
     {
       method: "GET",
+      headers: { "Session-ID": sessionID },
     },
     signal,
   );

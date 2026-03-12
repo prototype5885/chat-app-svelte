@@ -261,7 +261,7 @@
 </script>
 
 {#if visible}
-  <div class="w-full h-full absolute z-50">
+  <div class="w-full h-full absolute z-30">
     <div
       class="fixed min-w-36 shadow-lg/35 bg-black/40 shadow-black border border-white/10 p-2 backdrop-blur-sm rounded-lg"
       bind:this={ctxMenu}

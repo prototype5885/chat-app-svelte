@@ -10,15 +10,8 @@
   import { errorToast } from "../scripts/toast.svelte";
   import { get_messages } from "../scripts/httpActions";
   import type { MessageResponse, UserEditResponse } from "../scripts/schemas";
-  import {
-    create_message,
-    delete_message,
-    edit_message,
-    sendWs,
-    subscribe_to_message_list,
-    user_info,
-    wsSubscribe,
-  } from "../scripts/websocket.svelte";
+  import MessageTyping from "./MessageTyping.svelte";
+  import { sseConnected, subscribeSSE } from "../scripts/session.svelte";
 
   // these will happen if the scroll distance from bottom is above this:
   // won't autoscroll down on new message
@@ -47,9 +40,6 @@
       errorToast("Can't fetch chat messages, there is no channel selected");
       return;
     }
-
-    const event = subscribe_to_message_list;
-    sendWs(event, currentChannel.value.id);
 
     abortController = new AbortController();
     messageList = (
@@ -84,11 +74,8 @@
   });
 
   $effect(() => {
-    wsSubscribe(create_message, (event: Event) => {
-      const { detail: message } = event as CustomEvent<MessageResponse>;
-
-      messageList.push(message);
-
+    subscribeSSE("create_message", (e: any) => {
+      messageList.push(JSON.parse(e.data));
       if (scrollBottom < OLD_ABOVE_THIS) {
         scrollToBottom("instant");
       } else {
@@ -96,8 +83,8 @@
       }
     });
 
-    wsSubscribe(edit_message, (event: Event) => {
-      const { detail: message } = event as CustomEvent<MessageResponse>;
+    subscribeSSE("edit_message", (e: any) => {
+      const message = JSON.parse(e.data);
 
       for (let i = 0; i < messageList.length; i++) {
         if (messageList[i].id === message.id) {
@@ -108,13 +95,11 @@
       }
     });
 
-    wsSubscribe(delete_message, (event: Event) => {
+    subscribeSSE("delete_message", (e: any) => {
       interface MessageToDelete {
         id: string;
       }
-
-      const { detail: message } = event as CustomEvent<MessageToDelete>;
-
+      const message = JSON.parse(e.data) as MessageToDelete;
       for (let i = 0; i < messageList.length; i++) {
         if (messageList[i].id === message.id) {
           messageList.splice(i, 1);
@@ -123,8 +108,8 @@
       }
     });
 
-    wsSubscribe(user_info, (event: Event) => {
-      const { detail: user } = event as CustomEvent<UserEditResponse>;
+    subscribeSSE("user_info", (e: any) => {
+      const user = JSON.parse(e.data) as UserEditResponse;
 
       messageList.forEach((msg) => {
         if (msg.sender_id === user.id) {
@@ -231,63 +216,72 @@
 </script>
 
 <div class="relative w-full overflow-hidden">
-  <ul
-    class="h-full overflow-y-auto py-3"
-    style="overflow-anchor: none;"
-    bind:this={msgList}
-    onscroll={onDivScroll}
-  >
-    {#if reachedBeginning}
-      <b class="items-center py-8 px-4 text-3xl">
-        This is the beginning of #{props.channelName} channel
-      </b>
-    {/if}
-    {#each messageList as msg, index}
-      {@const sameDay =
-        index !== 0 ? isSameDay(messageList[index - 1].id, msg.id) : false}
-
-      <!-- insert separator if previous message is from a previous day -->
-      {#if !sameDay}
-        <div class="flex flex-row justify-center items-center py-4">
-          <div class="grow h-px ml-4 bg-white/10"></div>
-          <h1 class="text-center mx-1 text-white/50 text-xs">
-            {getMediumDate(msg.id)}
-          </h1>
-          <div class="grow h-px mr-4 bg-white/10"></div>
-        </div>
+  {#if sseConnected.value}
+    <ul
+      class="h-full overflow-y-auto py-3"
+      style="overflow-anchor: none;"
+      bind:this={msgList}
+      onscroll={onDivScroll}
+    >
+      {#if reachedBeginning}
+        <b class="items-center py-8 px-4 text-3xl">
+          This is the beginning of #{props.channelName} channel
+        </b>
       {/if}
+      {#each messageList as msg, index}
+        {@const sameDay =
+          index !== 0 ? isSameDay(messageList[index - 1].id, msg.id) : false}
 
-      <!-- show message in small format if previous message is less than five minutes old -->
-      {#if sameDay && !isOlderThanFiveMins(messageList[index - 1].id, msg.id) && messageList[index - 1].sender_id === msg.sender_id}
-        <Message {msg} small={true} />
-      {:else}
-        {#if sameDay}
-          <div class="h-4"></div>
+        <!-- insert separator if previous message is from a previous day -->
+        {#if !sameDay}
+          <div class="flex flex-row justify-center items-center py-4">
+            <div class="grow h-px ml-4 bg-white/10"></div>
+            <h1 class="text-center mx-1 text-white/50 text-xs">
+              {getMediumDate(msg.id)}
+            </h1>
+            <div class="grow h-px mr-4 bg-white/10"></div>
+          </div>
         {/if}
-        <Message {msg}></Message>
-      {/if}
-    {/each}
-    <div class="h-6"></div>
-  </ul>
-  {#if newMessagesCount !== 0 || isViewingOlder}
-    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex flex-col">
-      {#if newMessagesCount !== 0}
-        <span
-          class=" bg-blue-500 mb-4 px-4 mx-20 py-1 flex justify-center rounded"
-        >
-          {newMessagesCount} new messages received
-        </span>
-      {/if}
-      {#if isViewingOlder}
-        <button
-          class="bg-black/50 p-4 flex flex-row items-center backdrop-blur-xs rounded-2xl"
-          onclick={() => scrollToBottom("instant")}
-        >
-          <span>You are viewing older messages</span>
-          <div class="w-2"></div>
-          <span class="bg-blue-500 p-2 rounded-md">Jump to present</span>
-        </button>
-      {/if}
+
+        <!-- show message in small format if previous message is less than five minutes old -->
+        {#if sameDay && !isOlderThanFiveMins(messageList[index - 1].id, msg.id) && messageList[index - 1].sender_id === msg.sender_id}
+          <Message {msg} small={true} />
+        {:else}
+          {#if sameDay}
+            <div class="h-4"></div>
+          {/if}
+          <Message {msg}></Message>
+        {/if}
+      {/each}
+      <div class="h-6"></div>
+    </ul>
+    <div class="pointer-events-none absolute bottom-0 left-0 right-0 z-10 px-2">
+      <MessageTyping />
     </div>
+    {#if newMessagesCount !== 0 || isViewingOlder}
+      <div
+        class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex flex-col"
+      >
+        {#if newMessagesCount !== 0}
+          <span
+            class=" bg-blue-500 mb-4 px-4 mx-20 py-1 flex justify-center rounded"
+          >
+            {newMessagesCount} new messages received
+          </span>
+        {/if}
+        {#if isViewingOlder}
+          <button
+            class="bg-black/50 p-4 flex flex-row items-center backdrop-blur-xs rounded-2xl"
+            onclick={() => scrollToBottom("instant")}
+          >
+            <span>You are viewing older messages</span>
+            <div class="w-2"></div>
+            <span class="bg-blue-500 p-2 rounded-md">Jump to present</span>
+          </button>
+        {/if}
+      </div>
+    {/if}
+  {:else}
+    <div>Connecting to SSE...</div>
   {/if}
 </div>

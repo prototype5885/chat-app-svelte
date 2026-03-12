@@ -18,28 +18,24 @@
   import MemberList from "./lib/MemberList.svelte";
   import "@fontsource/inter";
   import {
-    wsConnection,
-    wsErrorText,
-    wsReconnectAttempts,
-  } from "./scripts/websocket.svelte";
+    sseConnected,
+    sseConnectionAttempts,
+  } from "./scripts/session.svelte";
 </script>
 
 <main>
-  {#if wsConnection.value !== "connected"}
+  {#if !sseConnected.value}
     <div
       class={[
         "flex flex-col h-screen justify-center items-center select-none",
         theme.value,
       ]}
     >
-      <b>State:</b>
-      <b class="text-2xl">{wsConnection.value}</b>
-      {#if wsReconnectAttempts.value !== 0}
+      <b class="text-2x">Connecting...</b>
+      {#if sseConnectionAttempts.value !== 0}
         <br />
-        <b>{wsErrorText.value}</b>
-        <br />
-        <b>Websocket reconnection attempts:</b>
-        <b class="text-2xl">{wsReconnectAttempts.value}</b>
+        <b class="text-white">Attempts:</b>
+        <b class="text-2xl">{sseConnectionAttempts.value}</b>
       {/if}
     </div>
   {:else}

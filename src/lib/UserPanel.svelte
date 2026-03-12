@@ -7,7 +7,7 @@
   import { get_user_info } from "../scripts/httpActions";
   import Tooltip from "./Tooltip.svelte";
   import type { UserEditResponse, UserSchema } from "../scripts/schemas";
-  import { self_user_info, wsSubscribe } from "../scripts/websocket.svelte";
+  import { subscribeSSE } from "../scripts/session.svelte";
 
   let userData = $state<UserSchema>();
 
@@ -16,8 +16,8 @@
   });
 
   $effect(() => {
-    wsSubscribe(self_user_info, (event: Event) => {
-      const { detail: user } = event as CustomEvent<UserEditResponse>;
+    subscribeSSE("self_user_info", (e: any) => {
+      const user = JSON.parse(e.data) as UserEditResponse;
 
       if (user.id !== userData?.id) {
         return;

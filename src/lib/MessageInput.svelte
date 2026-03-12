@@ -1,12 +1,13 @@
 <script lang="ts">
   import { currentChannel, currentServer } from "../scripts/globals.svelte";
   import { errorToast } from "../scripts/toast.svelte";
-  import { create_message } from "../scripts/httpActions";
+  import { create_message, typing } from "../scripts/httpActions";
   import MessageTyping from "./MessageTyping.svelte";
   import AutoResizeTextarea from "./AutoResizeTextarea.svelte";
   import Plus from "../icons/Plus.svelte";
 
   let chatInput = $state<string>("");
+  let isTyping = false;
 
   async function sendMessage() {
     if (chatInput === "") return;
@@ -19,12 +20,29 @@
 
     chatInput = "";
   }
+
+  async function typingValueChanged(value: "start" | "stop") {
+    if (!currentChannel.value) {
+      errorToast("Can't send typing, there is no channel selected");
+      return;
+    }
+    await typing(currentChannel.value.id, value);
+  }
+
+  $effect(() => {
+    chatInput;
+
+    if (chatInput !== "" && !isTyping) {
+      isTyping = true;
+      typingValueChanged("start");
+    } else if (chatInput === "" && isTyping) {
+      isTyping = false;
+      typingValueChanged("stop");
+    }
+  });
 </script>
 
 <div class="px-2 pb-2 relative w-full">
-  <div class="absolute bottom-full pointer-events-none">
-    <MessageTyping {chatInput} />
-  </div>
   <div
     class="flex rounded-lg bg-white/3 border border-color overflow-hidden px-2"
   >

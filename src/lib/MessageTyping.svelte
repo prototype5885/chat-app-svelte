@@ -1,47 +1,29 @@
 <script lang="ts">
-  import { currentChannel } from "../scripts/globals.svelte";
+  import { subscribeSSE } from "../scripts/session.svelte";
   import { errorToast } from "../scripts/toast.svelte";
-  import { typing } from "../scripts/httpActions";
-  import {
-    start_typing,
-    stop_typing,
-    wsSubscribe,
-  } from "../scripts/websocket.svelte";
-
-  let props: { chatInput: string } = $props();
-  let isTyping = false;
-
-  interface UserTyping {
-    id: string;
-    display_name: string | null;
-  }
 
   let usersTyping = $state(new Map<string, string>());
-
   let usersTypingText = $state<string>("");
   let isAreTypingText = $state<string>("");
 
-  $effect(() => {
-    wsSubscribe(start_typing, (event: Event) => {
-      const { detail: userTyping } = event as CustomEvent<UserTyping>;
+  subscribeSSE("typing", (e: any) => {
+    interface UserTyping {
+      action: "start" | "stop";
+      id: string;
+      display_name: string | null;
+    }
+    const data = JSON.parse(e.data) as UserTyping;
 
-      usersTyping.set(userTyping.id, userTyping.display_name!);
-      valuesChanged();
-    });
-
-    wsSubscribe(stop_typing, (event: Event) => {
-      const { detail: userTyping } = event as CustomEvent<UserTyping>;
-
-      if (!usersTyping.delete(userTyping.id)) {
+    if (data.action === "start") {
+      usersTyping.set(data.id, data.display_name!);
+    } else {
+      if (!usersTyping.delete(data.id)) {
         errorToast(
-          `'${stop_typing}' event received, but user ID '${userTyping.id}' was not found in usersTyping`,
+          `stop typing event received, but user ID '${data.id}' was not found in usersTyping`,
         );
       }
-      valuesChanged();
-    });
-  });
+    }
 
-  function valuesChanged() {
     usersTypingText = "";
     let i = 0;
     usersTyping.forEach((user) => {
@@ -57,26 +39,6 @@
         }
       }
     });
-  }
-
-  async function typingValueChanged(value: "start" | "stop") {
-    if (!currentChannel.value) {
-      errorToast("Can't send typing, there is no channel selected");
-      return;
-    }
-    await typing(currentChannel.value.id, value);
-  }
-
-  $effect(() => {
-    props.chatInput;
-
-    if (props.chatInput !== "" && !isTyping) {
-      isTyping = true;
-      typingValueChanged("start");
-    } else if (props.chatInput === "" && isTyping) {
-      isTyping = false;
-      typingValueChanged("stop");
-    }
   });
 </script>
 

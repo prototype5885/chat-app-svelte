@@ -9,11 +9,7 @@
     UserOnline,
     UserSchema,
   } from "../scripts/schemas";
-  import {
-    user_info,
-    user_online,
-    wsSubscribe,
-  } from "../scripts/websocket.svelte";
+  import { subscribeSSE } from "../scripts/session.svelte";
 
   let members = $state<UserSchema[]>([]);
   let onlineMembers = $derived(
@@ -49,8 +45,8 @@
   });
 
   $effect(() => {
-    wsSubscribe(user_info, (event: Event) => {
-      const { detail: user } = event as CustomEvent<UserEditResponse>;
+    subscribeSSE("user_info", (e: any) => {
+      const user = JSON.parse(e.data) as UserEditResponse;
 
       members.forEach((member) => {
         if (member.id === user.id) {
@@ -68,8 +64,8 @@
       });
     });
 
-    wsSubscribe(user_online, (event: Event) => {
-      const { detail: user } = event as CustomEvent<UserOnline>;
+    subscribeSSE("user_online", (e: any) => {
+      const user = JSON.parse(e.data) as UserOnline;
       members.forEach((member) => {
         if (member.id === user.id) {
           member.online = user.online;

@@ -11,11 +11,7 @@
   import { create_server, get_servers } from "../scripts/httpActions";
   import Tooltip from "./Tooltip.svelte";
   import type { ServerSchema } from "../scripts/schemas";
-  import {
-    delete_server,
-    server_info,
-    wsSubscribe,
-  } from "../scripts/websocket.svelte";
+  import { subscribeSSE } from "../scripts/session.svelte";
 
   let serverList = $state<ServerSchema[]>([]);
 
@@ -38,18 +34,14 @@
   });
 
   $effect(() => {
-    wsSubscribe(server_info, (event: Event) => {
-      const { detail: server } = event as CustomEvent<ServerSchema>;
-
-      updateServerInfo(server);
+    subscribeSSE("server_info", (e: any) => {
+      updateServerInfo(JSON.parse(e.data));
     });
 
-    wsSubscribe(delete_server, (event: Event) => {
-      interface ServerToDelete {
+    subscribeSSE("delete_server", (e: any) => {
+      const server = JSON.parse(e.data) as {
         id: string;
-      }
-
-      const { detail: server } = event as CustomEvent<ServerToDelete>;
+      };
 
       for (let i = 0; i < serverList.length; i++) {
         if (serverList[i].id === server.id) {

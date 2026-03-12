@@ -7,17 +7,10 @@
     currentServer,
     currentUserID,
   } from "../scripts/globals.svelte";
-  import {
-    create_channel,
-    delete_channel,
-    modify_channel,
-    sendWs,
-    subscribe_to_channel_list,
-    wsSubscribe,
-  } from "../scripts/websocket.svelte";
   import ChannelAdd from "./ChannelAdd.svelte";
   import { errorToast } from "../scripts/toast.svelte";
   import { get_channels } from "../scripts/httpActions";
+  import { subscribeSSE } from "../scripts/session.svelte";
 
   let props: { server: ServerSchema } = $props();
   const owned = $derived(props.server.owner_id === currentUserID);
@@ -31,9 +24,6 @@
       errorToast("Can't fetch channels, there is no server selected");
       return;
     }
-
-    const event = subscribe_to_channel_list;
-    sendWs(event, currentServer.value.id);
 
     abortController = new AbortController();
     channelList = await get_channels(
@@ -52,13 +42,13 @@
   });
 
   $effect(() => {
-    wsSubscribe(create_channel, (event: Event) => {
-      const { detail: channel } = event as CustomEvent<ChannelSchema>;
+    subscribeSSE("create_channel", (e: any) => {
+      const channel = JSON.parse(e.data) as ChannelSchema;
       channelList.push(channel);
     });
 
-    wsSubscribe(modify_channel, (event: Event) => {
-      const { detail: channel } = event as CustomEvent<ChannelSchema>;
+    subscribeSSE("modify_channel", (e: any) => {
+      const channel = JSON.parse(e.data) as ChannelSchema;
 
       for (let i = 0; i < channelList.length; i++) {
         if (channelList[i].id === channel.id) {
@@ -67,16 +57,12 @@
         }
       }
       errorToast(
-        `'${modify_channel}' event received, but channel ID '${channel.id}' was not found`,
+        `modify_channel event received, but channel ID '${channel.id}' was not found`,
       );
     });
 
-    wsSubscribe(delete_channel, (event: Event) => {
-      interface ChannelToDelete {
-        id: string;
-      }
-
-      const { detail: channel } = event as CustomEvent<ChannelToDelete>;
+    subscribeSSE("delete_channel", (e: any) => {
+      const channel = JSON.parse(e.data) as { id: string };
 
       for (let i = 0; i < channelList.length; i++) {
         if (channelList[i].id === channel.id) {
@@ -92,7 +78,7 @@
         }
       }
       errorToast(
-        `'${delete_channel}' event received, but channel ID '${channel.id}' was not found`,
+        `delete_channel event received, but channel ID '${channel.id}' was not found`,
       );
     });
   });

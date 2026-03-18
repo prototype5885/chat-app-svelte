@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { currentUserID } from "../scripts/globals.svelte";
   import { subscribeSSE } from "../scripts/session.svelte";
   import { errorToast } from "../scripts/toast.svelte";
 
@@ -13,6 +14,11 @@
       display_name: string | null;
     }
     const data = JSON.parse(e.data) as UserTyping;
+
+    // don't show own typing indicator
+    if (data.id === currentUserID) {
+      return;
+    }
 
     if (data.action === "start") {
       usersTyping.set(data.id, data.display_name!);

@@ -1,5 +1,3 @@
-export type DateFormat = "short" | "medium" | "long";
-
 function extractTimestamp(id: string): number {
   const timeChars = id.substring(0, 10); // first 10 characters contain the time
   const alphabet = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";

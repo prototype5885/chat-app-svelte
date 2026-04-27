@@ -26,6 +26,7 @@
     "@tailwindcss/typography": "0.5.19",
     "@tailwindcss/vite": "4.2.4",
     "marked": "18.0.2",
+    "sv-router": "0.16.0",
     "tailwindcss": "4.2.4"
   }
 }

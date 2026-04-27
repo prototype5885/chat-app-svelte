@@ -13,7 +13,7 @@
   import { subscribeSSE } from "../scripts/session.svelte";
 
   let props: { server: ServerSchema } = $props();
-  const owned = $derived(props.server.owner_id === currentUserID);
+  const owned = $derived(props.server.owner_id === currentUserID.value);
 
   let channelList = $state<ChannelSchema[]>([]);
 

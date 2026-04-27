@@ -1,8 +1,15 @@
-import { get_user_id } from "./httpActions";
 import type { ChannelSchema, ServerSchema } from "./schemas";
 import type { SettingsType } from "./types";
 
-export const currentUserID = await get_user_id();
+let currentUserIDState = $state<string>();
+export const currentUserID = {
+  get value() {
+    return currentUserIDState;
+  },
+  set value(newValue) {
+    currentUserIDState = newValue;
+  },
+};
 
 let editingMessageState = $state<string | null>(null);
 export const editingMessage = {

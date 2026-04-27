@@ -95,7 +95,7 @@
         notification={false}
         data-ctx-type="server"
         data-ctx-server-id={server.id}
-        data-ctx-own={server.owner_id === currentUserID}
+        data-ctx-own={server.owner_id === currentUserID.value}
       >
         {#if server.picture}
           <img

@@ -18,7 +18,7 @@
       ]}
       data-ctx-type="message"
       data-ctx-message-id={props.msg.id}
-      data-ctx-own={props.msg.sender_id === currentUserID}
+      data-ctx-own={props.msg.sender_id === currentUserID.value}
     >
       <!-- avatar -->
       <div
@@ -67,7 +67,7 @@
       ]}
       data-ctx-type="message"
       data-ctx-message-id={props.msg.id}
-      data-ctx-own={props.msg.sender_id === currentUserID}
+      data-ctx-own={props.msg.sender_id === currentUserID.value}
     >
       <div class="flex flex-row pl-3 grow">
         <!-- date -->

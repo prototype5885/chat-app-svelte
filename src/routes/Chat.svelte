@@ -17,6 +17,8 @@
   import Settings from "../lib/Settings.svelte";
   import Toasts from "../lib/Toasts.svelte";
   import MemberList from "../lib/MemberList.svelte";
+  // npm check cries if there is no ts-ignore here
+  // @ts-ignore
   import "@fontsource/inter";
   import {
     sseConnected,

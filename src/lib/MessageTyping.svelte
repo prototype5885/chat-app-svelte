@@ -16,7 +16,7 @@
     const data = JSON.parse(e.data) as UserTyping;
 
     // don't show own typing indicator
-    if (data.id === currentUserID) {
+    if (data.id === currentUserID.value) {
       return;
     }
 

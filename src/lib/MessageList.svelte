@@ -25,7 +25,7 @@
   const props: { channelName: string } = $props();
 
   let messageList: MessageResponse[] = $state([]);
-  let msgList: HTMLUListElement;
+  let msgList: HTMLUListElement | undefined = $state();
 
   let reachedBeginning = $state<boolean>(false);
   let newMessagesCount = $state<number>(0);
@@ -58,7 +58,7 @@
     initialDisplayMessages();
 
     await tick();
-    const canScroll = msgList.scrollHeight > msgList.clientHeight;
+    const canScroll = msgList!.scrollHeight > msgList!.clientHeight;
     if (!canScroll) {
       // since message list isn't scrollable, it most likely means chat is still very new
       // this would also trigger if chat is zoomed out and all 50 message can fit in without scrolling
@@ -173,6 +173,8 @@
   }
 
   async function onDivScroll() {
+    if (!msgList) return;
+
     const max = msgList.scrollHeight - msgList.clientHeight;
     scrollBottom = max - msgList.scrollTop;
 

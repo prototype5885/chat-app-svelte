@@ -4,6 +4,11 @@
   let passwordRepeat = $state<string>("");
 
   async function handleSubmit() {
+    if (password !== passwordRepeat) {
+      alert("Passwords don't match");
+      return;
+    }
+
     const formData = new URLSearchParams();
     formData.append("username", username);
     formData.append("password", password);

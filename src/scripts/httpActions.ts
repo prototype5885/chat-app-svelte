@@ -1,6 +1,6 @@
 import type * as s from "./schemas";
 import { sessionID } from "./session.svelte";
-import { errorToast } from "./toast.svelte";
+import { errorToast, warningToast } from "./toast.svelte";
 
 async function fetchWrapper(
   endpoint: string,
@@ -25,7 +25,8 @@ async function fetchWrapper(
   }
 
   if (response.status === 429) {
-    errorToast("Being rate limited");
+    warningToast("Being rate limited");
+    return;
   }
 
   if (response.status === 413) {

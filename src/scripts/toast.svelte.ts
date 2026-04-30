@@ -1,3 +1,5 @@
+import { toast } from "@zerodevx/svelte-toast";
+
 export type ToastType = "info" | "success" | "error" | "warning";
 
 export interface Toast {
@@ -7,49 +9,53 @@ export interface Toast {
   name: string | undefined;
 }
 
-export const toasts = $state<Toast[]>([]);
-
 export function infoToast(message: string) {
-  showToast(message, "info");
+  toast.push(message, {
+    duration: 5_000,
+    pausable: true,
+    theme: {
+      "--toastBackground": "rgb(29 78 216)",
+      "--toastBarBackground": "white",
+    },
+  });
   console.log(message);
 }
 
 export function successToast(message: string) {
-  showToast(message, "success");
+  toast.push(message, {
+    duration: 5_000,
+    pausable: true,
+    theme: {
+      "--toastBackground": "rgb(21 128 61)",
+      "--toastBarBackground": "white",
+    },
+  });
   console.log(message);
 }
 
-export function errorToast(
-  message: string,
-  name: string = "Error",
-  throwError: boolean = true,
-) {
-  showToast(message, "error", name);
+export function errorToast(message: string, throwError: boolean = true) {
+  toast.push(message, {
+    duration: 5_000,
+    pausable: true,
+    theme: {
+      "--toastBackground": "rgb(185 28 28)",
+      "--toastBarBackground": "white",
+    },
+  });
   if (throwError) {
     throw new Error(message);
   }
 }
 
 export function warningToast(message: string) {
-  showToast(message, "warning");
+  toast.push(message, {
+    duration: 5_000,
+    pausable: true,
+    theme: {
+      "--toastBackground": "rgb(250 204 21)",
+      "--toastBarBackground": "black",
+      "--toastColor": "black",
+    },
+  });
   console.warn(message);
-}
-
-function showToast(
-  message: string | undefined = undefined,
-  type: ToastType,
-  name: string | undefined = undefined,
-) {
-  const id = Math.random().toString(36).substring(2);
-  toasts.push({ id, message, type, name });
-
-  let timeout = 5000;
-  if (type === "error") {
-    timeout = 10000;
-  }
-
-  setTimeout(() => {
-    const index = toasts.findIndex((t) => t.id === id);
-    if (index > -1) toasts.splice(index, 1);
-  }, timeout);
 }

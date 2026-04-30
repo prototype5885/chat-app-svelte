@@ -25,16 +25,16 @@ async function fetchWrapper(
   }
 
   if (response.status === 429) {
-    errorToast("Being rate limited", response.status.toString());
+    errorToast("Being rate limited");
   }
 
   if (response.status === 413) {
-    errorToast("Content too large", response.status.toString());
+    errorToast("Content too large");
   }
 
   if (!response.ok) {
     const errJson = await response.text();
-    errorToast(errJson, response.status.toString());
+    errorToast(errJson);
   }
 
   const contentType = response.headers.get("content-type");

@@ -15,7 +15,6 @@
   } from "../scripts/globals.svelte";
   import UserPanel from "../lib/UserPanel.svelte";
   import Settings from "../lib/Settings.svelte";
-  import Toasts from "../lib/Toasts.svelte";
   import MemberList from "../lib/MemberList.svelte";
   // npm check cries if there is no ts-ignore here
   // @ts-ignore
@@ -49,7 +48,6 @@
       {/if}
     </div>
   {:else}
-    <Toasts />
     {#if settings.value.mode !== "off"}
       {#key settings.value}
         <Settings />

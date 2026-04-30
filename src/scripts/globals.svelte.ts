@@ -1,43 +1,43 @@
 import type { ChannelSchema, ServerSchema } from "./schemas";
 import type { SettingsType } from "./types";
 
-let currentUserIDState = $state<string>();
+let _currentUserID = $state<string>();
 export const currentUserID = {
   get value() {
-    return currentUserIDState;
+    return _currentUserID;
   },
   set value(newValue) {
-    currentUserIDState = newValue;
+    _currentUserID = newValue;
   },
 };
 
-let editingMessageState = $state<string | null>(null);
+let _editingMessage = $state<string | null>(null);
 export const editingMessage = {
   get value() {
-    return editingMessageState;
+    return _editingMessage;
   },
   set value(newValue) {
-    editingMessageState = newValue;
+    _editingMessage = newValue;
   },
 };
 
-let currentServerState = $state<ServerSchema>();
+let _currentServer = $state<ServerSchema>();
 export const currentServer = {
   get value() {
-    return currentServerState;
+    return _currentServer;
   },
   set value(newValue) {
-    currentServerState = newValue;
+    _currentServer = newValue;
   },
 };
 
-let currentChannelIDState = $state<ChannelSchema>();
+let _currentChannel = $state<ChannelSchema>();
 export const currentChannel = {
   get value() {
-    return currentChannelIDState;
+    return _currentChannel;
   },
   set value(newValue) {
-    currentChannelIDState = newValue;
+    _currentChannel = newValue;
 
     // reset editing message value
     editingMessage.value = null;
@@ -49,22 +49,22 @@ export const currentChannel = {
   },
 };
 
-let settingsState = $state<SettingsType>({ mode: "off" });
+let _settings = $state<SettingsType>({ mode: "off" });
 export const settings = {
   get value() {
-    return settingsState;
+    return _settings;
   },
   set value(newValue) {
-    settingsState = newValue;
+    _settings = newValue;
   },
 };
 
-let themeState = $state<string>("theme-diskord");
+let _theme = $state<string>("theme-diskord");
 export const theme = {
   get value() {
-    return themeState;
+    return _theme;
   },
   set value(newValue) {
-    themeState = newValue;
+    _theme = newValue;
   },
 };

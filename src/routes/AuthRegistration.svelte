@@ -14,7 +14,7 @@
     formData.append("password", password);
     formData.append("password_repeat", passwordRepeat);
 
-    const response = await fetch("/api/v1/user/login", {
+    const response = await fetch("/api/v1/user/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -49,7 +49,7 @@
       <input bind:value={passwordRepeat} type="password" />
     </div>
 
-    <button onclick={handleSubmit}>Login</button>
+    <button onclick={handleSubmit}>Register</button>
 
     <div>
       <a href="#/auth/login">Already have an account?</a>

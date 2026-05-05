@@ -1,5 +1,5 @@
 <script lang="ts">
-  import File from "../icons/File.svelte";
+  import { File } from "@lucide/svelte";
   import type { Attachment } from "../scripts/schemas";
 
   let { attachments }: { attachments: Attachment[] } = $props();

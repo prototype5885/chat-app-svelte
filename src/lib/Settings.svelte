@@ -1,6 +1,6 @@
 <script lang="ts">
   import { type Component } from "svelte";
-  import CircleX from "../icons/CircleX.svelte";
+  import { CircleX } from "@lucide/svelte";
   import { settings, theme } from "../scripts/globals.svelte";
   import SettingsAccount from "./SettingsAccount.svelte";
   import SettingsLanguage from "./SettingsLanguage.svelte";

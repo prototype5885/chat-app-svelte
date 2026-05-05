@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Plus from "../icons/Plus.svelte";
+  import { Plus } from "@lucide/svelte";
   import { currentServer } from "../scripts/globals.svelte";
   import { create_channel } from "../scripts/httpActions";
   import { errorToast } from "../scripts/toast.svelte";

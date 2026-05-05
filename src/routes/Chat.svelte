@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Hash from "../icons/Hash.svelte";
+  import { Hash } from "@lucide/svelte";
   import ChannelList from "../lib/ChannelList.svelte";
   import ContextMenu from "../lib/ContextMenu.svelte";
   import MessageInput from "../lib/MessageInput.svelte";

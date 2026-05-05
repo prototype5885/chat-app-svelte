@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
-  import Pencil from "../icons/Pencil.svelte";
+  import { Pencil } from "@lucide/svelte";
   import {
     upload_server_avatar,
     upload_user_avatar,

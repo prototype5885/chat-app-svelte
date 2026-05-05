@@ -6,8 +6,7 @@
     currentServer,
     currentUserID,
   } from "../scripts/globals.svelte";
-  import Mail from "../icons/Mail.svelte";
-  import Plus from "../icons/Plus.svelte";
+  import { Mail, Plus } from "@lucide/svelte";
   import { create_server, get_servers } from "../scripts/httpActions";
   import Tooltip from "./Tooltip.svelte";
   import type { ServerSchema } from "../scripts/schemas";

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Hash from "../icons/Hash.svelte";
+  import { Hash } from "@lucide/svelte";
   import { currentChannel } from "../scripts/globals.svelte";
   import type { ChannelSchema } from "../scripts/schemas";
 

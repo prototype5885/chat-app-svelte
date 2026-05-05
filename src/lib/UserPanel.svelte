@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import Settings from "../icons/Settings.svelte";
+  import { Settings } from "@lucide/svelte";
   import { settings } from "../scripts/globals.svelte";
   import Avatar from "./Avatar.svelte";
   import UserPanelButton from "./UserPanelButton.svelte";

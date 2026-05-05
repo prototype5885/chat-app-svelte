@@ -3,9 +3,8 @@
   import { errorToast } from "../scripts/toast.svelte";
   import { create_message, typing } from "../scripts/httpActions";
   import AutoResizeTextarea from "./AutoResizeTextarea.svelte";
-  import Plus from "../icons/Plus.svelte";
   import { onDestroy } from "svelte";
-  import Trash from "../icons/Trash.svelte";
+  import { Plus, Trash } from "@lucide/svelte";
 
   let chatInput = $state<string>("");
   let isTyping = false;

@@ -69,15 +69,21 @@ export interface MessageEditResponse {
   edited: string | null;
 }
 
+export interface Attachment {
+  name: string;
+  file: string;
+}
+
 export interface MessageResponse {
   id: string;
   sender_id: string;
   channel_id: string;
   message: string;
-  attachments: string | null;
+  attachment_count: number | null;
   edited: string | null;
   display_name: string;
   picture: string | null;
+  attachments: Attachment[] | null;
 }
 
 export interface TypingSchema {

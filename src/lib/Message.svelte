@@ -3,6 +3,7 @@
   import { currentUserID, editingMessage } from "../scripts/globals.svelte";
   import type { MessageResponse } from "../scripts/schemas";
   import Avatar from "./Avatar.svelte";
+  import MessageAttachments from "./MessageAttachments.svelte";
   import MessageEditor from "./MessageEditor.svelte";
   import MessageText from "./MessageText.svelte";
 
@@ -57,6 +58,9 @@
         {:else}
           <MessageText text={props.msg.message} edited={props.msg.edited} />
         {/if}
+        {#if props.msg.attachments}
+          <MessageAttachments attachments={props.msg.attachments} />
+        {/if}
       </div>
     </div>
   {:else}
@@ -82,6 +86,9 @@
         {:else}
           <div class="py-0.5">
             <MessageText text={props.msg.message} edited={props.msg.edited} />
+            {#if props.msg.attachments}
+              <MessageAttachments attachments={props.msg.attachments} />
+            {/if}
           </div>
         {/if}
       </div>

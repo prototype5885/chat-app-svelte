@@ -10,16 +10,30 @@
   let chatInput = $state<string>("");
   let isTyping = false;
 
+  // attachments
+  interface Attachment {
+    link: string | null;
+    name: string;
+    file: File;
+  }
+
+  let fileInput: HTMLInputElement | undefined = $state();
+  let attachments = $state<Attachment[]>([]);
+
   async function sendMessage() {
-    if (chatInput === "") return;
+    if (chatInput === "" && attachments.length === 0) return;
     if (!currentChannel.value) {
       errorToast("Can't send chat message, there is no channel selected");
       return;
     }
 
-    await create_message(currentChannel.value.id, chatInput);
+    const files = attachments.map((a) => a.file);
+    await create_message(currentChannel.value.id, chatInput, files);
+
+    revokeUrl();
 
     chatInput = "";
+    attachments = [];
   }
 
   async function typingValueChanged(value: "start" | "stop") {
@@ -41,16 +55,6 @@
       typingValueChanged("stop");
     }
   });
-
-  // attachments
-  interface Attachment {
-    link: string | null;
-    name: string;
-    file: File;
-  }
-
-  let fileInput: HTMLInputElement | undefined = $state();
-  let attachments = $state<Attachment[]>([]);
 
   function handleFileSelect(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -82,12 +86,16 @@
     fileInput!.click();
   }
 
-  onDestroy(() => {
+  function revokeUrl() {
     attachments.forEach((attachment) => {
       if (attachment.link) {
         URL.revokeObjectURL(attachment.link);
       }
     });
+  }
+
+  onDestroy(() => {
+    revokeUrl();
   });
 </script>
 

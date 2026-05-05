@@ -192,10 +192,16 @@ export async function get_members(serverID: string): Promise<s.UserSchema[]> {
   });
 }
 
-export async function create_message(channelID: string, message: string) {
+export async function create_message(channelID: string, message: string, files: File[] = []) {
+  const formData = new FormData();
+  formData.append("message", message);
+  files.forEach((file) => {
+    formData.append("files", file);
+  });
+
   await fetchWrapper(`/api/v1/channel/${channelID}/message`, {
     method: "POST",
-    body: JSON.stringify({ message: message }),
+    body: formData,
   });
 
   // Websocket response

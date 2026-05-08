@@ -10,6 +10,7 @@
     UserSchema,
   } from "../scripts/schemas";
   import { subscribeSSE } from "../scripts/session.svelte";
+  import { JSONParse } from "json-with-bigint";
 
   let members = $state<UserSchema[]>([]);
   let onlineMembers = $derived(
@@ -46,7 +47,7 @@
 
   $effect(() => {
     subscribeSSE("user_info", (e: any) => {
-      const user = JSON.parse(e.data) as UserEditResponse;
+      const user = JSONParse(e.data) as UserEditResponse;
 
       members.forEach((member) => {
         if (member.id === user.id) {
@@ -65,7 +66,7 @@
     });
 
     subscribeSSE("user_online", (e: any) => {
-      const user = JSON.parse(e.data) as UserOnline;
+      const user = JSONParse(e.data) as UserOnline;
       members.forEach((member) => {
         if (member.id === user.id) {
           member.online = user.online;

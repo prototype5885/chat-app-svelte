@@ -2,6 +2,7 @@
   import { currentUserID } from "../scripts/globals.svelte";
   import { subscribeSSE } from "../scripts/session.svelte";
   import { errorToast } from "../scripts/toast.svelte";
+  import { JSONParse } from "json-with-bigint";
 
   let usersTyping = $state(new Map<string, string>());
   let usersTypingText = $state<string>("");
@@ -13,7 +14,7 @@
       id: string;
       display_name: string | null;
     }
-    const data = JSON.parse(e.data) as UserTyping;
+    const data = JSONParse(e.data) as UserTyping;
 
     // don't show own typing indicator
     if (data.id === currentUserID.value) {

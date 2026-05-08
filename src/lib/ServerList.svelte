@@ -11,6 +11,7 @@
   import Tooltip from "./Tooltip.svelte";
   import type { ServerSchema } from "../scripts/schemas";
   import { subscribeSSE } from "../scripts/session.svelte";
+  import { JSONParse } from "json-with-bigint";
 
   let serverList = $state<ServerSchema[]>([]);
 
@@ -34,11 +35,11 @@
 
   $effect(() => {
     subscribeSSE("server_info", (e: any) => {
-      updateServerInfo(JSON.parse(e.data));
+      updateServerInfo(JSONParse(e.data));
     });
 
     subscribeSSE("delete_server", (e: any) => {
-      const server = JSON.parse(e.data) as {
+      const server = JSONParse(e.data) as {
         id: string;
       };
 

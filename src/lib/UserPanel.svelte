@@ -8,6 +8,7 @@
   import Tooltip from "./Tooltip.svelte";
   import type { UserEditResponse, UserSchema } from "../scripts/schemas";
   import { subscribeSSE } from "../scripts/session.svelte";
+  import { JSONParse } from "json-with-bigint";
 
   let userData = $state<UserSchema>();
 
@@ -17,7 +18,7 @@
 
   $effect(() => {
     subscribeSSE("self_user_info", (e: any) => {
-      const user = JSON.parse(e.data) as UserEditResponse;
+      const user = JSONParse(e.data) as UserEditResponse;
 
       if (user.id !== userData?.id) {
         return;

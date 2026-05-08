@@ -11,6 +11,7 @@
   import { errorToast } from "../scripts/toast.svelte";
   import { get_channels } from "../scripts/httpActions";
   import { subscribeSSE } from "../scripts/session.svelte";
+  import { JSONParse } from "json-with-bigint";
 
   let props: { server: ServerSchema } = $props();
   const owned = $derived(props.server.owner_id === currentUserID.value);
@@ -43,12 +44,12 @@
 
   $effect(() => {
     subscribeSSE("create_channel", (e: any) => {
-      const channel = JSON.parse(e.data) as ChannelSchema;
+      const channel = JSONParse(e.data) as ChannelSchema;
       channelList.push(channel);
     });
 
     subscribeSSE("modify_channel", (e: any) => {
-      const channel = JSON.parse(e.data) as ChannelSchema;
+      const channel = JSONParse(e.data) as ChannelSchema;
 
       for (let i = 0; i < channelList.length; i++) {
         if (channelList[i].id === channel.id) {
@@ -62,7 +63,7 @@
     });
 
     subscribeSSE("delete_channel", (e: any) => {
-      const channel = JSON.parse(e.data) as { id: string };
+      const channel = JSONParse(e.data) as { id: string };
 
       for (let i = 0; i < channelList.length; i++) {
         if (channelList[i].id === channel.id) {

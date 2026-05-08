@@ -12,6 +12,7 @@
   import type { MessageResponse, UserEditResponse } from "../scripts/schemas";
   import MessageTyping from "./MessageTyping.svelte";
   import { sseConnected, subscribeSSE } from "../scripts/session.svelte";
+  import { JSONParse } from "json-with-bigint";
 
   // these will happen if the scroll distance from bottom is above this:
   // won't autoscroll down on new message
@@ -75,7 +76,7 @@
 
   $effect(() => {
     subscribeSSE("create_message", (e: any) => {
-      messageList.push(JSON.parse(e.data));
+      messageList.push(JSONParse(e.data));
       if (scrollBottom < OLD_ABOVE_THIS) {
         scrollToBottom("instant");
       } else {
@@ -84,7 +85,7 @@
     });
 
     subscribeSSE("edit_message", (e: any) => {
-      const message = JSON.parse(e.data);
+      const message = JSONParse(e.data);
 
       for (let i = 0; i < messageList.length; i++) {
         if (messageList[i].id === message.id) {
@@ -99,7 +100,7 @@
       interface MessageToDelete {
         id: string;
       }
-      const message = JSON.parse(e.data) as MessageToDelete;
+      const message = JSONParse(e.data) as MessageToDelete;
       for (let i = 0; i < messageList.length; i++) {
         if (messageList[i].id === message.id) {
           messageList.splice(i, 1);
@@ -109,7 +110,7 @@
     });
 
     subscribeSSE("user_info", (e: any) => {
-      const user = JSON.parse(e.data) as UserEditResponse;
+      const user = JSONParse(e.data) as UserEditResponse;
 
       messageList.forEach((msg) => {
         if (msg.sender_id === user.id) {

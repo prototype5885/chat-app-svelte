@@ -1,6 +1,7 @@
 import type * as s from "./schemas";
 import { sessionID } from "./session.svelte";
 import { errorToast, warningToast } from "./toast.svelte";
+import { JSONParse, JSONStringify } from "json-with-bigint";
 
 async function fetchWrapper(
   endpoint: string,
@@ -42,7 +43,7 @@ async function fetchWrapper(
 
   if (contentType) {
     if (contentType.includes("application/json")) {
-      return await response.json();
+      return JSONParse(await response.text());
     }
 
     if (contentType.includes("text/plain")) {
@@ -87,7 +88,7 @@ export async function upload_user_avatar(
 export async function create_server(name: string): Promise<s.ServerSchema> {
   return await fetchWrapper("/api/v1/server", {
     method: "POST",
-    body: JSON.stringify({ name: name }),
+    body: JSONStringify({ name: name }),
   });
 }
 
@@ -140,7 +141,7 @@ export async function delete_server(serverID: string) {
 export async function create_channel(serverID: string, name: string) {
   await fetchWrapper(`/api/v1/server/${serverID}/channel`, {
     method: "POST",
-    body: JSON.stringify({ name: name }),
+    body: JSONStringify({ name: name }),
   });
 
   // Websocket response
@@ -210,7 +211,7 @@ export async function create_message(channelID: string, message: string, files: 
 export async function edit_message(messageID: string, message: string) {
   await fetchWrapper(`/api/v1/message/${messageID}`, {
     method: "PATCH",
-    body: JSON.stringify({ message: message }),
+    body: JSONStringify({ message: message }),
   });
 
   // Websocket response

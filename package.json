@@ -10,26 +10,26 @@
     "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json",
     "format": "npx prettier . --write"
   },
-  "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "7.1.0",
-    "@tsconfig/svelte": "5.0.8",
-    "@types/node": "25.6.0",
-    "@zerodevx/svelte-toast": "0.9.6",
-    "prettier": "3.8.3",
-    "prettier-plugin-svelte": "3.5.1",
-    "svelte": "5.55.5",
-    "svelte-check": "4.4.8",
-    "typescript": "6.0.3",
-    "vite": "8.0.10"
-  },
   "dependencies": {
     "@fontsource/inter": "5.2.8",
     "@lucide/svelte": "1.14.0",
     "@tailwindcss/typography": "0.5.19",
-    "@tailwindcss/vite": "4.2.4",
+    "@tailwindcss/vite": "4.3.0",
     "json-with-bigint": "3.5.8",
     "marked": "18.0.3",
-    "sv-router": "0.16.0",
-    "tailwindcss": "4.2.4"
+    "sv-router": "0.16.1",
+    "tailwindcss": "4.3.0"
+  },
+    "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "7.1.2",
+    "@tsconfig/svelte": "5.0.8",
+    "@types/node": "25.7.0",
+    "@zerodevx/svelte-toast": "0.9.6",
+    "prettier": "3.8.3",
+    "prettier-plugin-svelte": "3.5.2",
+    "svelte": "5.55.5",
+    "svelte-check": "4.4.8",
+    "typescript": "6.0.3",
+    "vite": "8.0.12"
   }
 }

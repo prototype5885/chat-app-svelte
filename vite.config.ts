@@ -7,7 +7,7 @@ const backendAddress = "http://127.0.0.1:8000";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [tailwindcss(), svelte()],
-  base: "/dist",
+  base: "/svelte",
   server: {
     host: "127.0.0.1",
     port: 3000,

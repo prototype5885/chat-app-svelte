@@ -135,7 +135,7 @@ export async function delete_server(serverID: string) {
   // no need to store last channel ID of this server anymore
   localStorage.removeItem(serverID);
 
-  // Websocket response
+  // SSE response
 }
 
 export async function create_channel(serverID: string, name: string) {
@@ -144,7 +144,7 @@ export async function create_channel(serverID: string, name: string) {
     body: JSONStringify({ name: name }),
   });
 
-  // Websocket response
+  // SSE response
 }
 
 export async function get_channel_info(
@@ -184,7 +184,7 @@ export async function delete_channel(channelID: string) {
     method: "DELETE",
   });
 
-  // Websocket response
+  // SSE response
 }
 
 export async function get_members(serverID: string): Promise<s.UserSchema[]> {
@@ -193,7 +193,11 @@ export async function get_members(serverID: string): Promise<s.UserSchema[]> {
   });
 }
 
-export async function create_message(channelID: string, message: string, files: File[] = []) {
+export async function create_message(
+  channelID: string,
+  message: string,
+  files: File[] = [],
+) {
   const formData = new FormData();
   formData.append("message", message);
   files.forEach((file) => {
@@ -205,7 +209,7 @@ export async function create_message(channelID: string, message: string, files: 
     body: formData,
   });
 
-  // Websocket response
+  // SSE response
 }
 
 export async function edit_message(messageID: string, message: string) {
@@ -214,7 +218,7 @@ export async function edit_message(messageID: string, message: string) {
     body: JSONStringify({ message: message }),
   });
 
-  // Websocket response
+  // SSE response
 }
 
 export async function get_messages(
@@ -247,7 +251,7 @@ export async function get_messages(
 export async function delete_message(messageID: string) {
   await fetchWrapper(`/api/v1/message/${messageID}`, { method: "DELETE" });
 
-  // Websocket response
+  // SSE response
 }
 
 export async function typing(channelID: string, value: "start" | "stop") {
@@ -255,5 +259,5 @@ export async function typing(channelID: string, value: "start" | "stop") {
     method: "POST",
   });
 
-  // Websocket response
+  // SSE response
 }

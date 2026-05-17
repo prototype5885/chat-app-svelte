@@ -28,7 +28,6 @@
 
   onMount(async () => {
     currentUserID.value = await get_user_id();
-    console.log(currentUserID.value);
   });
 </script>
 

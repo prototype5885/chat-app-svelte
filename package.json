@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@fontsource/inter": "5.2.8",
-    "@lucide/svelte": "1.14.0",
+    "@lucide/svelte": "1.16.0",
     "@tailwindcss/typography": "0.5.19",
     "@tailwindcss/vite": "4.3.0",
     "json-with-bigint": "3.5.8",
@@ -20,7 +20,7 @@
     "sv-router": "0.16.1",
     "tailwindcss": "4.3.0"
   },
-    "devDependencies": {
+  "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "7.1.2",
     "@tsconfig/svelte": "5.0.8",
     "@types/node": "25.7.0",
@@ -30,6 +30,6 @@
     "svelte": "5.55.5",
     "svelte-check": "4.4.8",
     "typescript": "6.0.3",
-    "vite": "8.0.12"
+    "vite": "8.0.13"
   }
 }

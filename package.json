@@ -13,23 +13,23 @@
   "dependencies": {
     "@fontsource/inter": "5.2.8",
     "@lucide/svelte": "1.17.0",
-    "@tailwindcss/typography": "0.5.19",
+    "@tailwindcss/typography": "0.5.20",
     "@tailwindcss/vite": "4.3.0",
     "json-with-bigint": "3.5.8",
-    "marked": "18.0.4",
-    "sv-router": "0.16.2",
+    "marked": "18.0.5",
+    "sv-router": "0.16.3",
     "tailwindcss": "4.3.0"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "7.1.2",
     "@tsconfig/svelte": "5.0.8",
-    "@types/node": "25.9.1",
+    "@types/node": "25.9.2",
     "@zerodevx/svelte-toast": "0.9.6",
-    "prettier": "3.8.3",
-    "prettier-plugin-svelte": "4.0.1",
-    "svelte": "5.55.10",
-    "svelte-check": "4.4.8",
+    "prettier": "3.8.4",
+    "prettier-plugin-svelte": "4.1.0",
+    "svelte": "5.56.3",
+    "svelte-check": "4.6.0",
     "typescript": "6.0.3",
-    "vite": "8.0.14"
+    "vite": "8.0.16"
   }
 }

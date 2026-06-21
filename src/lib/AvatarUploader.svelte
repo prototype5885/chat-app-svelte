@@ -10,6 +10,9 @@
   const props: { preview?: string | null; serverID?: string | bigint } =
     $props();
 
+  const allowedMimes = ["image/jpeg", "image/png"];
+  const allowedExt = ".jpg,.jpeg,.png";
+
   let selectedFile = $state<File | null>(null);
   let preview = $derived<string>(
     props.preview ? `/avatars/${props.preview}` : "",
@@ -20,12 +23,7 @@
     const input = e.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       selectedFile = input.files[0];
-      if (
-        selectedFile.type === "image/jpeg" ||
-        selectedFile.type === "image/png" ||
-        selectedFile.type === "image/webp" ||
-        selectedFile.type === "image/gif"
-      ) {
+      if (allowedMimes.includes(selectedFile.type)) {
         if (lastBlobUrl) {
           URL.revokeObjectURL(lastBlobUrl);
         }
@@ -80,7 +78,7 @@
     </div>
     <input
       type="file"
-      accept=".jpg,.jpeg,.png,.webp,.gif"
+      accept={allowedExt}
       onchange={handleFileSelect}
       class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
     />

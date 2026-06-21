@@ -1,23 +1,30 @@
-function extractTimestamp(id: string): number {
-  const timeChars = id.substring(0, 10); // first 10 characters contain the time
-  const alphabet = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
-
+function extractTimestamp(id: string | bigint): number {
   let timestamp = 0;
 
-  for (let i = 0; i < timeChars.length; i++) {
-    const char = timeChars[i];
-    const value = alphabet.indexOf(char);
-    timestamp = timestamp * 32 + value;
+  if (typeof id === "string") {
+    const timeChars = id.substring(0, 10); // first 10 characters contain the time
+    const alphabet = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+
+    for (let i = 0; i < timeChars.length; i++) {
+      const char = timeChars[i];
+      const value = alphabet.indexOf(char);
+      timestamp = timestamp * 32 + value;
+    }
+  } else {
+    const epoch = 1772841600n;
+    const timeShift = 22n;
+    return Number((id >> timeShift) + epoch);
   }
+
   return timestamp;
 }
 
-export function getShortDate(id: string): string {
+export function getShortDate(id: string | bigint): string {
   const timestamp = extractTimestamp(id);
   return new Date(timestamp).toLocaleString(undefined, { timeStyle: "short" });
 }
 
-export function getMediumDate(id: string): string {
+export function getMediumDate(id: string | bigint): string {
   const timestamp = extractTimestamp(id);
   return new Date(timestamp).toLocaleString(undefined, {
     year: "numeric",
@@ -26,7 +33,7 @@ export function getMediumDate(id: string): string {
   });
 }
 
-export function getLongDate(id: string): string {
+export function getLongDate(id: string | bigint): string {
   const timestamp = extractTimestamp(id);
   const date = new Date(timestamp);
 
@@ -48,7 +55,9 @@ export function getLongDate(id: string): string {
     date.getMonth() === yesterday.getMonth() &&
     date.getFullYear() === yesterday.getFullYear()
   ) {
-    return `Yesterday at ${date.toLocaleString(undefined, { timeStyle: "short" })}`;
+    return `Yesterday at ${date.toLocaleString(undefined, {
+      timeStyle: "short",
+    })}`;
   }
 
   // return long date if older than above
@@ -62,7 +71,10 @@ export function getLongDate(id: string): string {
   });
 }
 
-export function isSameDay(currentID: string, nextID: string): boolean {
+export function isSameDay(
+  currentID: string | bigint,
+  nextID: string | bigint,
+): boolean {
   const currentDate = new Date(extractTimestamp(currentID));
   const nextDate = new Date(extractTimestamp(nextID));
   return (
@@ -73,8 +85,8 @@ export function isSameDay(currentID: string, nextID: string): boolean {
 }
 
 export function isOlderThanFiveMins(
-  currentID: string,
-  nextID: string,
+  currentID: string | bigint,
+  nextID: string | bigint,
 ): boolean {
   const currentMins = extractTimestamp(currentID) / (1000 * 60);
   const nextMins = extractTimestamp(nextID) / (1000 * 60);

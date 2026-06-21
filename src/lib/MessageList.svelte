@@ -148,8 +148,8 @@
   }
 
   async function requestRelativeMessages(
-    channelID: string,
-    messageID: string,
+    channelID: string | bigint,
+    messageID: string | bigint,
     direction: "before" | "after",
   ) {
     requestInProgress = true;

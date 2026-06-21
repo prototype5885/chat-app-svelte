@@ -93,14 +93,14 @@ export async function create_server(name: string): Promise<s.ServerSchema> {
 }
 
 export async function get_server_info(
-  serverID: string,
+  serverID: string | bigint,
 ): Promise<s.ServerSchema> {
   return await fetchWrapper(`/api/v1/server/${serverID}`, { method: "GET" });
 }
 
 export async function update_server_info(
   formData: FormData,
-  serverID: string,
+  serverID: string | bigint,
 ): Promise<s.ServerSchema> {
   return await fetchWrapper(`/api/v1/server/${serverID}`, {
     method: "PATCH",
@@ -110,7 +110,7 @@ export async function update_server_info(
 
 export async function upload_server_avatar(
   file: File | null,
-  serverID: string,
+  serverID: string | bigint,
 ): Promise<string | null> {
   const formData = new FormData();
   if (file) {
@@ -138,7 +138,7 @@ export async function delete_server(serverID: string) {
   // SSE response
 }
 
-export async function create_channel(serverID: string, name: string) {
+export async function create_channel(serverID: string | bigint, name: string) {
   await fetchWrapper(`/api/v1/server/${serverID}/channel`, {
     method: "POST",
     body: JSONStringify({ name: name }),
@@ -148,7 +148,7 @@ export async function create_channel(serverID: string, name: string) {
 }
 
 export async function get_channel_info(
-  channelID: string,
+  channelID: string | bigint,
 ): Promise<s.ChannelSchema> {
   return await fetchWrapper(`/api/v1/channel/${channelID}`, {
     method: "GET",
@@ -157,7 +157,7 @@ export async function get_channel_info(
 
 export async function update_channel_info(
   formData: FormData,
-  channelID: string,
+  channelID: string | bigint,
 ): Promise<s.ChannelSchema> {
   return await fetchWrapper(`/api/v1/channel/${channelID}`, {
     method: "PATCH",
@@ -166,7 +166,7 @@ export async function update_channel_info(
 }
 
 export async function get_channels(
-  serverID: string,
+  serverID: string | bigint,
   signal: AbortSignal,
 ): Promise<s.ChannelSchema[]> {
   return await fetchWrapper(
@@ -187,14 +187,16 @@ export async function delete_channel(channelID: string) {
   // SSE response
 }
 
-export async function get_members(serverID: string): Promise<s.UserSchema[]> {
+export async function get_members(
+  serverID: string | bigint,
+): Promise<s.UserSchema[]> {
   return await fetchWrapper(`/api/v1/server/${serverID}/members`, {
     method: "GET",
   });
 }
 
 export async function create_message(
-  channelID: string,
+  channelID: string | bigint,
   message: string,
   files: File[] = [],
 ) {
@@ -212,7 +214,10 @@ export async function create_message(
   // SSE response
 }
 
-export async function edit_message(messageID: string, message: string) {
+export async function edit_message(
+  messageID: string | bigint,
+  message: string,
+) {
   await fetchWrapper(`/api/v1/message/${messageID}`, {
     method: "PATCH",
     body: JSONStringify({ message: message }),
@@ -222,14 +227,14 @@ export async function edit_message(messageID: string, message: string) {
 }
 
 export async function get_messages(
-  channelID: string,
-  messageID: string | null = null,
+  channelID: string | bigint,
+  messageID: string | bigint | null = null,
   direction: "before" | "after" | null = null,
   signal: AbortSignal,
 ): Promise<s.MessageResponse[]> {
   const params = new URLSearchParams();
   if (messageID && direction) {
-    params.append("messageID", messageID);
+    params.append("messageID", messageID.toString());
     params.append("direction", direction);
   }
 
@@ -254,7 +259,10 @@ export async function delete_message(messageID: string) {
   // SSE response
 }
 
-export async function typing(channelID: string, value: "start" | "stop") {
+export async function typing(
+  channelID: string | bigint,
+  value: "start" | "stop",
+) {
   await fetchWrapper(`/api/v1/channel/${channelID}/typing/${value}`, {
     method: "POST",
   });

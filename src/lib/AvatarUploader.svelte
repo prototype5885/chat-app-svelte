@@ -7,7 +7,8 @@
   } from "../scripts/httpActions";
   import { successToast, warningToast } from "../scripts/toast.svelte";
 
-  const props: { preview?: string | null; serverID?: string } = $props();
+  const props: { preview?: string | null; serverID?: string | bigint } =
+    $props();
 
   let selectedFile = $state<File | null>(null);
   let preview = $derived<string>(

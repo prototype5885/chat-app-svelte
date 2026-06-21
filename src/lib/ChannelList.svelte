@@ -34,7 +34,9 @@
 
     if (channelList.length > 0) {
       // select the channel found in localStorage, or just select the first one
-      const lastChannelID = localStorage.getItem(currentServer.value.id);
+      const lastChannelID = localStorage.getItem(
+        currentServer.value.id.toString(),
+      );
       const lastChannel = channelList.find(
         (channel) => channel.id === lastChannelID,
       );

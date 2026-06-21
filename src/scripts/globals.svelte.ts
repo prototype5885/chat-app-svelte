@@ -44,7 +44,10 @@ export const currentChannel = {
 
     // set last selected channel on a server
     if (currentServer.value && currentChannel.value) {
-      localStorage.setItem(currentServer.value.id, currentChannel.value.id);
+      localStorage.setItem(
+        currentServer.value.id.toString(),
+        currentChannel.value.id.toString(),
+      );
     }
   },
 };

@@ -1,7 +1,7 @@
 import type { ChannelSchema, ServerSchema } from "./schemas";
 import type { SettingsType } from "./types";
 
-let _currentUserID = $state<string>();
+let _currentUserID = $state<string | bigint>();
 export const currentUserID = {
   get value() {
     return _currentUserID;

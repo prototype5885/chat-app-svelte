@@ -27,7 +27,12 @@
   import { onMount } from "svelte";
 
   onMount(async () => {
-    currentUserID.value = await get_user_id();
+    const value = await get_user_id();
+    try {
+      currentUserID.value = BigInt(value);
+    } catch {
+      currentUserID.value = value;
+    }
   });
 </script>
 

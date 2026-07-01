@@ -1,5 +1,5 @@
 export type SettingsType = {
   mode: "off" | "user" | "server" | "channel";
-  serverID?: string;
-  channelID?: string;
+  serverID?: string | bigint;
+  channelID?: string | bigint;
 };

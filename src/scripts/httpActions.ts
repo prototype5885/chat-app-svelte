@@ -12,6 +12,12 @@ async function fetchWrapper(
 
   if (options.body && !(options.body instanceof FormData)) {
     headers.set("Content-Type", "application/json");
+  } else if (options.body instanceof FormData) {
+    const hasFiles = [...options.body.values()].some((v) => v instanceof File);
+    if (!hasFiles) {
+      headers.set("Content-Type", "application/x-www-form-urlencoded");
+      options.body = new URLSearchParams(options.body as any).toString();
+    }
   }
 
   const response = await fetch(endpoint, {

@@ -97,12 +97,9 @@
     });
 
     subscribeSSE("delete_message", (e: any) => {
-      interface MessageToDelete {
-        id: bigint;
-      }
-      const message = JSONParse(e.data) as MessageToDelete;
+      const messageID = BigInt(e.data);
       for (let i = 0; i < messageList.length; i++) {
-        if (messageList[i].id === message.id) {
+        if (messageList[i].id === messageID) {
           messageList.splice(i, 1);
           return;
         }

@@ -39,12 +39,10 @@
     });
 
     subscribeSSE("delete_server", (e: any) => {
-      const server = JSONParse(e.data) as {
-        id: bigint;
-      };
+      const serverID = BigInt(e.data);
 
       for (let i = 0; i < serverList.length; i++) {
-        if (serverList[i].id === server.id) {
+        if (serverList[i].id === serverID) {
           serverList.splice(i, 1);
           return;
         }

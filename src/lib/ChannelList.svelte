@@ -69,12 +69,12 @@
     });
 
     subscribeSSE("delete_channel", (e: any) => {
-      const channel = JSONParse(e.data) as { id: bigint };
+      const channelID = BigInt(e.data);
 
       for (let i = 0; i < channelList.length; i++) {
-        if (channelList[i].id === channel.id) {
+        if (channelList[i].id === channelID) {
           channelList.splice(i, 1);
-          if (currentChannel.value!.id === channel.id) {
+          if (currentChannel.value!.id === channelID) {
             if (channelList.length > 0) {
               currentChannel.value = channelList[0];
             } else {
@@ -85,7 +85,7 @@
         }
       }
       errorToast(
-        `delete_channel event received, but channel ID '${channel.id}' was not found`,
+        `delete_channel event received, but channel ID '${channelID}' was not found`,
       );
     });
   });

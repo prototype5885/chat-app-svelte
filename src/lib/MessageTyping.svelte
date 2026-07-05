@@ -9,24 +9,29 @@
   let isAreTypingText = $state<string>("");
 
   subscribeSSE("typing", (e: any) => {
-    interface UserTyping {
-      action: "start" | "stop";
-      id: bigint;
-      display_name: string | null;
-    }
-    const data = JSONParse(e.data) as UserTyping;
+    const data = e.data;
+    const firstSpace = data.indexOf(" ");
+    const secondSpace = data.indexOf(" ", firstSpace + 1); // will be -1 if STOP action is received
+
+    const action = Number(data.slice(0, firstSpace));
+    const userID =
+      secondSpace !== -1
+        ? BigInt(data.slice(firstSpace + 1, secondSpace))
+        : BigInt(data.slice(firstSpace + 1));
+    const displayName = secondSpace !== -1 ? data.slice(secondSpace + 1) : null;
 
     // don't show own typing indicator
     if (data.id === currentUserID.value) {
       return;
     }
 
-    if (data.action === "start") {
-      usersTyping.set(data.id, data.display_name!);
+    if (action === 1) {
+      // if START
+      usersTyping.set(userID, displayName);
     } else {
-      if (!usersTyping.delete(data.id)) {
+      if (!usersTyping.delete(userID)) {
         errorToast(
-          `stop typing event received, but user ID '${data.id}' was not found in usersTyping`,
+          `stop typing event received, but user ID '${userID}' was not found in usersTyping`,
         );
       }
     }

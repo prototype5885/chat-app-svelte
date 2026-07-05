@@ -21,7 +21,7 @@
     const displayName = secondSpace !== -1 ? data.slice(secondSpace + 1) : null;
 
     // don't show own typing indicator
-    if (data.id === currentUserID.value) {
+    if (userID === currentUserID.value) {
       return;
     }
 

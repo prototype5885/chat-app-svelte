@@ -61,7 +61,7 @@ async function fetchWrapper(
 }
 
 export async function get_user_id(): Promise<bigint> {
-  const data = await fetchWrapper("/api/v1/user_id", { method: "GET" })
+  const data = await fetchWrapper("/api/v1/user_id", { method: "GET" });
   return BigInt(data);
 }
 
@@ -219,8 +219,12 @@ export async function create_message(
   // SSE response
 }
 
-export async function edit_message(messageID: bigint, message: string) {
-  await fetchWrapper(`/api/v1/message/${messageID}`, {
+export async function edit_message(
+  channelID: bigint,
+  messageID: bigint,
+  message: string,
+) {
+  await fetchWrapper(`/api/v1/channel/${channelID}/message/${messageID}`, {
     method: "PATCH",
     body: JSONStringify({ message: message }),
   });
@@ -256,9 +260,12 @@ export async function get_messages(
 }
 
 export async function delete_message(channelID: bigint, messageID: bigint) {
-  await fetchWrapper(`/api/v1/channel/${channelID.toString()}/message/${messageID.toString()}`, {
-    method: "DELETE",
-  });
+  await fetchWrapper(
+    `/api/v1/channel/${channelID.toString()}/message/${messageID.toString()}`,
+    {
+      method: "DELETE",
+    },
+  );
 
   // SSE response
 }

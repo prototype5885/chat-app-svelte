@@ -15,7 +15,7 @@
       return;
     }
 
-    await edit_message(props.msg.id, editedMessage);
+    await edit_message(props.msg.channel_id, props.msg.id, editedMessage);
 
     cancel();
   }

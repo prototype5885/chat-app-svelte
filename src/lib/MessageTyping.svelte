@@ -4,14 +4,14 @@
   import { errorToast } from "../scripts/toast.svelte";
   import { JSONParse } from "json-with-bigint";
 
-  let usersTyping = $state(new Map<string, string>());
+  let usersTyping = $state(new Map<bigint, string>());
   let usersTypingText = $state<string>("");
   let isAreTypingText = $state<string>("");
 
   subscribeSSE("typing", (e: any) => {
     interface UserTyping {
       action: "start" | "stop";
-      id: string;
+      id: bigint;
       display_name: string | null;
     }
     const data = JSONParse(e.data) as UserTyping;

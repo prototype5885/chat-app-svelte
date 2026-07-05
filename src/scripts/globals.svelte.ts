@@ -1,7 +1,7 @@
 import type { ChannelSchema, ServerSchema } from "./schemas";
 import type { SettingsType } from "./types";
 
-let _currentUserID = $state<string | bigint>();
+let _currentUserID = $state<bigint>();
 export const currentUserID = {
   get value() {
     return _currentUserID;
@@ -11,7 +11,7 @@ export const currentUserID = {
   },
 };
 
-let _editingMessage = $state<string | null>(null);
+let _editingMessage = $state<bigint | null>(null);
 export const editingMessage = {
   get value() {
     return _editingMessage;

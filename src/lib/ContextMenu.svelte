@@ -47,10 +47,14 @@
     const target = event.target as HTMLElement;
     const element = target.closest("[data-ctx-type]");
     const type = element?.getAttribute("data-ctx-type");
-    const userID = element?.getAttribute("data-ctx-user-id") || undefined;
-    const serverID = element?.getAttribute("data-ctx-server-id") || undefined;
-    const channelID = element?.getAttribute("data-ctx-channel-id") || undefined;
-    const messageID = element?.getAttribute("data-ctx-message-id") || undefined;
+    const userID = element?.getAttribute("data-ctx-user-id");
+    const serverIDStr = element?.getAttribute("data-ctx-server-id");
+    const channelIDStr = element?.getAttribute("data-ctx-channel-id");
+    const messageIDSTr = element?.getAttribute("data-ctx-message-id");
+
+    const serverID = serverIDStr ? BigInt(serverIDStr) : undefined;
+    const channelID = channelIDStr ? BigInt(channelIDStr) : undefined;
+    const messageID = messageIDSTr ? BigInt(messageIDSTr) : undefined;
 
     const owner = element?.hasAttribute("data-ctx-own")
       ? element.getAttribute("data-ctx-own") === "true"
@@ -136,7 +140,7 @@
             label: "Copy server ID",
             color: "default",
             action: () => {
-              navigator.clipboard.writeText(serverID!);
+              navigator.clipboard.writeText(serverID!.toString());
               infoToast(`Copied server ID ${serverID} to clipboard`);
             },
           },
@@ -186,7 +190,7 @@
             label: "Copy channel ID",
             color: "default",
             action: () => {
-              navigator.clipboard.writeText(channelID!);
+              navigator.clipboard.writeText(channelID!.toString());
               infoToast(`Copied channel ID ${channelID} to clipboard`);
             },
           },
@@ -226,7 +230,7 @@
             label: "Copy message ID",
             color: "default",
             action: () => {
-              navigator.clipboard.writeText(messageID!);
+              navigator.clipboard.writeText(messageID!.toString());
               infoToast(`Copied message ID ${messageID} to clipboard`);
             },
           },

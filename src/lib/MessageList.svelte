@@ -98,7 +98,7 @@
 
     subscribeSSE("delete_message", (e: any) => {
       interface MessageToDelete {
-        id: string;
+        id: bigint;
       }
       const message = JSONParse(e.data) as MessageToDelete;
       for (let i = 0; i < messageList.length; i++) {
@@ -148,8 +148,8 @@
   }
 
   async function requestRelativeMessages(
-    channelID: string | bigint,
-    messageID: string | bigint,
+    channelID: bigint,
+    messageID: bigint,
     direction: "before" | "after",
   ) {
     requestInProgress = true;

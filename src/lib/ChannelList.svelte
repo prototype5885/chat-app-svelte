@@ -37,10 +37,14 @@
       const lastChannelID = localStorage.getItem(
         currentServer.value.id.toString(),
       );
-      const lastChannel = channelList.find(
-        (channel) => channel.id === lastChannelID,
-      );
-      currentChannel.value = lastChannel || channelList[0];
+      if (lastChannelID) {
+        const lastChannel = channelList.find(
+          (channel) => channel.id === BigInt(lastChannelID),
+        );
+        currentChannel.value = lastChannel;
+      } else {
+        currentChannel.value = channelList[0];
+      }
     }
   });
 
@@ -65,7 +69,7 @@
     });
 
     subscribeSSE("delete_channel", (e: any) => {
-      const channel = JSONParse(e.data) as { id: string };
+      const channel = JSONParse(e.data) as { id: bigint };
 
       for (let i = 0; i < channelList.length; i++) {
         if (channelList[i].id === channel.id) {

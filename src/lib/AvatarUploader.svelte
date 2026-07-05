@@ -7,8 +7,7 @@
   } from "../scripts/httpActions";
   import { successToast, warningToast } from "../scripts/toast.svelte";
 
-  const props: { preview?: string | null; serverID?: string | bigint } =
-    $props();
+  const props: { preview?: string | null; serverID?: bigint } = $props();
 
   const allowedMimes = ["image/jpeg", "image/png"];
   const allowedExt = ".jpg,.jpeg,.png";

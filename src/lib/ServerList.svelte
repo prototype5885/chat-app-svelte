@@ -25,7 +25,7 @@
     // remove server IDs of left/deleted servers from localStorage
     Object.keys(localStorage).forEach((lastServerID) => {
       const foundServer = serverList.find(
-        (server) => server.id === lastServerID,
+        (server) => server.id === BigInt(lastServerID),
       );
       if (!foundServer) {
         localStorage.removeItem(lastServerID);
@@ -40,7 +40,7 @@
 
     subscribeSSE("delete_server", (e: any) => {
       const server = JSONParse(e.data) as {
-        id: string;
+        id: bigint;
       };
 
       for (let i = 0; i < serverList.length; i++) {

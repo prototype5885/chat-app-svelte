@@ -60,8 +60,9 @@ async function fetchWrapper(
   }
 }
 
-export async function get_user_id(): Promise<string> {
-  return await fetchWrapper("/api/v1/user_id", { method: "GET" });
+export async function get_user_id(): Promise<bigint> {
+  const data = await fetchWrapper("/api/v1/user_id", { method: "GET" })
+  return BigInt(data);
 }
 
 export async function get_user_info(): Promise<s.UserSchema> {
@@ -99,14 +100,14 @@ export async function create_server(name: string): Promise<s.ServerSchema> {
 }
 
 export async function get_server_info(
-  serverID: string | bigint,
+  serverID: bigint,
 ): Promise<s.ServerSchema> {
   return await fetchWrapper(`/api/v1/server/${serverID}`, { method: "GET" });
 }
 
 export async function update_server_info(
   formData: FormData,
-  serverID: string | bigint,
+  serverID: bigint,
 ): Promise<s.ServerSchema> {
   return await fetchWrapper(`/api/v1/server/${serverID}`, {
     method: "PATCH",
@@ -116,7 +117,7 @@ export async function update_server_info(
 
 export async function upload_server_avatar(
   file: File | null,
-  serverID: string | bigint,
+  serverID: bigint,
 ): Promise<string | null> {
   const formData = new FormData();
   if (file) {
@@ -133,18 +134,18 @@ export async function get_servers(): Promise<s.ServerSchema[]> {
   return await fetchWrapper("/api/v1/servers", { method: "GET" });
 }
 
-export async function delete_server(serverID: string) {
-  await fetchWrapper(`/api/v1/server/${serverID}`, {
+export async function delete_server(serverID: bigint) {
+  await fetchWrapper(`/api/v1/server/${serverID.toString()}`, {
     method: "DELETE",
   });
 
   // no need to store last channel ID of this server anymore
-  localStorage.removeItem(serverID);
+  localStorage.removeItem(serverID.toString());
 
   // SSE response
 }
 
-export async function create_channel(serverID: string | bigint, name: string) {
+export async function create_channel(serverID: bigint, name: string) {
   await fetchWrapper(`/api/v1/server/${serverID}/channel`, {
     method: "POST",
     body: JSONStringify({ name: name }),
@@ -154,7 +155,7 @@ export async function create_channel(serverID: string | bigint, name: string) {
 }
 
 export async function get_channel_info(
-  channelID: string | bigint,
+  channelID: bigint,
 ): Promise<s.ChannelSchema> {
   return await fetchWrapper(`/api/v1/channel/${channelID}`, {
     method: "GET",
@@ -163,7 +164,7 @@ export async function get_channel_info(
 
 export async function update_channel_info(
   formData: FormData,
-  channelID: string | bigint,
+  channelID: bigint,
 ): Promise<s.ChannelSchema> {
   return await fetchWrapper(`/api/v1/channel/${channelID}`, {
     method: "PATCH",
@@ -172,7 +173,7 @@ export async function update_channel_info(
 }
 
 export async function get_channels(
-  serverID: string | bigint,
+  serverID: bigint,
   signal: AbortSignal,
 ): Promise<s.ChannelSchema[]> {
   return await fetchWrapper(
@@ -185,24 +186,22 @@ export async function get_channels(
   );
 }
 
-export async function delete_channel(channelID: string) {
-  await fetchWrapper(`/api/v1/channel/${channelID}`, {
+export async function delete_channel(channelID: bigint) {
+  await fetchWrapper(`/api/v1/channel/${channelID.toString()}`, {
     method: "DELETE",
   });
 
   // SSE response
 }
 
-export async function get_members(
-  serverID: string | bigint,
-): Promise<s.UserSchema[]> {
+export async function get_members(serverID: bigint): Promise<s.UserSchema[]> {
   return await fetchWrapper(`/api/v1/server/${serverID}/members`, {
     method: "GET",
   });
 }
 
 export async function create_message(
-  channelID: string | bigint,
+  channelID: bigint,
   message: string,
   files: File[] = [],
 ) {
@@ -220,10 +219,7 @@ export async function create_message(
   // SSE response
 }
 
-export async function edit_message(
-  messageID: string | bigint,
-  message: string,
-) {
+export async function edit_message(messageID: bigint, message: string) {
   await fetchWrapper(`/api/v1/message/${messageID}`, {
     method: "PATCH",
     body: JSONStringify({ message: message }),
@@ -233,8 +229,8 @@ export async function edit_message(
 }
 
 export async function get_messages(
-  channelID: string | bigint,
-  messageID: string | bigint | null = null,
+  channelID: bigint,
+  messageID: bigint | null = null,
   direction: "before" | "after" | null = null,
   signal: AbortSignal,
 ): Promise<s.MessageResponse[]> {
@@ -259,19 +255,21 @@ export async function get_messages(
   );
 }
 
-export async function delete_message(messageID: string) {
-  await fetchWrapper(`/api/v1/message/${messageID}`, { method: "DELETE" });
+export async function delete_message(messageID: bigint) {
+  await fetchWrapper(`/api/v1/message/${messageID.toString()}`, {
+    method: "DELETE",
+  });
 
   // SSE response
 }
 
-export async function typing(
-  channelID: string | bigint,
-  value: "start" | "stop",
-) {
-  await fetchWrapper(`/api/v1/channel/${channelID}/typing/${value}`, {
-    method: "POST",
-  });
+export async function typing(channelID: bigint, value: "start" | "stop") {
+  await fetchWrapper(
+    `/api/v1/channel/${channelID.toString()}/typing/${value}`,
+    {
+      method: "POST",
+    },
+  );
 
   // SSE response
 }

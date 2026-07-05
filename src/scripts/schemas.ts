@@ -1,5 +1,5 @@
 export interface UserSchema {
-  id: string | bigint;
+  id: bigint;
   username: string | null;
   display_name: string;
   picture: string | null;
@@ -12,20 +12,20 @@ export interface UserEditRequest {
 }
 
 export interface UserEditResponse {
-  id: string | bigint;
+  id: bigint;
   display_name?: string;
   picture?: string | null;
   custom_status?: string | null;
 }
 
 export interface UserOnline {
-  id: string | bigint;
+  id: bigint;
   online: boolean;
 }
 
 export interface ServerSchema {
-  id: string | bigint;
-  owner_id: string | bigint;
+  id: bigint;
+  owner_id: bigint;
   name: string;
   picture: string | null;
   banner: string | null;
@@ -41,8 +41,8 @@ export interface ServerEditRequest {
 }
 
 export interface ChannelSchema {
-  id: string | bigint;
-  server_id: string | bigint;
+  id: bigint;
+  server_id: bigint;
   name: string;
 }
 
@@ -63,7 +63,7 @@ export interface MessageEditRequest {
 }
 
 export interface MessageEditResponse {
-  id: string | bigint;
+  id: bigint;
   message: string;
   attachments: string | null;
   edited: string | null;
@@ -75,9 +75,9 @@ export interface Attachment {
 }
 
 export interface MessageResponse {
-  id: string | bigint;
-  sender_id: string | bigint;
-  channel_id: string | bigint;
+  id: bigint;
+  sender_id: bigint;
+  channel_id: bigint;
   message: string;
   attachment_count: number | null;
   edited: string | null;
@@ -87,6 +87,6 @@ export interface MessageResponse {
 }
 
 export interface TypingSchema {
-  user_id: string | bigint;
+  user_id: bigint;
   display_name: string | null;
 }

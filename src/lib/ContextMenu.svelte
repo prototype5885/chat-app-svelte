@@ -198,6 +198,12 @@
         break;
       }
       case "message": {
+        if (!channelID) {
+          errorToast(
+            `Channel ID is '${channelID}' in context menu type '${type}'`,
+          );
+          return;
+        }
         if (!messageID) {
           errorToast(
             `Message ID is '${messageID}' in context menu type '${type}'`,
@@ -221,7 +227,7 @@
             hide: !owner,
             color: "red",
             action: async () => {
-              await delete_message(messageID);
+              await delete_message(channelID, messageID);
             },
           },
           { type: "separator" },

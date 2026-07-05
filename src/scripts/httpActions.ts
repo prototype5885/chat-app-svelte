@@ -255,8 +255,8 @@ export async function get_messages(
   );
 }
 
-export async function delete_message(messageID: bigint) {
-  await fetchWrapper(`/api/v1/message/${messageID.toString()}`, {
+export async function delete_message(channelID: bigint, messageID: bigint) {
+  await fetchWrapper(`/api/v1/channel/${channelID.toString()}/message/${messageID.toString()}`, {
     method: "DELETE",
   });
 

@@ -18,6 +18,7 @@
         props.msg.id === editingMessage.value ? "bg-white/5" : "",
       ]}
       data-ctx-type="message"
+      data-ctx-channel-id={props.msg.channel_id}
       data-ctx-message-id={props.msg.id}
       data-ctx-own={props.msg.sender_id === currentUserID.value}
     >
@@ -70,6 +71,7 @@
         props.msg.id === editingMessage.value ? "bg-white/5" : "",
       ]}
       data-ctx-type="message"
+      data-ctx-channel-id={props.msg.channel_id}
       data-ctx-message-id={props.msg.id}
       data-ctx-own={props.msg.sender_id === currentUserID.value}
     >

@@ -66,17 +66,17 @@ export async function get_user_id(): Promise<bigint> {
   return BigInt(data);
 }
 
-export async function get_user_info(): Promise<s.UserSchema> {
-  return await fetchWrapper("/api/v1/user", { method: "GET" });
+export async function get_user_info() {
+  const result = await fetchWrapper("/api/v1/user", { method: "GET" });
+  return await s.UserSchema.parseAsync(result);
 }
 
-export async function update_user_info(
-  formData: FormData,
-): Promise<s.UserEditResponse> {
-  return await fetchWrapper("/api/v1/user", {
+export async function update_user_info(formData: FormData) {
+  const result = await fetchWrapper("/api/v1/user", {
     method: "PATCH",
     body: formData,
   });
+  return await s.UserEditResponseSchema.parseAsync(result);
 }
 
 export async function upload_user_avatar(
@@ -194,10 +194,11 @@ export async function delete_channel(channelID: bigint) {
   // SSE response
 }
 
-export async function get_members(serverID: bigint): Promise<s.UserSchema[]> {
-  return await fetchWrapper(`/api/v1/server/${serverID}/members`, {
+export async function get_members(serverID: bigint) {
+  const result = await fetchWrapper(`/api/v1/server/${serverID}/members`, {
     method: "GET",
   });
+  return await z.array(s.UserSchema).parseAsync(result);
 }
 
 export async function create_message(

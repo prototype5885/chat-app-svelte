@@ -1,11 +1,12 @@
 <script lang="ts">
+  import { z } from "zod";
   import { onMount } from "svelte";
   import { get_user_info, update_user_info } from "../scripts/httpActions";
   import { successToast } from "../scripts/toast.svelte";
-  import type { UserSchema } from "../scripts/schemas";
+  import { DisplayNameSchema, UserSchema } from "../scripts/schemas";
   import AvatarUploader from "./AvatarUploader.svelte";
 
-  let userData = $state<UserSchema>();
+  let userData = $state<z.infer<typeof UserSchema>>();
 
   let modifiedDisplayName = $state<string>("");
 
@@ -49,10 +50,10 @@
     }
 
     const data = await update_user_info(formData);
-    if (data.display_name !== undefined) {
+    if (data.display_name) {
       userData.display_name = data.display_name;
     }
-    if (data.custom_status !== undefined) {
+    if (data.custom_status) {
       userData.custom_status = data.custom_status;
     }
     successToast("Updated user info!");
@@ -68,7 +69,7 @@
       <input
         type="text"
         id="display_name"
-        maxlength="32"
+        maxlength={DisplayNameSchema.maxLength}
         required
         class="outline-1"
         bind:value={modifiedDisplayName}

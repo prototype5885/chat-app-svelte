@@ -44,28 +44,23 @@ export const MessageSchema = z.object({
   attachments: z.array(AttachmentSchema).nullable().optional(),
 });
 
-export interface UserSchema {
-  id: bigint;
-  username: string | null;
-  display_name: string;
-  picture: string | null;
-  custom_status: string | null;
-  online: boolean | null;
-}
+export const UserSchema = z.object({
+  id: z.bigint(),
+  username: UsernameSchema,
+  display_name: DisplayNameSchema,
+  picture: PictureSchema,
+  custom_status: CustomStatusSchema,
+  online: z.boolean(),
+});
 
-export interface UserEditResponse {
-  id: bigint;
-  display_name?: string;
-  picture?: string | null;
-  custom_status?: string | null;
-}
+export const UserEditResponseSchema = z.object({
+  id: z.bigint(),
+  display_name: DisplayNameSchema.nullable().optional(),
+  picture: PictureSchema,
+  custom_status: CustomStatusSchema,
+});
 
 export const UserOnline = z.object({
   id: z.bigint(),
   online: z.boolean(),
 });
-
-export interface Attachment {
-  name: string;
-  file: string;
-}

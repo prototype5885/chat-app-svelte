@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { z } from "zod";
   import { onMount } from "svelte";
   import { get_members } from "../scripts/httpActions";
   import { currentServer } from "../scripts/globals.svelte";
@@ -6,13 +7,13 @@
   import Avatar from "./Avatar.svelte";
   import {
     UserOnline,
-    type UserEditResponse,
-    type UserSchema,
+    UserEditResponseSchema,
+    UserSchema,
   } from "../scripts/schemas";
   import { subscribeSSE } from "../scripts/session.svelte";
   import { JSONParse } from "json-with-bigint";
 
-  let members = $state<UserSchema[]>([]);
+  let members = $state<z.infer<ReturnType<typeof UserSchema.array>>>([]);
   let onlineMembers = $derived(
     members
       .filter((m) => m.online)
@@ -47,17 +48,17 @@
 
   $effect(() => {
     subscribeSSE("user_info", (e: any) => {
-      const user = JSONParse(e.data) as UserEditResponse;
+      const user = UserEditResponseSchema.parse(JSONParse(e.data));
 
       members.forEach((member) => {
         if (member.id === user.id) {
-          if (user.picture !== undefined) {
+          if (user.picture) {
             member.picture = user.picture;
           }
-          if (user.display_name !== undefined) {
+          if (user.display_name) {
             member.display_name = user.display_name;
           }
-          if (user.custom_status !== undefined) {
+          if (user.custom_status) {
             member.custom_status = user.custom_status;
           }
           return;

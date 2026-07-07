@@ -10,7 +10,7 @@
   } from "../scripts/date";
   import { errorToast } from "../scripts/toast.svelte";
   import { get_messages } from "../scripts/httpActions";
-  import { MessageSchema, type UserEditResponse } from "../scripts/schemas";
+  import { MessageSchema, UserEditResponseSchema } from "../scripts/schemas";
   import MessageTyping from "./MessageTyping.svelte";
   import { sseConnected, subscribeSSE } from "../scripts/session.svelte";
   import { JSONParse } from "json-with-bigint";
@@ -108,14 +108,14 @@
     });
 
     subscribeSSE("user_info", (e: any) => {
-      const user = JSONParse(e.data) as UserEditResponse;
+      const user = UserEditResponseSchema.parse(JSONParse(e.data));
 
       messageList.forEach((msg) => {
         if (msg.sender_id === user.id) {
-          if (user.picture !== undefined) {
+          if (user.picture) {
             msg.picture = user.picture;
           }
-          if (user.display_name !== undefined) {
+          if (user.display_name) {
             msg.display_name = user.display_name;
           }
         }

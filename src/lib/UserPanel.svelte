@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { z } from "zod";
   import { onMount } from "svelte";
   import { Settings } from "@lucide/svelte";
   import { settings } from "../scripts/globals.svelte";
@@ -6,11 +7,11 @@
   import UserPanelButton from "./UserPanelButton.svelte";
   import { get_user_info } from "../scripts/httpActions";
   import Tooltip from "./Tooltip.svelte";
-  import type { UserEditResponse, UserSchema } from "../scripts/schemas";
+  import { UserEditResponseSchema, type UserSchema } from "../scripts/schemas";
   import { subscribeSSE } from "../scripts/session.svelte";
   import { JSONParse } from "json-with-bigint";
 
-  let userData = $state<UserSchema>();
+  let userData = $state<z.infer<typeof UserSchema>>();
 
   onMount(async () => {
     userData = await get_user_info();
@@ -18,19 +19,19 @@
 
   $effect(() => {
     subscribeSSE("self_user_info", (e: any) => {
-      const user = JSONParse(e.data) as UserEditResponse;
+      const user = UserEditResponseSchema.parse(JSONParse(e.data));
 
       if (user.id !== userData?.id) {
         return;
       }
 
-      if (user.picture !== undefined) {
+      if (user.picture) {
         userData.picture = user.picture;
       }
-      if (user.display_name !== undefined) {
+      if (user.display_name) {
         userData.display_name = user.display_name;
       }
-      if (user.custom_status !== undefined) {
+      if (user.custom_status) {
         userData.custom_status = user.custom_status;
       }
       return;

@@ -1,8 +1,12 @@
 <script lang="ts">
+  import { z } from "zod";
   import { File } from "@lucide/svelte";
-  import type { Attachment } from "../scripts/schemas";
+  import { AttachmentSchema } from "../scripts/schemas";
 
-  let { attachments }: { attachments: Attachment[] } = $props();
+  let {
+    attachments,
+  }: { attachments: z.infer<ReturnType<typeof AttachmentSchema.array>> } =
+    $props();
 
   function isImage(url: string) {
     return /\.(jpg|jpeg|webp|png|gif)$/i.test(url);

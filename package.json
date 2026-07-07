@@ -18,7 +18,8 @@
     "json-with-bigint": "3.5.8",
     "marked": "18.0.5",
     "sv-router": "0.17.0",
-    "tailwindcss": "4.3.2"
+    "tailwindcss": "4.3.2",
+    "zod": "4.4.3"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "7.1.2",

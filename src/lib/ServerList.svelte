@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { z } from "zod";
   import { onMount } from "svelte";
   import ServerBase from "./ServerBase.svelte";
   import {
@@ -13,7 +14,7 @@
   import { subscribeSSE } from "../scripts/session.svelte";
   import { JSONParse } from "json-with-bigint";
 
-  let serverList = $state<ServerSchema[]>([]);
+  let serverList = $state<z.infer<ReturnType<typeof ServerSchema.array>>>([]);
 
   onMount(async () => {
     serverList = await get_servers();
@@ -50,19 +51,19 @@
     });
   });
 
-  function selectServer(server: ServerSchema) {
+  function selectServer(server: z.infer<typeof ServerSchema>) {
     currentServer.value = server;
     currentChannel.value = undefined;
   }
 
   async function createServer(name: string) {
-    const newServer: ServerSchema = await create_server(name);
+    const newServer = await create_server(name);
     serverList.push(newServer);
 
     selectServer(newServer);
   }
 
-  function updateServerInfo(data: ServerSchema) {
+  function updateServerInfo(data: z.infer<typeof ServerSchema>) {
     for (let i = 0; i < serverList.length; i++) {
       if (serverList[i].id === data.id) {
         serverList[i] = data;

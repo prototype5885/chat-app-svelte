@@ -1,3 +1,4 @@
+import { z } from "zod";
 import type { ChannelSchema, ServerSchema } from "./schemas";
 import type { SettingsType } from "./types";
 
@@ -21,7 +22,7 @@ export const editingMessage = {
   },
 };
 
-let _currentServer = $state<ServerSchema>();
+let _currentServer = $state<z.infer<typeof ServerSchema>>();
 export const currentServer = {
   get value() {
     return _currentServer;

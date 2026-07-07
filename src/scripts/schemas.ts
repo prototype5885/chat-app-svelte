@@ -1,3 +1,27 @@
+import { z } from "zod";
+
+export const UsernameSchema = z.string().trim().min(6).max(32);
+export const PasswordSchema = z.string().trim().min(6).max(128);
+
+export const DisplayNameSchema = z.string().trim().min(1).max(64);
+export const CustomStatusSchema = z.string().trim().min(1).max(32)
+  .nullable().optional();
+
+export const ServerNameSchema = z.string().trim().min(1).max(64);
+export const ChannelNameSchema = z.string().trim().min(1).max(32);
+
+export const MessageTextSchema = z.string().trim().min(1).max(4096);
+export const PictureSchema = z.string().nullable().optional();
+
+export const ServerSchema = z.object({
+  id: z.bigint(),
+  owner_id: z.bigint(),
+  name: ServerNameSchema,
+  picture: PictureSchema,
+  banner: PictureSchema,
+  roles: z.string().nullable().optional(),
+});
+
 export interface UserSchema {
   id: bigint;
   username: string | null;
@@ -21,15 +45,6 @@ export interface UserEditResponse {
 export interface UserOnline {
   id: bigint;
   online: boolean;
-}
-
-export interface ServerSchema {
-  id: bigint;
-  owner_id: bigint;
-  name: string;
-  picture: string | null;
-  banner: string | null;
-  roles: string | null;
 }
 
 export interface ServerCreateRequest {

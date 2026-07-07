@@ -1,4 +1,5 @@
-import type * as s from "./schemas";
+import { z } from "zod";
+import * as s from "./schemas";
 import { sessionID } from "./session.svelte";
 import { errorToast, warningToast } from "./toast.svelte";
 import { JSONParse, JSONStringify } from "json-with-bigint";
@@ -92,27 +93,27 @@ export async function upload_user_avatar(
   });
 }
 
-export async function create_server(name: string): Promise<s.ServerSchema> {
-  return await fetchWrapper("/api/v1/server", {
+export async function create_server(name: string) {
+  const result = await fetchWrapper("/api/v1/server", {
     method: "POST",
     body: JSONStringify({ name: name }),
   });
+  return await s.ServerSchema.parseAsync(result);
 }
 
-export async function get_server_info(
-  serverID: bigint,
-): Promise<s.ServerSchema> {
-  return await fetchWrapper(`/api/v1/server/${serverID}`, { method: "GET" });
+export async function get_server_info(serverID: bigint) {
+  const result = await fetchWrapper(`/api/v1/server/${serverID}`, {
+    method: "GET",
+  });
+  return await s.ServerSchema.parseAsync(result);
 }
 
-export async function update_server_info(
-  formData: FormData,
-  serverID: bigint,
-): Promise<s.ServerSchema> {
-  return await fetchWrapper(`/api/v1/server/${serverID}`, {
+export async function update_server_info(formData: FormData, serverID: bigint) {
+  const result = await fetchWrapper(`/api/v1/server/${serverID}`, {
     method: "PATCH",
     body: formData,
   });
+  return await s.ServerSchema.parseAsync(result);
 }
 
 export async function upload_server_avatar(
@@ -130,8 +131,9 @@ export async function upload_server_avatar(
   });
 }
 
-export async function get_servers(): Promise<s.ServerSchema[]> {
-  return await fetchWrapper("/api/v1/servers", { method: "GET" });
+export async function get_servers() {
+  const result = await fetchWrapper("/api/v1/servers", { method: "GET" });
+  return await z.array(s.ServerSchema).parseAsync(result);
 }
 
 export async function delete_server(serverID: bigint) {

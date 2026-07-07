@@ -1,12 +1,13 @@
 <script lang="ts">
+  import { z } from "zod";
   import { onMount } from "svelte";
   import { get_server_info, update_server_info } from "../scripts/httpActions";
   import { successToast } from "../scripts/toast.svelte";
   import { settings } from "../scripts/globals.svelte";
-  import type { ServerSchema } from "../scripts/schemas";
+  import { ServerNameSchema, ServerSchema } from "../scripts/schemas";
   import AvatarUploader from "./AvatarUploader.svelte";
 
-  let serverData = $state<ServerSchema>();
+  let serverData = $state<z.infer<typeof ServerSchema>>();
 
   let modifiedServerName = $state<string>("");
   let modifiedPicture: File | null = null;
@@ -65,7 +66,7 @@
       <input
         type="text"
         id="name"
-        maxlength="32"
+        maxlength={ServerNameSchema.maxLength}
         required
         class="outline-1"
         bind:value={modifiedServerName}

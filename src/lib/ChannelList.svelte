@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { z } from "zod";
   import { onDestroy, onMount } from "svelte";
   import type { ChannelSchema, ServerSchema } from "../scripts/schemas";
   import Channel from "./Channel.svelte";
@@ -13,7 +14,7 @@
   import { subscribeSSE } from "../scripts/session.svelte";
   import { JSONParse } from "json-with-bigint";
 
-  let props: { server: ServerSchema } = $props();
+  let props: { server: z.infer<typeof ServerSchema> } = $props();
   const owned = $derived(props.server.owner_id === currentUserID.value);
 
   let channelList = $state<ChannelSchema[]>([]);

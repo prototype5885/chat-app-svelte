@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { z } from "zod";
   import { onMount } from "svelte";
   import { successToast } from "../scripts/toast.svelte";
   import { settings } from "../scripts/globals.svelte";
@@ -6,9 +7,9 @@
     get_channel_info,
     update_channel_info,
   } from "../scripts/httpActions";
-  import type { ChannelSchema } from "../scripts/schemas";
+  import { ChannelNameSchema, ChannelSchema } from "../scripts/schemas";
 
-  let channelData = $state<ChannelSchema>();
+  let channelData = $state<z.infer<typeof ChannelSchema>>();
 
   let modifiedName = $state<string>("");
 
@@ -67,7 +68,7 @@
       <input
         type="text"
         id="name"
-        maxlength="32"
+        maxlength={ChannelNameSchema.maxLength}
         required
         class="outline-1"
         bind:value={modifiedName}

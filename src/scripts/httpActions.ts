@@ -156,29 +156,26 @@ export async function create_channel(serverID: bigint, name: string) {
   // SSE response
 }
 
-export async function get_channel_info(
-  channelID: bigint,
-): Promise<s.ChannelSchema> {
-  return await fetchWrapper(`/api/v1/channel/${channelID}`, {
+export async function get_channel_info(channelID: bigint) {
+  const result = await fetchWrapper(`/api/v1/channel/${channelID}`, {
     method: "GET",
   });
+  return await s.ChannelSchema.parseAsync(result);
 }
 
 export async function update_channel_info(
   formData: FormData,
   channelID: bigint,
-): Promise<s.ChannelSchema> {
-  return await fetchWrapper(`/api/v1/channel/${channelID}`, {
+) {
+  const result = await fetchWrapper(`/api/v1/channel/${channelID}`, {
     method: "PATCH",
     body: formData,
   });
+  return await s.ChannelSchema.parseAsync(result);
 }
 
-export async function get_channels(
-  serverID: bigint,
-  signal: AbortSignal,
-): Promise<s.ChannelSchema[]> {
-  return await fetchWrapper(
+export async function get_channels(serverID: bigint, signal: AbortSignal) {
+  const result = await fetchWrapper(
     `/api/v1/server/${serverID}/channels`,
     {
       method: "GET",
@@ -186,6 +183,7 @@ export async function get_channels(
     },
     signal,
   );
+  return await z.array(s.ChannelSchema).parseAsync(result);
 }
 
 export async function delete_channel(channelID: bigint) {

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { z } from "zod";
   import { onDestroy, onMount } from "svelte";
-  import type { ChannelSchema, ServerSchema } from "../scripts/schemas";
+  import { ChannelSchema, ServerSchema } from "../scripts/schemas";
   import Channel from "./Channel.svelte";
   import {
     currentChannel,
@@ -17,7 +17,7 @@
   let props: { server: z.infer<typeof ServerSchema> } = $props();
   const owned = $derived(props.server.owner_id === currentUserID.value);
 
-  let channelList = $state<ChannelSchema[]>([]);
+  let channelList = $state<z.infer<ReturnType<typeof ChannelSchema.array>>>([]);
 
   let abortController: AbortController | null = null;
 
@@ -51,12 +51,12 @@
 
   $effect(() => {
     subscribeSSE("create_channel", (e: any) => {
-      const channel = JSONParse(e.data) as ChannelSchema;
+      const channel = ChannelSchema.parse(JSONParse(e.data));
       channelList.push(channel);
     });
 
     subscribeSSE("modify_channel", (e: any) => {
-      const channel = JSONParse(e.data) as ChannelSchema;
+      const channel = ChannelSchema.parse(JSONParse(e.data));
 
       for (let i = 0; i < channelList.length; i++) {
         if (channelList[i].id === channel.id) {

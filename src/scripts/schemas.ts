@@ -22,6 +22,12 @@ export const ServerSchema = z.object({
   roles: z.string().nullable().optional(),
 });
 
+export const ChannelSchema = z.object({
+  id: z.bigint(),
+  server_id: z.bigint(),
+  name: ChannelNameSchema,
+});
+
 export interface UserSchema {
   id: bigint;
   username: string | null;
@@ -41,12 +47,6 @@ export interface UserEditResponse {
 export interface UserOnline {
   id: bigint;
   online: boolean;
-}
-
-export interface ChannelSchema {
-  id: bigint;
-  server_id: bigint;
-  name: string;
 }
 
 export interface Attachment {

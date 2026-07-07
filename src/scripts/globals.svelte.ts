@@ -32,7 +32,7 @@ export const currentServer = {
   },
 };
 
-let _currentChannel = $state<ChannelSchema>();
+let _currentChannel = $state<z.infer<typeof ChannelSchema>>();
 export const currentChannel = {
   get value() {
     return _currentChannel;

@@ -1,9 +1,11 @@
 <script lang="ts">
+  import { z } from "zod";
   import { Hash } from "@lucide/svelte";
   import { currentChannel } from "../scripts/globals.svelte";
   import type { ChannelSchema } from "../scripts/schemas";
 
-  const props: { channel: ChannelSchema; owned: boolean } = $props();
+  const props: { channel: z.infer<typeof ChannelSchema>; owned: boolean } =
+    $props();
 </script>
 
 <li>

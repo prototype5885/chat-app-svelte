@@ -1,6 +1,6 @@
 <script lang="ts">
   import { z } from "zod";
-  import { getLongDate, getShortDate, utcToLocal } from "../scripts/date";
+  import { getLongDate, getShortDate } from "../scripts/date";
   import { currentUserID, editingMessage } from "../scripts/globals.svelte";
   import type { MessageSchema } from "../scripts/schemas";
   import Avatar from "./Avatar.svelte";

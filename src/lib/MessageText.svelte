@@ -1,14 +1,14 @@
 <script lang="ts">
   import { marked } from "marked";
   import Tooltip from "./Tooltip.svelte";
-  import { utcToLocal } from "../scripts/date";
+  import { parseUnixTimestamp } from "../scripts/date";
 
   marked.setOptions({
     breaks: true,
     gfm: true,
   });
 
-  let props: { text: string; edited: string | null | undefined } = $props();
+  let props: { text: string; edited: number | null | undefined } = $props();
 
   const htmlContent = $derived(marked.parse(props.text));
 </script>
@@ -24,7 +24,7 @@
 </div>
 
 {#if props.edited}
-  <Tooltip text={utcToLocal(props.edited)}>
+  <Tooltip text={parseUnixTimestamp(props.edited)}>
     <span class="text-xs text-gray-400 select-none pl-0.5">(edited)</span>
   </Tooltip>
 {/if}

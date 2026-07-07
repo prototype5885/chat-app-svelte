@@ -38,7 +38,7 @@ export const MessageSchema = z.object({
   sender_id: z.bigint(),
   channel_id: z.bigint(),
   message: MessageTextSchema,
-  edited: z.string().nullable().optional(),
+  edited: z.number().nullable().optional(),
   display_name: DisplayNameSchema,
   picture: PictureSchema,
   attachments: z.array(AttachmentSchema).nullable().optional(),

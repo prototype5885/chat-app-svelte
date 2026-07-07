@@ -55,9 +55,11 @@ export function getLongDate(id: string | bigint): string {
     date.getMonth() === yesterday.getMonth() &&
     date.getFullYear() === yesterday.getFullYear()
   ) {
-    return `Yesterday at ${date.toLocaleString(undefined, {
-      timeStyle: "short",
-    })}`;
+    return `Yesterday at ${
+      date.toLocaleString(undefined, {
+        timeStyle: "short",
+      })
+    }`;
   }
 
   // return long date if older than above
@@ -95,6 +97,6 @@ export function isOlderThanFiveMins(
   return difference > 5.0;
 }
 
-export function utcToLocal(date: string) {
-  return new Date(`${date}Z`).toLocaleString();
+export function parseUnixTimestamp(timestamp: number) {
+  return new Date(timestamp * 1000).toLocaleString();
 }

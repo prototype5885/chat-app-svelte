@@ -55,5 +55,4 @@
   class="resize-none overflow-y-hidden box-border my-4 outline-0 mx-2 grow placeholder:text-white/30"
   rows="1"
   {placeholder}
-  onkeydown={handleKeyDown}
-></textarea>
+  onkeydown={handleKeyDown}></textarea>

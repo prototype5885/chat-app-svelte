@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { z } from "zod";
   import { onDestroy } from "svelte";
   import { Pencil } from "@lucide/svelte";
   import {
@@ -6,6 +7,7 @@
     upload_user_avatar,
   } from "../scripts/httpActions";
   import { successToast, warningToast } from "../scripts/toast.svelte";
+  import type { PictureSchema } from "../scripts/schemas";
 
   const props: { preview?: string | null; serverID?: bigint } = $props();
 
@@ -35,7 +37,7 @@
   }
 
   async function changeAvatar() {
-    let name: string | null = null;
+    let name: z.infer<typeof PictureSchema> = null;
     if (props.serverID) {
       name = await upload_server_avatar(selectedFile, props.serverID);
       successToast("Server avatar changed!");

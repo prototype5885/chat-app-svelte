@@ -4,8 +4,13 @@ export const UsernameSchema = z.string().trim().min(6).max(32);
 export const PasswordSchema = z.string().trim().min(6).max(128);
 
 export const DisplayNameSchema = z.string().trim().min(1).max(64);
-export const CustomStatusSchema = z.string().trim().min(1).max(32)
-  .nullable().optional();
+export const CustomStatusSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(32)
+  .nullable()
+  .optional();
 
 export const ServerNameSchema = z.string().trim().min(1).max(64);
 export const ChannelNameSchema = z.string().trim().min(1).max(32);

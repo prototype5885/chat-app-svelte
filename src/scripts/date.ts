@@ -55,11 +55,8 @@ export function getLongDate(id: string | bigint): string {
     date.getMonth() === yesterday.getMonth() &&
     date.getFullYear() === yesterday.getFullYear()
   ) {
-    return `Yesterday at ${
-      date.toLocaleString(undefined, {
-        timeStyle: "short",
-      })
-    }`;
+    const time = date.toLocaleString(undefined, { timeStyle: "short" });
+    return `Yesterday at ${time}`;
   }
 
   // return long date if older than above

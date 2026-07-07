@@ -61,9 +61,9 @@ async function fetchWrapper(
   }
 }
 
-export async function get_user_id(): Promise<bigint> {
-  const data = await fetchWrapper("/api/v1/user_id", { method: "GET" });
-  return BigInt(data);
+export async function get_user_id() {
+  const result = await fetchWrapper("/api/v1/user_id", { method: "GET" });
+  return await z.bigint().parseAsync(result);
 }
 
 export async function get_user_info() {
@@ -79,18 +79,18 @@ export async function update_user_info(formData: FormData) {
   return await s.UserEditResponseSchema.parseAsync(result);
 }
 
-export async function upload_user_avatar(
-  file: File | null,
-): Promise<string | null> {
+export async function upload_user_avatar(file: File | null) {
   const formData = new FormData();
   if (file) {
     formData.append("file", file);
   }
 
-  return await fetchWrapper("/api/v1/user/upload/avatar", {
+  const result = await fetchWrapper("/api/v1/user/upload/avatar", {
     method: "POST",
     body: formData,
   });
+
+  return await s.PictureSchema.parseAsync(result);
 }
 
 export async function create_server(name: string) {
@@ -119,16 +119,20 @@ export async function update_server_info(formData: FormData, serverID: bigint) {
 export async function upload_server_avatar(
   file: File | null,
   serverID: bigint,
-): Promise<string | null> {
+) {
   const formData = new FormData();
   if (file) {
     formData.append("file", file);
   }
 
-  return await fetchWrapper(`/api/v1/server/${serverID}/upload/avatar`, {
-    method: "POST",
-    body: formData,
-  });
+  const result = await fetchWrapper(
+    `/api/v1/server/${serverID}/upload/avatar`,
+    {
+      method: "POST",
+      body: formData,
+    },
+  );
+  return await s.PictureSchema.parseAsync(result);
 }
 
 export async function get_servers() {

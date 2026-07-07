@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { MessageTextSchema } from "../scripts/schemas";
 
   let {
     value = $bindable(),
@@ -53,6 +54,7 @@
   bind:this={textareaRef}
   bind:value
   class="resize-none overflow-y-hidden box-border my-4 outline-0 mx-2 grow placeholder:text-white/30"
+  maxlength={MessageTextSchema.maxLength}
   rows="1"
   {placeholder}
   onkeydown={handleKeyDown}></textarea>

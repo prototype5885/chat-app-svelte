@@ -8,7 +8,7 @@
     gfm: true,
   });
 
-  let props: { text: string; edited: string | null } = $props();
+  let props: { text: string; edited: string | null | undefined } = $props();
 
   const htmlContent = $derived(marked.parse(props.text));
 </script>

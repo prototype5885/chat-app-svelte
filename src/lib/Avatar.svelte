@@ -1,7 +1,7 @@
 <script lang="ts">
   let props: {
     size: string;
-    pic: string | null;
+    pic: string | null | undefined;
     name: string;
     online: boolean | null;
   } = $props();

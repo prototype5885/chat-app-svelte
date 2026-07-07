@@ -237,7 +237,7 @@ export async function get_messages(
   messageID: bigint | null = null,
   direction: "before" | "after" | null = null,
   signal: AbortSignal,
-): Promise<s.MessageResponse[]> {
+) {
   const params = new URLSearchParams();
   if (messageID && direction) {
     params.append("messageID", messageID.toString());
@@ -249,7 +249,7 @@ export async function get_messages(
     url += `?${params}`;
   }
 
-  return await fetchWrapper(
+  const result = await fetchWrapper(
     url,
     {
       method: "GET",
@@ -257,6 +257,8 @@ export async function get_messages(
     },
     signal,
   );
+
+  return await z.array(s.MessageSchema).parseAsync(result);
 }
 
 export async function delete_message(channelID: bigint, messageID: bigint) {

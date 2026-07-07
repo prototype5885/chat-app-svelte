@@ -1,11 +1,12 @@
 <script lang="ts">
+  import { z } from "zod";
   import { currentChannel, editingMessage } from "../scripts/globals.svelte";
   import { edit_message } from "../scripts/httpActions";
-  import type { MessageResponse } from "../scripts/schemas";
+  import { MessageSchema } from "../scripts/schemas";
   import { errorToast } from "../scripts/toast.svelte";
   import AutoResizeTextarea from "./AutoResizeTextarea.svelte";
 
-  const props: { msg: MessageResponse } = $props();
+  const props: { msg: z.infer<typeof MessageSchema> } = $props();
   let editedMessage = $derived(props.msg.message);
 
   async function editMessage() {

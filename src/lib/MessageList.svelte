@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { z } from "zod";
   import { onDestroy, onMount, tick } from "svelte";
   import { currentChannel } from "../scripts/globals.svelte";
   import Message from "./Message.svelte";
@@ -9,7 +10,7 @@
   } from "../scripts/date";
   import { errorToast } from "../scripts/toast.svelte";
   import { get_messages } from "../scripts/httpActions";
-  import type { MessageResponse, UserEditResponse } from "../scripts/schemas";
+  import { MessageSchema, type UserEditResponse } from "../scripts/schemas";
   import MessageTyping from "./MessageTyping.svelte";
   import { sseConnected, subscribeSSE } from "../scripts/session.svelte";
   import { JSONParse } from "json-with-bigint";
@@ -25,7 +26,7 @@
 
   const props: { channelName: string } = $props();
 
-  let messageList: MessageResponse[] = $state([]);
+  let messageList = $state<z.infer<ReturnType<typeof MessageSchema.array>>>([]);
   let msgList: HTMLUListElement | undefined = $state();
 
   let reachedBeginning = $state<boolean>(false);

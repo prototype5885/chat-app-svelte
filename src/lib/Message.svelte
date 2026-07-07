@@ -1,13 +1,14 @@
 <script lang="ts">
+  import { z } from "zod";
   import { getLongDate, getShortDate, utcToLocal } from "../scripts/date";
   import { currentUserID, editingMessage } from "../scripts/globals.svelte";
-  import type { MessageResponse } from "../scripts/schemas";
+  import type { MessageSchema } from "../scripts/schemas";
   import Avatar from "./Avatar.svelte";
   import MessageAttachments from "./MessageAttachments.svelte";
   import MessageEditor from "./MessageEditor.svelte";
   import MessageText from "./MessageText.svelte";
 
-  let props: { msg: MessageResponse; small?: boolean } = $props();
+  let props: { msg: z.infer<typeof MessageSchema>; small?: boolean } = $props();
 </script>
 
 <li>

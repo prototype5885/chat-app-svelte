@@ -28,6 +28,22 @@ export const ChannelSchema = z.object({
   name: ChannelNameSchema,
 });
 
+export const AttachmentSchema = z.object({
+  name: z.string(),
+  file: z.string(),
+});
+
+export const MessageSchema = z.object({
+  id: z.bigint(),
+  sender_id: z.bigint(),
+  channel_id: z.bigint(),
+  message: MessageTextSchema,
+  edited: z.string().nullable().optional(),
+  display_name: DisplayNameSchema,
+  picture: PictureSchema,
+  attachments: z.array(AttachmentSchema).nullable().optional(),
+});
+
 export interface UserSchema {
   id: bigint;
   username: string | null;
@@ -52,16 +68,4 @@ export interface UserOnline {
 export interface Attachment {
   name: string;
   file: string;
-}
-
-export interface MessageResponse {
-  id: bigint;
-  sender_id: bigint;
-  channel_id: bigint;
-  message: string;
-  attachment_count: number | null;
-  edited: string | null;
-  display_name: string;
-  picture: string | null;
-  attachments: Attachment[] | null;
 }

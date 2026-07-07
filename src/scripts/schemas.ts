@@ -60,10 +60,10 @@ export interface UserEditResponse {
   custom_status?: string | null;
 }
 
-export interface UserOnline {
-  id: bigint;
-  online: boolean;
-}
+export const UserOnline = z.object({
+  id: z.bigint(),
+  online: z.boolean(),
+});
 
 export interface Attachment {
   name: string;

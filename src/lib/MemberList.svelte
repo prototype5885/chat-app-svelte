@@ -4,10 +4,10 @@
   import { currentServer } from "../scripts/globals.svelte";
   import { errorToast } from "../scripts/toast.svelte";
   import Avatar from "./Avatar.svelte";
-  import type {
-    UserEditResponse,
+  import {
     UserOnline,
-    UserSchema,
+    type UserEditResponse,
+    type UserSchema,
   } from "../scripts/schemas";
   import { subscribeSSE } from "../scripts/session.svelte";
   import { JSONParse } from "json-with-bigint";
@@ -66,7 +66,7 @@
     });
 
     subscribeSSE("user_online", (e: any) => {
-      const user = JSONParse(e.data) as UserOnline;
+      const user = UserOnline.parse(JSONParse(e.data));
       members.forEach((member) => {
         if (member.id === user.id) {
           member.online = user.online;

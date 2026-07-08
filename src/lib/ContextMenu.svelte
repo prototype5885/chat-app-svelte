@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { z } from "zod";
   import { onDestroy, onMount } from "svelte";
   import {
     delete_channel,
@@ -50,11 +51,17 @@
     const userID = element?.getAttribute("data-ctx-user-id");
     const serverIDStr = element?.getAttribute("data-ctx-server-id");
     const channelIDStr = element?.getAttribute("data-ctx-channel-id");
-    const messageIDSTr = element?.getAttribute("data-ctx-message-id");
+    const messageIDStr = element?.getAttribute("data-ctx-message-id");
 
-    const serverID = serverIDStr ? BigInt(serverIDStr) : undefined;
-    const channelID = channelIDStr ? BigInt(channelIDStr) : undefined;
-    const messageID = messageIDSTr ? BigInt(messageIDSTr) : undefined;
+    const serverID = serverIDStr
+      ? z.coerce.bigint().parse(serverIDStr)
+      : undefined;
+    const channelID = channelIDStr
+      ? z.coerce.bigint().parse(channelIDStr)
+      : undefined;
+    const messageID = messageIDStr
+      ? z.coerce.bigint().parse(messageIDStr)
+      : undefined;
 
     const owner = element?.hasAttribute("data-ctx-own")
       ? element.getAttribute("data-ctx-own") === "true"

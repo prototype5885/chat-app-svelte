@@ -69,3 +69,11 @@ export const UserOnline = z.object({
   id: z.bigint(),
   online: z.boolean(),
 });
+
+export const MessageEditResponseSchema = z.object({
+  id: z.bigint(),
+  sender_id: z.bigint(),
+  channel_id: z.bigint(),
+  message: MessageTextSchema,
+  edited: z.number(),
+});

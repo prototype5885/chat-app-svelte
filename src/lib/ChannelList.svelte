@@ -40,7 +40,7 @@
       );
       if (lastChannelID) {
         const lastChannel = channelList.find(
-          (channel) => channel.id === BigInt(lastChannelID),
+          (channel) => channel.id === z.coerce.bigint().parse(lastChannelID),
         );
         currentChannel.value = lastChannel;
       } else {
@@ -52,6 +52,7 @@
   $effect(() => {
     subscribeSSE("create_channel", (e: any) => {
       const channel = ChannelSchema.parse(JSONParse(e.data));
+
       channelList.push(channel);
     });
 
@@ -70,7 +71,7 @@
     });
 
     subscribeSSE("delete_channel", (e: any) => {
-      const channelID = BigInt(e.data);
+      const channelID = z.coerce.bigint().parse(e.data);
 
       for (let i = 0; i < channelList.length; i++) {
         if (channelList[i].id === channelID) {

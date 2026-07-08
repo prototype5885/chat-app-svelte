@@ -1,8 +1,8 @@
 <script lang="ts">
+  import { z } from "zod";
   import { currentUserID } from "../scripts/globals.svelte";
   import { subscribeSSE } from "../scripts/session.svelte";
   import { errorToast } from "../scripts/toast.svelte";
-  import { JSONParse } from "json-with-bigint";
 
   let usersTyping = $state(new Map<bigint, string>());
   let usersTypingText = $state<string>("");
@@ -16,8 +16,8 @@
     const action = Number(data.slice(0, firstSpace));
     const userID =
       secondSpace !== -1
-        ? BigInt(data.slice(firstSpace + 1, secondSpace))
-        : BigInt(data.slice(firstSpace + 1));
+        ? z.coerce.bigint().parse(data.slice(firstSpace + 1, secondSpace))
+        : z.coerce.bigint().parse(data.slice(firstSpace + 1));
     const displayName = secondSpace !== -1 ? data.slice(secondSpace + 1) : null;
 
     // don't show own typing indicator

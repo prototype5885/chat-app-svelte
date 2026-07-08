@@ -10,7 +10,7 @@
   import { Mail, Plus } from "@lucide/svelte";
   import { create_server, get_servers } from "../scripts/httpActions";
   import Tooltip from "./Tooltip.svelte";
-  import type { ServerSchema } from "../scripts/schemas";
+  import { ServerSchema } from "../scripts/schemas";
   import { subscribeSSE } from "../scripts/session.svelte";
   import { JSONParse } from "json-with-bigint";
 
@@ -26,7 +26,7 @@
     // remove server IDs of left/deleted servers from localStorage
     Object.keys(localStorage).forEach((lastServerID) => {
       const foundServer = serverList.find(
-        (server) => server.id === BigInt(lastServerID),
+        (server) => server.id === z.coerce.bigint().parse(lastServerID),
       );
       if (!foundServer) {
         localStorage.removeItem(lastServerID);
@@ -36,11 +36,13 @@
 
   $effect(() => {
     subscribeSSE("server_info", (e: any) => {
-      updateServerInfo(JSONParse(e.data));
+      const server = ServerSchema.parse(JSONParse(e.data));
+
+      updateServerInfo(server);
     });
 
     subscribeSSE("delete_server", (e: any) => {
-      const serverID = BigInt(e.data);
+      const serverID = z.coerce.bigint().parse(e.data);
 
       for (let i = 0; i < serverList.length; i++) {
         if (serverList[i].id === serverID) {

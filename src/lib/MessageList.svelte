@@ -10,7 +10,11 @@
   } from "../scripts/date";
   import { errorToast } from "../scripts/toast.svelte";
   import { get_messages } from "../scripts/httpActions";
-  import { MessageSchema, UserEditResponseSchema } from "../scripts/schemas";
+  import {
+    MessageEditResponseSchema,
+    MessageSchema,
+    UserEditResponseSchema,
+  } from "../scripts/schemas";
   import MessageTyping from "./MessageTyping.svelte";
   import { sseConnected, subscribeSSE } from "../scripts/session.svelte";
   import { JSONParse } from "json-with-bigint";
@@ -77,7 +81,9 @@
 
   $effect(() => {
     subscribeSSE("create_message", (e: any) => {
-      messageList.push(JSONParse(e.data));
+      const message = MessageSchema.parse(JSONParse(e.data));
+
+      messageList.push(message);
       if (scrollBottom < OLD_ABOVE_THIS) {
         scrollToBottom("instant");
       } else {
@@ -86,19 +92,20 @@
     });
 
     subscribeSSE("edit_message", (e: any) => {
-      const message = JSONParse(e.data);
+      const editedMessage = MessageEditResponseSchema.parse(JSONParse(e.data));
 
       for (let i = 0; i < messageList.length; i++) {
-        if (messageList[i].id === message.id) {
-          messageList[i].message = message.message;
-          messageList[i].edited = message.edited;
+        if (messageList[i].id === editedMessage.id) {
+          messageList[i].message = editedMessage.message;
+          messageList[i].edited = editedMessage.edited;
           return;
         }
       }
     });
 
     subscribeSSE("delete_message", (e: any) => {
-      const messageID = BigInt(e.data);
+      const messageID = z.coerce.bigint().parse(e.data);
+
       for (let i = 0; i < messageList.length; i++) {
         if (messageList[i].id === messageID) {
           messageList.splice(i, 1);

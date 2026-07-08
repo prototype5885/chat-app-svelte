@@ -1,6 +1,8 @@
 // export const create_server = "create_server";
 // export const delete_server = "delete_server";
 
+import { currentChannel, currentServer } from "./globals.svelte";
+
 // export const create_channel = "create_channel";
 // export const delete_channel = "delete_channel";
 // export const modify_channel = "modify_channel";
@@ -48,13 +50,13 @@ eventSource.onopen = () => {
 
 eventSource.onerror = (err) => {
   sseConnectedState = false;
+  currentServer.value = undefined;
+  currentChannel.value = undefined;
   sseConnectionAttemptsState++;
 };
 
 eventSource.addEventListener("session_id", (e) => {
-  if (sessionID === "") {
-    sessionID = e.data;
-  }
+  sessionID = e.data;
 });
 
 // this will allow components to subscribe to events and automatically unsubscribe

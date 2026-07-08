@@ -39,7 +39,7 @@ export const sseConnectionAttempts = {
   },
 };
 
-export let sessionID = "";
+export let sessionID: string | undefined;
 
 const eventSource = new EventSource(`/api/v1/session`);
 
@@ -57,6 +57,7 @@ eventSource.onerror = (err) => {
 
 eventSource.addEventListener("session_id", (e) => {
   sessionID = e.data;
+  console.log(`Current session ID is: ${sessionID}`);
 });
 
 // this will allow components to subscribe to events and automatically unsubscribe

@@ -63,7 +63,7 @@ async function fetchWrapper(
 
 export async function get_user_id() {
   const result = await fetchWrapper("/api/v1/user_id", { method: "GET" });
-  return await z.bigint().parseAsync(result);
+  return await z.coerce.bigint().parseAsync(result);
 }
 
 export async function get_user_info() {
@@ -183,7 +183,7 @@ export async function get_channels(serverID: bigint, signal: AbortSignal) {
     `/api/v1/server/${serverID}/channels`,
     {
       method: "GET",
-      headers: { "Session-ID": sessionID },
+      headers: { "Session-ID": sessionID! },
     },
     signal,
   );
@@ -258,7 +258,7 @@ export async function get_messages(
     url,
     {
       method: "GET",
-      headers: { "Session-ID": sessionID },
+      headers: { "Session-ID": sessionID! },
     },
     signal,
   );

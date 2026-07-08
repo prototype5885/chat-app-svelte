@@ -9,6 +9,7 @@ export const currentUserID = {
   },
   set value(newValue) {
     _currentUserID = newValue;
+    console.log(`User ID is: ${_currentUserID}`);
   },
 };
 
@@ -29,6 +30,7 @@ export const currentServer = {
   },
   set value(newValue) {
     _currentServer = newValue;
+    console.log(`Current server ID is: ${_currentServer?.id}`);
   },
 };
 
@@ -50,6 +52,7 @@ export const currentChannel = {
         currentChannel.value.id.toString(),
       );
     }
+    console.log(`Current channel ID is: ${_currentChannel?.id}`);
   },
 };
 

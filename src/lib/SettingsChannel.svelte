@@ -8,6 +8,7 @@
     update_channel_info,
   } from "../scripts/httpActions";
   import { ChannelNameSchema, ChannelSchema } from "../scripts/schemas";
+  import FormField from "./FormField.svelte";
 
   let channelData = $state<z.infer<typeof ChannelSchema>>();
 
@@ -63,21 +64,19 @@
 
 {#if channelData}
   <div>
-    <form class="flex flex-col" onsubmit={handleSubmit}>
-      <label for="name">Channel name</label>
-      <input
-        type="text"
+    <form class="flex flex-col w-lg" onsubmit={handleSubmit}>
+      <FormField
+        label="Channel Name"
         id="name"
         maxlength={ChannelNameSchema.maxLength}
         required
-        class="outline-1"
         bind:value={modifiedName}
       />
       <br />
       <button
         disabled={!wasAnythingChanged()}
         type="submit"
-        class="bg-blue-500 rounded disabled:bg-black/20"
+        class="button-default"
       >
         Submit
       </button>

@@ -5,6 +5,7 @@
   import { successToast } from "../scripts/toast.svelte";
   import { DisplayNameSchema, UserSchema } from "../scripts/schemas";
   import AvatarUploader from "./AvatarUploader.svelte";
+  import FormField from "./FormField.svelte";
 
   let userData = $state<z.infer<typeof UserSchema>>();
 
@@ -64,21 +65,19 @@
   <div>
     <AvatarUploader preview={userData.picture} />
     <br />
-    <form class="flex flex-col" onsubmit={handleSubmit}>
-      <label for="display_name">Display name</label>
-      <input
-        type="text"
+    <form class="flex flex-col w-lg" onsubmit={handleSubmit}>
+      <FormField
+        label="Display name"
         id="display_name"
         maxlength={DisplayNameSchema.maxLength}
         required
-        class="outline-1"
         bind:value={modifiedDisplayName}
       />
       <br />
       <button
         disabled={!wasAnythingChanged()}
         type="submit"
-        class="bg-blue-500 rounded disabled:bg-black/20"
+        class="button-default"
       >
         Submit
       </button>

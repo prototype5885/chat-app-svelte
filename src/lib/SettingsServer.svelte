@@ -6,6 +6,7 @@
   import { settings } from "../scripts/globals.svelte";
   import { ServerNameSchema, ServerSchema } from "../scripts/schemas";
   import AvatarUploader from "./AvatarUploader.svelte";
+  import FormField from "./FormField.svelte";
 
   let serverData = $state<z.infer<typeof ServerSchema>>();
 
@@ -61,21 +62,19 @@
   <div>
     <AvatarUploader preview={serverData.picture} serverID={serverData.id} />
     <br />
-    <form class="flex flex-col" onsubmit={handleSubmit}>
-      <label for="name">Server name</label>
-      <input
-        type="text"
+    <form class="flex flex-col w-lg" onsubmit={handleSubmit}>
+      <FormField
+        label="Server Name"
         id="name"
         maxlength={ServerNameSchema.maxLength}
         required
-        class="outline-1"
         bind:value={modifiedServerName}
       />
       <br />
       <button
         disabled={!wasAnythingChanged()}
         type="submit"
-        class="bg-blue-500 rounded disabled:bg-black/20"
+        class="button-default"
       >
         Submit
       </button>

@@ -91,10 +91,12 @@
   <!-- right side -->
   <div class="w-2/5">
     <h1 class="p-8">{selected?.label}</h1>
-    {#if selected}
-      {@const Selected = selected.component}
-      <Selected />
-    {/if}
+    <div class="flex flex-col items-center">
+      {#if selected}
+        {@const Selected = selected.component}
+        <Selected />
+      {/if}
+    </div>
   </div>
 
   <!-- far right side (close button) -->

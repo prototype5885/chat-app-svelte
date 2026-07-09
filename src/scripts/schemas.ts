@@ -18,6 +18,11 @@ export const ChannelNameSchema = z.string().trim().min(1).max(32);
 export const MessageTextSchema = z.string().trim().min(1).max(4096);
 export const PictureSchema = z.string().nullable().optional();
 
+export const ValidationIssue = z.object({
+  field: z.string(),
+  issues: z.array(z.string()),
+});
+
 export const ServerSchema = z.object({
   id: z.bigint(),
   owner_id: z.bigint(),

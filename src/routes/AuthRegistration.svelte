@@ -1,7 +1,14 @@
 <script lang="ts">
+  import { z } from "zod";
+  import FormField from "../lib/FormField.svelte";
+  import { ValidationIssue } from "../scripts/schemas";
+
   let username = $state<string>("");
   let password = $state<string>("");
   let passwordRepeat = $state<string>("");
+
+  let usernameIssues = $state<string[] | undefined>();
+  let passwordIssues = $state<string[] | undefined>();
 
   async function handleSubmit() {
     if (password !== passwordRepeat) {
@@ -12,7 +19,7 @@
     const formData = new URLSearchParams();
     formData.append("username", username);
     formData.append("password", password);
-    formData.append("password_repeat", passwordRepeat);
+    // formData.append("password_repeat", passwordRepeat);
 
     const response = await fetch("/api/v1/user/register", {
       method: "POST",
@@ -22,37 +29,52 @@
       body: formData.toString(),
     });
 
+    usernameIssues = undefined;
+    passwordIssues = undefined;
+
     if (response.status === 200) {
       window.location.href = "#/auth/login";
+    } else if (response.status === 400) {
+      const rawIssues = await response.json();
+      const issues = z.array(ValidationIssue).parse(rawIssues);
+
+      issues.forEach((issue) => {
+        if (issue.field === "username") {
+          usernameIssues = issue.issues;
+        } else if (issue.field === "password") {
+          passwordIssues = issue.issues;
+        }
+      });
+    } else if (response.status === 409) {
+      const text = await response.text();
+      usernameIssues = [text];
     }
   }
 </script>
 
-<div>
-  <div>
-    <div>
-      <h1>Registration</h1>
-    </div>
-
-    <div>
-      <span>Username</span>
-      <input bind:value={username} type="text" />
-    </div>
-
-    <div>
-      <span>Password</span>
-      <input bind:value={password} type="password" />
-    </div>
-
-    <div>
-      <span>Confirm Password</span>
-      <input bind:value={passwordRepeat} type="password" />
-    </div>
-
-    <button onclick={handleSubmit}>Register</button>
-
-    <div>
-      <a href="#/auth/login">Already have an account?</a>
-    </div>
-  </div>
+<div
+  class="flex flex-col justify-center items-center h-screen select-non theme-diskord"
+>
+  <span class="mb-2 text-xl">Registration</span>
+  <FormField
+    label="Username"
+    bind:value={username}
+    bind:issues={usernameIssues}
+  />
+  <FormField
+    label="Password"
+    bind:value={password}
+    bind:issues={passwordIssues}
+    type="password"
+  />
+  <FormField
+    label="Confirm Password"
+    bind:value={passwordRepeat}
+    bind:issues={passwordIssues}
+    type="password"
+  />
+  <button class="button-default w-48 my-4" onclick={handleSubmit}
+    >Register</button
+  >
+  <a href="#/auth/login">Already have an account?</a>
 </div>

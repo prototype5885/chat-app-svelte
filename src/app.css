@@ -10,6 +10,16 @@ body {
   background-color: rgb(66, 68, 75);
 }
 
+.button-default {
+  background-color: color-mix(in oklab, var(--color-black) 20%, transparent);
+  padding: 12px;
+  border-radius: calc(infinity * 1px)
+}
+
+.button-default:hover {
+  background-color: color-mix(in oklab, var(--color-black) 35%, transparent);
+}
+
 .theme-1 {
   color: white;
   background-image: linear-gradient(

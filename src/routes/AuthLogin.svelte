@@ -1,6 +1,13 @@
 <script lang="ts">
+  import { z } from "zod";
+  import FormField from "../lib/FormField.svelte";
+  import { ValidationIssue } from "../scripts/schemas";
+
   let username = $state<string>("");
   let password = $state<string>("");
+
+  let usernameIssues = $state<string[] | undefined>();
+  let passwordIssues = $state<string[] | undefined>();
 
   async function handleSubmit() {
     const formData = new URLSearchParams();
@@ -15,33 +22,45 @@
       body: formData.toString(),
     });
 
+    usernameIssues = undefined;
+    passwordIssues = undefined;
+
     if (response.status === 200) {
       window.location.href = "#/chat";
+    } else if (response.status === 400) {
+      const rawIssues = await response.json();
+      const issues = z.array(ValidationIssue).parse(rawIssues);
+
+      issues.forEach((issue) => {
+        if (issue.field === "username") {
+          usernameIssues = issue.issues;
+        } else if (issue.field === "password") {
+          passwordIssues = issue.issues;
+        }
+      });
+    } else if (response.status === 401) {
+      const text = await response.text();
+      usernameIssues = [text];
+      passwordIssues = [text];
     }
   }
 </script>
 
-<div>
-  <div>
-    <div>
-      <h1>Login</h1>
-    </div>
-    <div>
-      <div>
-        <span>Username</span>
-        <input bind:value={username} type="text" />
-      </div>
-
-      <div>
-        <span>Password</span>
-        <input bind:value={password} type="password" />
-      </div>
-
-      <button onclick={handleSubmit}>Login</button>
-
-      <div>
-        <a href="#/auth/registration">No account? Register</a>
-      </div>
-    </div>
-  </div>
+<div
+  class="flex flex-col justify-center items-center h-screen select-non theme-diskord"
+>
+  <span class="mb-2 text-xl">Login</span>
+  <FormField
+    label="Username"
+    bind:value={username}
+    bind:issues={usernameIssues}
+  />
+  <FormField
+    label="Password"
+    bind:value={password}
+    bind:issues={passwordIssues}
+    type="password"
+  />
+  <button class="button-default w-48 my-4" onclick={handleSubmit}>Login</button>
+  <a href="#/auth/registration">No account? Register</a>
 </div>

@@ -4,6 +4,8 @@
   let {
     label,
     type = "text",
+    id = undefined,
+    maxlength = undefined,
     value = $bindable(""),
     required = false,
     disabled = false,
@@ -13,6 +15,8 @@
   }: {
     label: string;
     type?: HTMLInputTypeAttribute;
+    id?: string;
+    maxlength?: number | null | undefined;
     value?: string;
     required?: boolean;
     disabled?: boolean;
@@ -35,6 +39,8 @@
       {required}
       {disabled}
       {autocomplete}
+      {id}
+      {maxlength}
       bind:value
       onfocus={() => (focused = true)}
       onblur={() => (focused = false)}

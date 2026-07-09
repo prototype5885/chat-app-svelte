@@ -1,6 +1,7 @@
 // export const create_server = "create_server";
 // export const delete_server = "delete_server";
 
+import { z } from "zod";
 import { currentChannel, currentServer } from "./globals.svelte";
 
 // export const create_channel = "create_channel";
@@ -39,7 +40,7 @@ export const sseConnectionAttempts = {
   },
 };
 
-export let sessionID: string | undefined;
+export let sessionID: bigint | undefined;
 
 const eventSource = new EventSource(`/api/v1/session`);
 
@@ -56,7 +57,7 @@ eventSource.onerror = (err) => {
 };
 
 eventSource.addEventListener("session_id", (e) => {
-  sessionID = e.data;
+  sessionID = z.coerce.bigint().parse(e.data);
   console.log(`Current session ID is: ${sessionID}`);
 });
 

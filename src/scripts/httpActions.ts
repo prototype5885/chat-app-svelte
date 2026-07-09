@@ -183,7 +183,7 @@ export async function get_channels(serverID: bigint, signal: AbortSignal) {
     `/api/v1/server/${serverID}/channels`,
     {
       method: "GET",
-      headers: { "Session-ID": sessionID! },
+      headers: { "Session-ID": sessionID!.toString() },
     },
     signal,
   );
@@ -258,7 +258,7 @@ export async function get_messages(
     url,
     {
       method: "GET",
-      headers: { "Session-ID": sessionID! },
+      headers: { "Session-ID": sessionID!.toString() },
     },
     signal,
   );

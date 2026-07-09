@@ -20,6 +20,11 @@ body {
   background-color: color-mix(in oklab, var(--color-black) 35%, transparent);
 }
 
+.button-default:disabled {
+  background-color: color-mix(in oklab, var(--color-black) 5%, transparent);
+  color: gray;
+}
+
 .theme-1 {
   color: white;
   background-image: linear-gradient(

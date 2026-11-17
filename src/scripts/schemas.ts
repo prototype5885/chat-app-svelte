@@ -15,7 +15,7 @@ export const CustomStatusSchema = z
 export const ServerNameSchema = z.string().trim().min(1).max(64);
 export const ChannelNameSchema = z.string().trim().min(1).max(32);
 
-export const MessageTextSchema = z.string().trim().min(1).max(4096);
+export const MessageTextSchema = z.string().trim().min(0).max(4096);
 export const PictureSchema = z.string().nullable().optional();
 
 export const ValidationIssue = z.object({
